@@ -5,7 +5,7 @@ Configuration
 -------------
 Under users/server/create .env file that looks similar to this:
 DB_URL = mongodb+srv://admin:<your admin password>@cluster<some  number>.<some unique id>.mongodb.net/<some database name>
-ACCESS_TOKEN_SECRET = xb3tim8rnIdoMMJfGNaqMxHX6zyWGBrR
+ACCESS_TOKEN_SECRET = 
 To do this, you need to create an MongoDB Atlas account, a collection, and a database.
 
 The DB_URL comes from signing up for an MongoDB Atlas account and creating a cluster.  Under database select the cluster (likely
