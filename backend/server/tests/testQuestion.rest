@@ -30,14 +30,14 @@ Content-Type: application/json
 GET http://localhost:8081/question/getAll
 Content-Type: application/json
 
-###
+###Input ID for question created by the 2nd "question create"
 
 POST http://localhost:8081/question/editQuestion
 Content-Type: application/json 
 
 {
-    "questionId" : "699f3a59e21b5fbd3dc90595", //Input ID for question created by the 2nd "question create"
-    "question" : "QuestionThatWasEdited",
+    "questionId" : "699f4517568dff3622bf8174", 
+    "question" : "QuestionThatWasEdited2",
     "correct_answer" : "NewCorrectAnswer",
     "incorrect_answer1" : "NewIncorrectAnswer",
     "incorrect_answer2" : "NewSecondIncorrectAnswer",
@@ -46,20 +46,20 @@ Content-Type: application/json
     "difficulty" : 20
 }
 
-###
+###Input ID for question created by the 2nd "question create"
 GET  http://localhost:8081/question/getQuestionById
 Content-Type: application/json 
 
 {
-    "questionId" : "699f3a34e21b5fbd3dc90592" //Input ID for question created by the 2nd "question create"
+    "questionId" : "699f44ed568dff3622bf8171" 
 }
 
-###
+###Input ID for question created by the 1st "question create"
 GET  http://localhost:8081/question/getQuestionById
 Content-Type: application/json 
 
 {
-    "questionId" : "699f3a59e21b5fbd3dc90595" //Input ID for question created by the 1st "question create"
+    "questionId" : "699f4517568dff3622bf8174" 
 }
 
 ###
