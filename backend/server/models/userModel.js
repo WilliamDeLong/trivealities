@@ -18,6 +18,10 @@ const newUserSchema = new mongoose.Schema(
       type: String,
       min : 8
     },
+    profileImage: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "ProfileImage",
+    },
     date: {
       type: Date,
       default: Date.now,
