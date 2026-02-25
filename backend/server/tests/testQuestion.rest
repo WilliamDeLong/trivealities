@@ -1,0 +1,66 @@
+POST http://localhost:8081/question/create
+Content-Type: application/json 
+
+{
+    "question" : "This question is false",
+    "correct_answer" : "Paradox",
+    "incorrect_answer1" : "True",
+    "incorrect_answer2" : "False",
+    "incorrect_answer3" : "True and False",
+    "category" : 3,
+    "difficulty" : 3
+}
+###
+POST http://localhost:8081/question/create
+Content-Type: application/json 
+
+{
+    "question" : "Q2Edit",
+    "correct_answer" : "CorrectAnswer",
+    "incorrect_answer1" : "IncorrectAnswer",
+    "incorrect_answer2" : "OtherIncorrectAnswer",
+    "incorrect_answer3" : "EvenMoreIncorrectAnswer",
+    "category" : 3,
+    "difficulty" : 3
+}
+
+###
+
+###
+GET http://localhost:8081/question/getAll
+Content-Type: application/json
+
+###
+
+POST http://localhost:8081/question/editQuestion
+Content-Type: application/json 
+
+{
+    "questionId" : "699f3a59e21b5fbd3dc90595", //Input ID for question created by the 2nd "question create"
+    "question" : "QuestionThatWasEdited",
+    "correct_answer" : "NewCorrectAnswer",
+    "incorrect_answer1" : "NewIncorrectAnswer",
+    "incorrect_answer2" : "NewSecondIncorrectAnswer",
+    "incorrect_answer3" : "AnAnswerThatIsSomehowEVENMOREIncorrect",
+    "category" : 3,
+    "difficulty" : 20
+}
+
+###
+GET  http://localhost:8081/question/getQuestionById
+Content-Type: application/json 
+
+{
+    "questionId" : "699f3a34e21b5fbd3dc90592" //Input ID for question created by the 2nd "question create"
+}
+
+###
+GET  http://localhost:8081/question/getQuestionById
+Content-Type: application/json 
+
+{
+    "questionId" : "699f3a59e21b5fbd3dc90595" //Input ID for question created by the 1st "question create"
+}
+
+###
+POST  http://localhost:8081/question/deleteAll
