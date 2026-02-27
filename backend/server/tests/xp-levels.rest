@@ -1,0 +1,126 @@
+### =========================
+### Trivealities API - REST Client file (VS Code)
+### Save as: trivealities.rest
+### Requires VS Code extension: "REST Client"
+### =========================
+
+@baseUrl = http://localhost:8081
+@json = application/json
+
+### -------------------------------------------------
+### (1) SIGN UP (your route: POST /user/signup)
+### -------------------------------------------------
+# @name createUser
+POST {{baseUrl}}/user/signup
+Content-Type: {{json}}
+
+{
+  "username": "TrivealitiesRinRin",
+  "email": "TheRealRinRin@example.com",
+  "password": "password123"
+}
+
+### -------------------------------------------------
+### (2) Grab _id from signup response (your API returns the doc directly)
+### -------------------------------------------------
+@userId = {{createUser.response.body.$._id}}
+### -------------------------------------------------
+### (3) GET a user's level/xp (GET /user/:id/level)
+### -------------------------------------------------
+GET {{baseUrl}}/user/{{userId}}/level
+Accept: {{json}}
+
+### -------------------------------------------------
+### (4) POST add XP (POST /user/:id/xp)
+### -------------------------------------------------
+POST {{baseUrl}}/user/{{userId}}/xp
+Content-Type: {{json}}
+
+{
+  "xp": 50
+}
+
+### -------------------------------------------------
+### (5) POST add XP to level up (120 => L1 XP20 if 100/level)
+### -------------------------------------------------
+POST {{baseUrl}}/user/{{userId}}/xp
+Content-Type: {{json}}
+
+{
+  "xp": 120
+}
+
+### -------------------------------------------------
+### (6) POST big XP (999 => +9 levels, 99 leftover)
+### -------------------------------------------------
+POST {{baseUrl}}/user/{{userId}}/xp
+Content-Type: {{json}}
+
+{
+  "xp": 999
+}
+
+### -------------------------------------------------
+### (7) GET leaderboard (GET /user/levels)
+### -------------------------------------------------
+GET {{baseUrl}}/user/levels
+Accept: {{json}}
+
+### =========================
+### Negative / invalid tests
+### =========================
+
+### (8) Reject negative XP (should 400)
+POST {{baseUrl}}/user/{{userId}}/xp
+Content-Type: {{json}}
+
+{
+  "xp": -20
+}
+
+### (9) Missing XP (should 400)
+POST {{baseUrl}}/user/{{userId}}/xp
+Content-Type: {{json}}
+
+{
+}
+
+### (10) XP = 0 (should 400 if you enforce > 0)
+POST {{baseUrl}}/user/{{userId}}/xp
+Content-Type: {{json}}
+
+{
+  "xp": 0
+}
+
+### (11) Non-numeric XP (should 400)
+POST {{baseUrl}}/user/{{userId}}/xp
+Content-Type: {{json}}
+
+{
+  "xp": "abc"
+}
+
+### (12) Invalid user id format (should 400)
+POST {{baseUrl}}/user/notanid/xp
+Content-Type: {{json}}
+
+{
+  "xp": 10
+}
+
+### (13) Valid ObjectId but not found (should 404)
+POST {{baseUrl}}/user/64b64c0f2f9a4c3a2d1e0000/xp
+Content-Type: {{json}}
+
+{
+  "xp": 25
+}
+
+### (14) GET level invalid id (should 400)
+GET {{baseUrl}}/user/notanid/level
+Accept: {{json}}
+
+### (15) GET level not found (should 404)
+GET {{baseUrl}}/user/64b64c0f2f9a4c3a2d1e0000/level
+Accept: {{json}}

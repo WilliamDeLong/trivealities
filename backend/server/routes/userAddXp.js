@@ -3,16 +3,11 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const User = require("../models/userModel");
 
-// Every 100 XP = +1 level
 const XP_PER_LEVEL = 100;
 
-/**
- * POST /user/:id/xp
- * Body: { xp: number }
- * - Adds XP
- * - Every 100 XP => +1 level
- * - Keeps remainder XP in accountXp
- */
+// helps prevent floating point leftovers like 49.9999999997
+const round2 = (n) => Math.round((n + Number.EPSILON) * 100) / 100;
+
 router.post("/:id/xp", async (req, res) => {
   try {
     const { id } = req.params;
@@ -29,15 +24,15 @@ router.post("/:id/xp", async (req, res) => {
     const user = await User.findById(id).select("accountLevel accountXp");
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    // Defensive defaults (for older docs)
     if (typeof user.accountLevel !== "number") user.accountLevel = 0;
     if (typeof user.accountXp !== "number") user.accountXp = 0;
 
-    user.accountXp += xpToAdd;
+    user.accountXp = round2(user.accountXp + xpToAdd);
 
     const levelsGained = Math.floor(user.accountXp / XP_PER_LEVEL);
     user.accountLevel += levelsGained;
-    user.accountXp = user.accountXp % XP_PER_LEVEL;
+
+    user.accountXp = round2(user.accountXp % XP_PER_LEVEL);
 
     await user.save();
 
@@ -46,7 +41,7 @@ router.post("/:id/xp", async (req, res) => {
       levelsGained,
       accountLevel: user.accountLevel,
       accountXp: user.accountXp,
-      xpNeededForNextLevel: XP_PER_LEVEL - user.accountXp,
+      xpNeededForNextLevel: round2(XP_PER_LEVEL - user.accountXp),
     });
   } catch (error) {
     console.error(error);
