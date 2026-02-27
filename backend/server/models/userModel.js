@@ -7,11 +7,13 @@ const newUserSchema = new mongoose.Schema(
       type: String,
       required: true,
       label: "username",
+      unique: true,
     },
     email: {
       type: String,
       required: true,
       label: "email",
+      unique: true,
     },
     password: {
       required: true,
@@ -21,6 +23,7 @@ const newUserSchema = new mongoose.Schema(
     profileImage: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "ProfileImage",
+      required: false,
     },
     date: {
       type: Date,

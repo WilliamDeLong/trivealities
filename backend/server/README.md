@@ -3,6 +3,8 @@ copy & paste ( in terminal ) :
 - git clone https://github.com/Tochey/User_Service.git
 - cd server
 - npm install 
+- npm i express-fileupload @aws-sdk/client-s3 (For aws file upload)
+- npm i multernpm
 - npm run server
 #### In another terminal tab
 - cd client
