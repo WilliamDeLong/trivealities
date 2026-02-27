@@ -36,6 +36,7 @@ app.use('/question', getQuestionByIdRoute)
 app.use('/question', deleteQuestion)
 app.use("/user", userAddXp);
 app.use("/user", userGetLevels);
+app.use("/user", require("./routes/profileImageUpload"));
 
 app.listen(SERVER_PORT, (req, res) => {
     console.log(`The backend service is running on port ${SERVER_PORT} and waiting for requests.`);

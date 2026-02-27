@@ -21,6 +21,7 @@ const newUserSchema = new mongoose.Schema(
     profileImage: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "ProfileImage",
+      required: false,
     },
     date: {
       type: Date,

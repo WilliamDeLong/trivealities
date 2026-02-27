@@ -23,11 +23,18 @@ router.post('/signup', async (req, res) => {
     //parse the generated hash into the password
     const hashPassword = await bcrypt.hash(password, generateHash)
 
+    //asving the default profile image to the user when they sign up
+    const defaultProfileImage = await ProfileImage.create({
+        imageUrl: "/user-icon.png",
+        isDefault: true,
+    });
+
     //creates a new user
     const createUser = new newUserModel({
         username: username,
         email: email,
         password: hashPassword,
+        profileImage: defaultProfileImage._id, // reference the default profile image
     });
 
    
