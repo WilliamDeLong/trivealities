@@ -15,16 +15,15 @@ POST {{baseUrl}}/user/signup
 Content-Type: {{json}}
 
 {
-  "username": "restUser1",
-  "email": "restuser1@example.com",
+  "username": "TrivealitiesRinRin",
+  "email": "TheRealRinRin@example.com",
   "password": "password123"
 }
 
 ### -------------------------------------------------
 ### (2) Grab _id from signup response (your API returns the doc directly)
 ### -------------------------------------------------
-@userId = {{createUser.response.body._id}}
-
+@userId = {{createUser.response.body.$._id}}
 ### -------------------------------------------------
 ### (3) GET a user's level/xp (GET /user/:id/level)
 ### -------------------------------------------------
