@@ -26,8 +26,18 @@ const newUserSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    accountLevel: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    accountXp: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
   },
   { collection: "users" }
 );
 
-module.exports = mongoose.model('users', newUserSchema)
+module.exports = mongoose.models.users || mongoose.model("users", newUserSchema);

@@ -13,6 +13,8 @@ const getAllQuestionsRoute = require('./routes/questionGetAllQuestions')
 const editQuestionRoute = require('./routes/questionEditQuestion')
 const getQuestionByIdRoute = require('./routes/questionGetQuestionById')
 const deleteQuestion = require('./routes/questionDeleteAll')
+const userAddXp = require("./routes/userAddXp");
+const userGetLevels = require("./routes/userGetLevels");
 
 
 require('dotenv').config();
@@ -32,6 +34,8 @@ app.use('/question', getAllQuestionsRoute)
 app.use('/question', editQuestionRoute)
 app.use('/question', getQuestionByIdRoute)
 app.use('/question', deleteQuestion)
+app.use("/user", userAddXp);
+app.use("/user", userGetLevels);
 
 app.listen(SERVER_PORT, (req, res) => {
     console.log(`The backend service is running on port ${SERVER_PORT} and waiting for requests.`);
