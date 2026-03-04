@@ -1,0 +1,45 @@
+@baseUrl = http://localhost:8081
+@userId = 6995f13c64b894511bcd639d
+
+### 1) Signup (creates user + default ProfileImage)
+POST {{baseUrl}}/user/signup
+Content-Type: application/json
+
+{
+  "username": "tochiamanze",
+  "email": "cdon@gmail.com",
+  "password": "tochi12345"
+}
+
+###
+
+### 2) Get user profile (should return populated profileImage with default imageUrl)
+GET {{baseUrl}}/user/{{userId}}
+Accept: application/json
+
+###
+
+### 3) Upload new profile image (multipart/form-data)
+POST {{baseUrl}}/user/{{userId}}/profile-image
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="test.png"
+Content-Type: image/png
+
+< ./user-icon.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+
+### 4) Get user profile again (should now show S3 imageUrl)
+GET {{baseUrl}}/user/{{userId}}
+Accept: application/json
+
+###
+
+### 5) Negative: upload with NO file (should be 400)
+POST {{baseUrl}}/user/{{userId}}/profile-image
+
+###
+
