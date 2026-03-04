@@ -1,5 +1,11 @@
-POST http://localhost:8081/question/create
-Content-Type: application/json 
+
+@baseUrl = http://localhost:8081
+@json = application/json
+
+
+# @name createQuestion1
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
 
 {
     "question" : "This question is false",
@@ -11,8 +17,11 @@ Content-Type: application/json
     "difficulty" : 3
 }
 ###
-POST http://localhost:8081/question/create
-Content-Type: application/json 
+@questionId1 = {{createQuestion1.response.body.$._id}}
+###
+# @name createQuestion2
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
 
 {
     "question" : "Q2Edit",
@@ -23,20 +32,22 @@ Content-Type: application/json
     "category" : 3,
     "difficulty" : 3
 }
+###
+@questionId2 = {{createQuestion2.response.body.$._id}}
 
 ###
 
 ###
-GET http://localhost:8081/question/getAll
+GET {{baseUrl}}/question/getAll
 Content-Type: application/json
 
 ###Input ID for question created by the 2nd "question create"
 
-POST http://localhost:8081/question/editQuestion
-Content-Type: application/json 
+POST {{baseUrl}}/question/editQuestion
+Content-Type: {{json}}
 
 {
-    "questionId" : "699f4517568dff3622bf8174", 
+    "questionId" : "{{questionId2}}", 
     "question" : "QuestionThatWasEdited2",
     "correct_answer" : "NewCorrectAnswer",
     "incorrect_answer1" : "NewIncorrectAnswer",
@@ -47,20 +58,20 @@ Content-Type: application/json
 }
 
 ###Input ID for question created by the 2nd "question create"
-GET  http://localhost:8081/question/getQuestionById
-Content-Type: application/json 
+GET  {{baseUrl}}/question/getQuestionById
+Content-Type: {{json}}
 
 {
-    "questionId" : "699f44ed568dff3622bf8171" 
+    "questionId" : "{{questionId2}}" 
 }
 
 ###Input ID for question created by the 1st "question create"
-GET  http://localhost:8081/question/getQuestionById
-Content-Type: application/json 
+GET  {{baseUrl}}/question/getQuestionById
+Content-Type: {{json}}
 
 {
-    "questionId" : "699f4517568dff3622bf8174" 
+    "questionId" : "{{questionId1}}" 
 }
 
 ###
-POST  http://localhost:8081/question/deleteAll
+POST  {{baseUrl}}/question/deleteAll
