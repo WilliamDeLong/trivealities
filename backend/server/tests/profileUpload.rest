@@ -13,7 +13,7 @@ Content-Type: application/json
 
 ###
 
-### 2) Get user profile (should return populated profileImage with default imageUrl)
+### 2) Get user profile 
 GET {{baseUrl}}/user/{{userId}}
 Accept: application/json
 

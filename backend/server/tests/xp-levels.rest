@@ -15,8 +15,8 @@ POST {{baseUrl}}/user/signup
 Content-Type: {{json}}
 
 {
-  "username": "TrivealitiesRinRin",
-  "email": "TheRealRinRin@example.com",
+  "username": "TrivealitfalfwiesRinRin",
+  "email": "ThlwakfneRealRinRin@example.com",
   "password": "password123"
 }
 
