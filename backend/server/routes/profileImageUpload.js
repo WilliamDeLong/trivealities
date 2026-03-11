@@ -5,7 +5,7 @@ const crypto = require("crypto");
 const path = require("path");
 
 const User = require("../models/userModel");            // adjust if your user model filename differs
-const ProfileImage = require("../models/ProfileImage"); // adjust if your ProfileImage filename differs
+const profileImage = require("../models/profileImage"); // adjust if your ProfileImage filename differs
 
 const { PutObjectCommand } = require("@aws-sdk/client-s3");
 const { s3Client } = require("../utilities/s3-credentials");  // adjust path to your s3-credentials file
@@ -72,7 +72,7 @@ router.post("/:id/profile-image", upload.single("image"), async (req, res) => {
     const imageUrl = `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
 
     // Create ProfileImage doc
-    const imgDoc = await ProfileImage.create({
+    const imgDoc = await profileImage.create({
       imageUrl,
       isDefault: false,
     });

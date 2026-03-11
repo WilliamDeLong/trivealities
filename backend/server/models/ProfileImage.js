@@ -18,4 +18,4 @@ const profileImageSchema = new mongoose.Schema(
   { collection: "profileImages" }
 );
 
-module.exports = mongoose.model("ProfileImage", profileImageSchema);
+module.exports = mongoose.model("profileImage", profileImageSchema);

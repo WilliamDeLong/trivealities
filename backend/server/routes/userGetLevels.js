@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-const User = require("../models/userModel"); // ✅ IMPORTANT
+const newUserModel = require("../models/userModel"); // ✅ IMPORTANT
 
 // GET /user/levels
 router.get("/levels", async (req, res) => {
   try {
-    const users = await User.find({})
+    const users = await newUserModel.find({})
       .select("username accountLevel accountXp")
       .sort({ accountLevel: -1, accountXp: -1 });
 
@@ -26,7 +26,7 @@ router.get("/:id/level", async (req, res) => {
       return res.status(400).json({ message: "Invalid user id" });
     }
 
-    const user = await User.findById(id).select("username accountLevel accountXp");
+    const user = await newUserModel.findById(id).select("username accountLevel accountXp");
     if (!user) return res.status(404).json({ message: "User not found" });
 
     return res.json(user);

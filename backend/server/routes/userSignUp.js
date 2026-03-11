@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const { newUserValidation } = require("../models/userValidator");
 const newUserModel = require("../models/userModel");
-const ProfileImage = require("../models/ProfileImage"); // ✅ add this
+const profileImage = require("../models/profileImage"); // ✅ add this
 
 router.post("/signup", async (req, res) => {
   const { error } = newUserValidation(req.body);
@@ -31,7 +31,7 @@ router.post("/signup", async (req, res) => {
     const hashPassword = await bcrypt.hash(password, salt);
 
     // ✅ Create default profile image doc
-    const defaultProfileImage = await ProfileImage.create({
+    const defaultProfileImage = await profileImage.create({
       imageUrl: "/user-icon.png",
       isDefault: true,
     });

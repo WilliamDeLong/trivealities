@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-const User = require("../models/userModel");
+const newUserModel = require("../models/userModel");
 
-const XP_PER_LEVEL = 100;
+const xp_per_level = 100;
 
 // helps prevent floating point leftovers like 49.9999999997
 const round2 = (n) => Math.round((n + Number.EPSILON) * 100) / 100;
@@ -21,7 +21,7 @@ router.post("/:id/xp", async (req, res) => {
       return res.status(400).json({ message: "XP must be a positive number" });
     }
 
-    const user = await User.findById(id).select("accountLevel accountXp");
+    const user = await newUserModel.findById(id).select("accountLevel accountXp");
     if (!user) return res.status(404).json({ message: "User not found" });
 
     if (typeof user.accountLevel !== "number") user.accountLevel = 0;
@@ -29,10 +29,10 @@ router.post("/:id/xp", async (req, res) => {
 
     user.accountXp = round2(user.accountXp + xpToAdd);
 
-    const levelsGained = Math.floor(user.accountXp / XP_PER_LEVEL);
+    const levelsGained = Math.floor(user.accountXp / xp_per_level);
     user.accountLevel += levelsGained;
 
-    user.accountXp = round2(user.accountXp % XP_PER_LEVEL);
+    user.accountXp = round2(user.accountXp % xp_per_level);
 
     await user.save();
 
@@ -41,7 +41,7 @@ router.post("/:id/xp", async (req, res) => {
       levelsGained,
       accountLevel: user.accountLevel,
       accountXp: user.accountXp,
-      xpNeededForNextLevel: round2(XP_PER_LEVEL - user.accountXp),
+      xpNeededForNextLevel: round2(xp_per_level - user.accountXp),
     });
   } catch (error) {
     console.error(error);

@@ -22,7 +22,7 @@ const newUserSchema = new mongoose.Schema(
     },
     profileImage: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "ProfileImage",
+      ref: "profileImage",
       required: false,
     },
     date: {
