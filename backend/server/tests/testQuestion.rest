@@ -74,4 +74,14 @@ Content-Type: {{json}}
 }
 
 ###
+POST  {{baseUrl}}/question/deleteQID
+Content-Type: {{json}}
+
+{
+    "questionId" : "{{questionId2}}" 
+}
+
+
+
+###
 POST  {{baseUrl}}/question/deleteAll

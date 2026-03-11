@@ -13,9 +13,12 @@ const getAllQuestionsRoute = require('./routes/questionGetAllQuestions')
 const editQuestionRoute = require('./routes/questionEditQuestion')
 const getQuestionByIdRoute = require('./routes/questionGetQuestionById')
 const deleteQuestion = require('./routes/questionDeleteAll')
+const deleteQID = require('./routes/questionDeleteID')
 const userAddXp = require("./routes/userAddXp");
 const userGetLevels = require("./routes/userGetLevels");
+const deleteUID = require("./routes/userDeleteID");
 const profileImageUpload = require("./routes/profileImageUpload");
+const profileImageDeleteID = require("./routes/profileImageDeleteID");
 
 
 require('dotenv').config();
@@ -30,14 +33,18 @@ app.use('/user', getAllUsersRoute)
 app.use('/user', getUserByIdRoute)
 app.use('/user', editUser)
 app.use('/user', deleteUser)
+app.use('/user', deleteUID)
 app.use('/question', newQuestionRoute)
 app.use('/question', getAllQuestionsRoute)
 app.use('/question', editQuestionRoute)
 app.use('/question', getQuestionByIdRoute)
 app.use('/question', deleteQuestion)
-app.use("/user", userAddXp);
-app.use("/user", userGetLevels);
-app.use("/user", profileImageUpload);
+app.use('/question', deleteQID)
+app.use("/user", userAddXp)
+app.use("/user", userGetLevels)
+app.use("/user", profileImageUpload)
+app.use("/user", profileImageDeleteID) // Needs to be tested
+
 
 app.listen(SERVER_PORT, (req, res) => {
     console.log(`The backend service is running on port ${SERVER_PORT} and waiting for requests.`);

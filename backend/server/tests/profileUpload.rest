@@ -43,3 +43,10 @@ POST {{baseUrl}}/user/{{userId}}/profile-image
 
 ###
 
+### Note: Profile ID is the ID of the profile image. 
+POST  http://localhost:8081/user/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69b19b797098075437cca5f3" 
+}

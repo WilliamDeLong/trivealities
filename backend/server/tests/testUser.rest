@@ -2,8 +2,8 @@ POST http://localhost:8081/user/signup
 Content-Type: application/json 
 
 {
-    "username" : "tochiamanze",
-    "email" : "cdon@gmail.com",
+    "username" : "1tochiamanze",
+    "email" : "1cdon@gmail.com",
     "password" : "tochi12345"
 }
 
@@ -13,7 +13,7 @@ POST http://localhost:8081/user/login
 Content-Type: application/json 
 
 {
-    "username" : "tochiamanze",
+    "username" : "1tochiamanze",
     "password" : "tochi12345"
 }
 
@@ -27,9 +27,9 @@ POST http://localhost:8081/user/editUser
 Content-Type: application/json 
 
 {
-    "userId" : "699f409ed981927e9a89865e",
-    "username" : "Tochi Edit",
-    "email" : "cdonEdited@notagmail.com",
+    "userId" : "69b19b797098075437cca5f5",
+    "username" : "1Tochi Edit",
+    "email" : "1cdonEdited@notagmail.com",
     "password" : "dwwrwraaa"
 }
 
@@ -38,7 +38,7 @@ GET  http://localhost:8081/user/getUserById
 Content-Type: application/json 
 
 {
-    "userId" : "699f409ed981927e9a89865e"
+    "userId" : "69b19b797098075437cca5f5"
 }
 
 ###
@@ -47,6 +47,14 @@ Content-Type: application/json
 
 {
     "userId" : "697117139e6a43431cf663cd"
+}
+
+###
+POST  http://localhost:8081/user/deleteUID
+Content-Type: application/json
+
+{
+    "userId" : "69b19b797098075437cca5f5" 
 }
 
 ###
