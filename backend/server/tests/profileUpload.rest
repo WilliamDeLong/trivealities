@@ -44,7 +44,7 @@ POST {{baseUrl}}/user/{{userId}}/profile-image
 ###
 
 ### Note: Profile ID is the ID of the profile image. 
-POST  http://localhost:8081/user/deletePiID
+POST  {{baseUrl}}/user/deletePiID
 Content-Type: application/json
 
 {
