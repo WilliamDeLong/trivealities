@@ -6,6 +6,7 @@ const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const [profileUrl, setProfileUrl] = useState("/user-icon.png"); // default fallback
   const [selectedFile, setSelectedFile] = useState(null);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
   const [status, setStatus] = useState("");
 
   const navigate = useNavigate();
@@ -88,8 +89,10 @@ const ProfilePage = () => {
 
       setSelectedFile(null);
       setStatus("Profile image updated!");
+      setUploadSuccess(true);
     } catch (err) {
       console.error("UPLOAD error:", err);
+      setUploadSuccess(false);
       setStatus("Upload failed (see console).");
     }
   };
@@ -129,14 +132,29 @@ const ProfilePage = () => {
             <input
               type="file"
               accept="image/*"
-              onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+              onChange={(e) => {setSelectedFile(e.target.files?.[0] || null); setUploadSuccess(false);}}
             />
             <button
               onClick={uploadProfileImage}
               disabled={!selectedFile}
-              style={{ marginLeft: 8 }}
+              style={{
+                marginTop: 10,
+                marginLeft: 8,
+                padding: "10px 16px",
+                border: "none",
+                borderRadius: "8px",
+                color: "white",
+                fontWeight: "bold",
+                cursor: !selectedFile ? "not-allowed" : "pointer",
+                backgroundColor: !selectedFile
+                  ? "#22c55e"
+                  : uploadSuccess
+                  ? "#22c55e"
+                  : "#ef4444",
+                transition: "background-color 0.3s ease, transform 0.2s ease",
+              }}
             >
-              Upload New Profile Image
+              {uploadSuccess ? "Upload Successful" : "Upload New Profile Image"}
             </button>
           </div>
 

@@ -4,7 +4,11 @@ const profileImageSchema = new mongoose.Schema(
   {
     imageUrl: {
       type: String,
-      default: "/user-icon.png", // OR "/images/user-icon.png"
+      default: "/user-icon.png",
+    },
+    imageKey: {
+      type: String,
+      default: null,
     },
     isDefault: {
       type: Boolean,

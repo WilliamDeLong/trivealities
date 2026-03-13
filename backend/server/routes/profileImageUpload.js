@@ -1,14 +1,13 @@
-// backend/server/routes/profileImageUpload.js
 const express = require("express");
 const multer = require("multer");
 const crypto = require("crypto");
 const path = require("path");
 
-const User = require("../models/userModel");            // adjust if your user model filename differs
-const profileImage = require("../models/profileImage"); // adjust if your ProfileImage filename differs
+const User = require("../models/userModel");
+const profileImage = require("../models/profileImage");
 
-const { PutObjectCommand } = require("@aws-sdk/client-s3");
-const { s3Client } = require("../utilities/s3-credentials");  // adjust path to your s3-credentials file
+const { PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+const { s3Client } = require("../utilities/s3-credentials");
 
 const router = express.Router();
 
@@ -22,13 +21,16 @@ const upload = multer({
 });
 
 /**
- * GET /users/:id
- * Returns the user with populated profileImage (includes default imageUrl if assigned on signup)
+ * GET /:id
+ * Returns the user with populated profileImage
  */
 router.get("/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id).populate("profileImage");
-    if (!user) return res.status(404).send({ message: "User not found." });
+
+    if (!user) {
+      return res.status(404).send({ message: "User not found." });
+    }
 
     return res.status(200).send({ user });
   } catch (err) {
@@ -37,51 +39,71 @@ router.get("/:id", async (req, res) => {
 });
 
 /**
- * POST /users/:id/profile-image
- * Uploads an image to S3, creates a ProfileImage doc, and links it to the user.
- * Expects multipart/form-data with file field name: "image"
+ * POST /:id/profile-image
+ * Uploads an image to S3, creates a ProfileImage doc, links it to the user,
+ * deletes the old custom image, and keeps the shared default image.
  */
 router.post("/:id/profile-image", upload.single("image"), async (req, res) => {
   try {
-    if (!req.file) return res.status(400).send({ message: "No image uploaded." });
+    if (!req.file) {
+      return res.status(400).send({ message: "No image uploaded." });
+    }
 
     const userId = req.params.id;
 
-    // Ensure user exists
-    const user = await User.findById(userId);
-    if (!user) return res.status(404).send({ message: "User not found." });
+    // Ensure user exists and get current profile image
+    const user = await User.findById(userId).populate("profileImage");
+    if (!user) {
+      return res.status(404).send({ message: "User not found." });
+    }
+
+    const oldProfileImage = user.profileImage;
 
     // Build S3 key: profile-images/<userId>/<random>.<ext>
     const ext = path.extname(req.file.originalname) || "";
     const key = `profile-images/${userId}/${crypto.randomUUID()}${ext}`;
 
     // Upload to S3
-    const command = new PutObjectCommand({
+    const uploadCommand = new PutObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET,
       Key: key,
       Body: req.file.buffer,
       ContentType: req.file.mimetype,
     });
 
-    const data = await s3Client.send(command);
-    if (data?.$metadata?.httpStatusCode !== 200) {
+    const uploadResult = await s3Client.send(uploadCommand);
+
+    if (uploadResult?.$metadata?.httpStatusCode !== 200) {
       return res.status(500).send({ message: "S3 upload failed." });
     }
 
-    // Public URL (works if your bucket/object is readable)
     const imageUrl = `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
 
-    // Create ProfileImage doc
+    // Create new ProfileImage doc
     const imgDoc = await profileImage.create({
       imageUrl,
+      imageKey: key,
       isDefault: false,
     });
 
-    // Link it to user
+    // Update user to new profile image
     user.profileImage = imgDoc._id;
     await user.save();
 
-    // Return updated user with populated profile image
+    // Delete old custom image (never delete shared default image)
+    if (oldProfileImage && !oldProfileImage.isDefault) {
+      if (oldProfileImage.imageKey) {
+        const deleteCommand = new DeleteObjectCommand({
+          Bucket: process.env.AWS_S3_BUCKET,
+          Key: oldProfileImage.imageKey,
+        });
+
+        await s3Client.send(deleteCommand);
+      }
+
+      await profileImage.findByIdAndDelete(oldProfileImage._id);
+    }
+
     const updatedUser = await User.findById(userId).populate("profileImage");
 
     return res.status(200).send({
@@ -89,6 +111,7 @@ router.post("/:id/profile-image", upload.single("image"), async (req, res) => {
       user: updatedUser,
     });
   } catch (err) {
+    console.error("UPLOAD ERROR:", err);
     return res.status(500).send({ message: err.message });
   }
 });

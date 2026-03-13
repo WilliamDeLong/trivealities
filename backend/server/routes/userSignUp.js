@@ -30,13 +30,18 @@ router.post("/signup", async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
 
-    // ✅ Create default profile image doc
-    const defaultProfileImage = await profileImage.create({
-      imageUrl: "/user-icon.png",
-      isDefault: true,
-    });
+    // Create default profile image doc
+    let defaultProfileImage = await profileImage.findOne({ isDefault: true });
 
-    // Create user (✅ attach default profile image)
+    if (!defaultProfileImage) {
+      defaultProfileImage = await profileImage.create({
+        imageUrl: "/user-icon.png",
+        imageKey: null, 
+        isDefault: true,
+      });
+    }
+
+    // Create user with reference to default profile image
     const createUser = new newUserModel({
       username,
       email,
