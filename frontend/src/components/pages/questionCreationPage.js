@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import getUserInfo from "../../utilities/decodeJwt";
-import Container from 'react-bootstrap/Container';
 
 const PRIMARY_COLOR = "#cc5c99";
 const SECONDARY_COLOR = '#0c0c1f'
@@ -30,9 +29,6 @@ const QuestionCreationPage = () => {
     borderStyle: "none",
     color: bgColor,
   };
-  let tbleStyling = {
-    // width: 800,
-  };
 
   const handleChange = ({ currentTarget: input }) => {
     setData({ ...data, [input.name]: input.value });
@@ -57,9 +53,9 @@ const QuestionCreationPage = () => {
     try {
       const { data: res } = await axios.post(url, data);
       console.log(data);
-      const { accessToken } = res;
+      //const { accessToken } = res;
       //store token in localStorage
-      localStorage.setItem("accessToken", accessToken);
+      //localStorage.setItem("accessToken", accessToken);
       navigate("/questionCreate");
     } catch (error) {
       if (
@@ -86,7 +82,8 @@ const QuestionCreationPage = () => {
                   <Form.Label style={labelStyling}>Question Prompt</Form.Label>
                   <Form.Control type="question" name="question" onChange={handleChange} placeholder="Please enter the prompt that will display for the question."/>
                   </Form.Group>
-                <table style={tbleStyling}>
+                <table>
+                  <tbody>
                 <tr>
                 
                 <td width="50%">
@@ -105,7 +102,7 @@ const QuestionCreationPage = () => {
                   </Form.Group>
                   <Form.Group className="mb-3" controlId="formQuestionCategory">
                   <Form.Label style={labelStyling}>Question Category</Form.Label>
-                  <select name="trivia_category" class="form-control">
+                  <select name="trivia_category" className="form-control">
                       <option value="any">Any Category</option>
                       <option value="9">General Knowledge</option>
                       <option value="10">Entertainment: Books</option>
@@ -136,7 +133,7 @@ const QuestionCreationPage = () => {
                 
                 <Form.Group className="mb-3" controlId="formQuestionDifficulty">
                   <Form.Label style={labelStyling}>Question Difficulty</Form.Label>
-                  <select name="difficulty" class="form-control">
+                  <select name="difficulty" className="form-control">
                       <option value="any">Any Difficulty</option>
                       <option value="0">Easy</option>
                       <option value="1">Medium</option>
@@ -184,17 +181,18 @@ const QuestionCreationPage = () => {
                 </Form.Group>
                 </td>
                 </tr>
+                </tbody>
                 </table>
 
                 
-                <div class="form-check form-switch">
+                <div className="form-check form-switch">
                   <input
-                    class="form-check-input"
+                    className="form-check-input"
                     type="checkbox"
                     id="flexSwitchCheckDefault"
                     onChange={() => { setLight(!light) }}
                   />
-                  <label class="form-check-label" for="flexSwitchCheckDefault" className='text-muted'>
+                  <label className="form-check-label text-muted" htmlFor="flexSwitchCheckDefault">
                     {bgText}
                   </label>
                 </div>

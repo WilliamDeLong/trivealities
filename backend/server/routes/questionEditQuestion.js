@@ -3,8 +3,7 @@ const router = express.Router();
 const z = require('zod')
 const bcrypt = require("bcrypt");
 const newQuestionModel = require("../models/questionModel");
-//const { newUserValidation } = require('../models/userValidator');
-const { generateAccessToken } = require('../utilities/generateToken');
+//const { generateAccessToken } = require('../utilities/generateToken');
 
 router.post('/editQuestion', async (req, res) =>
 {
@@ -23,7 +22,7 @@ router.post('/editQuestion', async (req, res) =>
     const hashCorrect_Answer = await bcrypt.hash(correct_answer, generateHash)
 
     // find and update question using stored information
-    newQuestionModel.findByIdAndUpdate(questionId, {
+    query_data = {
         question : question, 
         correct_answer : hashCorrect_Answer, 
         incorrect_answer1: incorrect_answer1,
@@ -31,13 +30,13 @@ router.post('/editQuestion', async (req, res) =>
 		incorrect_answer3: incorrect_answer3,
         category: category,
         difficulty: difficulty,
-    } ,function (err, ques) {
+    };
+    newQuestionModel.findByIdAndUpdate(questionId, query_data ,function (err, ques) {
     if (err){
         console.log(err);
     } else {
         // create and send new access token to local storage
-        const accessToken = generateAccessToken(ques._id, question, hashCorrect_Answer, incorrect_answer1, incorrect_answer2, incorrect_answer3, category, difficulty)  
-        res.header('Authorization', accessToken).send({ accessToken: accessToken })
+        res.send(query_data)
     }
     });
 
