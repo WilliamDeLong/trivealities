@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import getUserInfo from "../../utilities/decodeJwt";
-import Container from 'react-bootstrap/Container';
 
 const PRIMARY_COLOR = "#cc5c99";
 const SECONDARY_COLOR = '#0c0c1f'
@@ -30,9 +29,6 @@ const QuestionCreationPage = () => {
     borderStyle: "none",
     color: bgColor,
   };
-  let tbleStyling = {
-    // width: 800,
-  };
 
   const handleChange = ({ currentTarget: input }) => {
     setData({ ...data, [input.name]: input.value });
@@ -57,9 +53,9 @@ const QuestionCreationPage = () => {
     try {
       const { data: res } = await axios.post(url, data);
       console.log(data);
-      const { accessToken } = res;
+      //const { accessToken } = res;
       //store token in localStorage
-      localStorage.setItem("accessToken", accessToken);
+      //localStorage.setItem("accessToken", accessToken);
       navigate("/questionCreate");
     } catch (error) {
       if (
@@ -86,7 +82,7 @@ const QuestionCreationPage = () => {
                   <Form.Label style={labelStyling}>Question Prompt</Form.Label>
                   <Form.Control type="question" name="question" onChange={handleChange} placeholder="Please enter the prompt that will display for the question."/>
                   </Form.Group>
-                <table style={tbleStyling}>
+                <table>
                 <tr>
                 
                 <td width="50%">
