@@ -12,7 +12,7 @@ const url = `${process.env.REACT_APP_BACKEND_SERVER_URI}/question/create`;
 
 const QuestionCreationPage = () => {
   const [user, setUser] = useState(null)
-  const [data, setData] = useState({ questionPrompt: "", correctAnswer: "", incorrectAnswer1: "", incorrectAnswer2: "", incorrectAnswer3: "", category: 0, difficulty: 0});
+  const [data, setData] = useState({ question: "", correct_answer: "", incorrect_answer1: "", incorrect_answer2: "", incorrect_answer3: "", category: 0, difficulty: 0});
   const [error, setError] = useState("");
   const [light, setLight] = useState(false);
   const [bgColor, setBgColor] = useState(SECONDARY_COLOR);
@@ -31,7 +31,7 @@ const QuestionCreationPage = () => {
     color: bgColor,
   };
   let tbleStyling = {
-    width: 800,
+    // width: 800,
   };
 
   const handleChange = ({ currentTarget: input }) => {
@@ -56,6 +56,7 @@ const QuestionCreationPage = () => {
     e.preventDefault();
     try {
       const { data: res } = await axios.post(url, data);
+      console.log(data);
       const { accessToken } = res;
       //store token in localStorage
       localStorage.setItem("accessToken", accessToken);
@@ -83,20 +84,20 @@ const QuestionCreationPage = () => {
               <Form>
                 <Form.Group className="mb-3" controlId="formBasicPrompt">
                   <Form.Label style={labelStyling}>Question Prompt</Form.Label>
-                  <Form.Control type="questionPrompt" name="questionPrompt" onChange={handleChange} placeholder="Please enter the prompt that will display for the question."/>
+                  <Form.Control type="question" name="question" onChange={handleChange} placeholder="Please enter the prompt that will display for the question."/>
                   </Form.Group>
                 <table style={tbleStyling}>
                 <tr>
                 
-                <td>
+                <td width="50%">
                   <Form.Group className="mb-3" controlId="formBasicAnswer">
                     <Form.Label style={labelStyling}>Correct Answer</Form.Label>
                     <br></br><Form.Text className="text-muted">
-                      Insert the correct answer to the question, there will only be one correct answer.
+                      This is the correct answer to the question, there will only be one correct answer.
                     </Form.Text>
                     <Form.Control
-                      type="correctAnswer"
-                      name="correctAnswer"
+                      type="correct_answer"
+                      name="correct_answer"
                       placeholder="Insert correct answer here."
                       onChange={handleChange}
                     />
@@ -151,12 +152,11 @@ const QuestionCreationPage = () => {
                   <Form.Label style={labelStyling}>Incorrect Answer 1</Form.Label>
                   <br></br>
                   <Form.Text className="text-muted">
-                    This is where you put the answers that are incorrect, but will still show up in the question.
-                    Try to play some mindgames.
+                    This is where you put the incorrect answers, try to play some mindgames.
                   </Form.Text>
                   <Form.Control
-                    type="incorrectAnswer1"
-                    name="incorrectAnswer1"
+                    type="incorrect_answer1"
+                    name="incorrect_answer1"
                     placeholder="Insert first incorrect answer here."
                     onChange={handleChange}
                   />
@@ -166,8 +166,8 @@ const QuestionCreationPage = () => {
                 <Form.Group className="mb-3" controlId="formBasicWrongAnswer2">
                   <Form.Label style={labelStyling}>Incorrect Answer 2</Form.Label>
                   <Form.Control
-                    type="incorrectAnswer2"
-                    name="incorrectAnswer2"
+                    type="incorrect_answer2"
+                    name="incorrect_answer2"
                     placeholder="Insert second incorrect answer here."
                     onChange={handleChange}
                   />
@@ -176,8 +176,8 @@ const QuestionCreationPage = () => {
                 <Form.Group className="mb-3" controlId="formBasicWrongAnswer3">
                   <Form.Label style={labelStyling}>Incorrect Answer 3</Form.Label>
                   <Form.Control
-                    type="incorrectAnswer3"
-                    name="incorrectAnswer3"
+                    type="incorrect_answer3"
+                    name="incorrect_answer3"
                     placeholder="Insert third incorrect answer here."
                     onChange={handleChange}
                   />
@@ -186,15 +186,7 @@ const QuestionCreationPage = () => {
                 </tr>
                 </table>
 
-                <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                  <Form.Text className="text-muted pt-1">
-                    Dont have an account?
-                    <span>
-                      <Link to="/signup" style={labelStyling}> Sign up
-                      </Link>
-                    </span>
-                  </Form.Text>
-                </Form.Group>
+                
                 <div class="form-check form-switch">
                   <input
                     class="form-check-input"
@@ -214,7 +206,7 @@ const QuestionCreationPage = () => {
                   style={buttonStyling}
                   className='mt-2'
                 >
-                  Log In
+                  Submit question
                 </Button>
               </Form>
             </div>
