@@ -1,0 +1,38 @@
+### Get default questions (10)
+GET http://localhost:8081/api/questions
+
+
+### Get 20 random questions
+GET http://localhost:8081/api/questions?amount=20
+
+
+### Get 51 random questions (max allowed is 50, so should return an error)
+GET http://localhost:8081/api/questions?amount=1000
+
+
+### Get easy questions
+GET http://localhost:8081/api/questions?difficulty=easy
+
+
+### Get medium boolean (true/false) questions
+GET http://localhost:8081/api/questions?difficulty=medium&type=boolean
+
+
+### Get hard multiple choice questions
+GET http://localhost:8081/api/questions?difficulty=hard&type=multiple
+
+
+### Get questions from category 9 (General Knowledge)
+GET http://localhost:8081/api/questions?category=9
+
+
+### Get 15 hard science questions (category 17)
+GET http://localhost:8081/api/questions?amount=15&difficulty=hard&category=17
+
+
+### Get 10 boolean sports questions (category 21)
+GET http://localhost:8081/api/questions?amount=10&type=boolean&category=21
+
+
+### Get 25 mixed difficulty questions from category 18 (Computers)
+GET http://localhost:8081/api/questions?amount=25&category=18

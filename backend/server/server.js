@@ -19,7 +19,7 @@ const userGetLevels = require("./routes/userGetLevels");
 const deleteUID = require("./routes/userDeleteID");
 const profileImageUpload = require("./routes/profileImageUpload");
 const profileImageDeleteID = require("./routes/profileImageDeleteID");
-
+const openTriviaDBquestionGetter = require("./routes/openTriviaDBquestionGetter");
 
 require('dotenv').config();
 const SERVER_PORT = 8081
@@ -27,6 +27,7 @@ const SERVER_PORT = 8081
 dbConnection()
 app.use(cors({origin: '*'}))
 app.use(express.json())
+app.use("/api", openTriviaDBquestionGetter);
 app.use('/user', loginRoute)
 app.use('/user', registerRoute)
 app.use('/user', getAllUsersRoute)
