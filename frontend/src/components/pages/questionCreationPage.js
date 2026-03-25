@@ -56,6 +56,7 @@ const QuestionCreationPage = () => {
       //const { accessToken } = res;
       //store token in localStorage
       //localStorage.setItem("accessToken", accessToken);
+      console.log("Help");
       navigate("/questionCreate");
     } catch (error) {
       if (
@@ -81,7 +82,7 @@ const QuestionCreationPage = () => {
                 <Form.Group className="mb-3" controlId="formBasicPrompt">
                   <Form.Label style={labelStyling}>Question Prompt</Form.Label>
                   <Form.Control type="question" name="question" onChange={handleChange} placeholder="Please enter the prompt that will display for the question."/>
-                  </Form.Group>
+                </Form.Group>
                 <table>
                   <tbody>
                 <tr>
