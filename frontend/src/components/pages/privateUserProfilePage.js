@@ -31,10 +31,10 @@ const PrivateUserProfile = () => {
   // <span><b>{<FollowingCount username = {username}/>}</b></span>;
   if (!user) return (<div><h4>Log in to view this page.</h4></div>)
   return (
-    <div class="container">
-      <div class="col-md-12 text-center">
+    <div className="container">
+      <div className="col-md-12 text-center">
         <h1>{user && user.username}</h1>
-        <div class="col-md-12 text-center">
+        <div className="col-md-12 text-center">
           <>
             <Button className="me-2" onClick={handleShow}>
               Log Out
