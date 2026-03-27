@@ -3,14 +3,19 @@
     flex-direction: column;
     gap: 20px;
     max-width: 400px;
-    margin: 0 auto;
+    margin: 10px auto;
 }
 
 .card {
     background-color: #f8f9fa;
-    padding: 20px;
+    margin: 20px;
+    padding: 10px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
 }
 
 .card h3 {
@@ -19,6 +24,5 @@
 
 .card p {
     margin: 0;
-    font-weight: bold;
     color: #333;
 }
