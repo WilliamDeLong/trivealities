@@ -8,10 +8,11 @@ import getUserInfo from "../../utilities/decodeJwt";
 const PRIMARY_COLOR = "#cc5c99";
 const SECONDARY_COLOR = '#0c0c1f'
 const url = `${process.env.REACT_APP_BACKEND_SERVER_URI}/question/create`;
+const data_default = { question: "", correct_answer: "", incorrect_answer1: "", incorrect_answer2: "", incorrect_answer3: "", category: 0, difficulty: 0};
 
 const QuestionCreationPage = () => {
   const [user, setUser] = useState(null)
-  const [data, setData] = useState({ question: "", correct_answer: "", incorrect_answer1: "", incorrect_answer2: "", incorrect_answer3: "", category: 0, difficulty: 0});
+  const [data, setData] = useState(data_default);
   const [error, setError] = useState("");
   const [light, setLight] = useState(false);
   const [bgColor, setBgColor] = useState(SECONDARY_COLOR);
@@ -31,7 +32,12 @@ const QuestionCreationPage = () => {
   };
 
   const handleChange = ({ currentTarget: input }) => {
+    //console.log(input.name);
+    console.log(input.name+":",input.value);
+    //const ques = newQuestionModel.findOne({ question: input.value });
+    //console.log(ques);
     setData({ ...data, [input.name]: input.value });
+    //console.log(data);
   };
 
   useEffect(() => {
@@ -51,13 +57,17 @@ const QuestionCreationPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log(data);
       const { data: res } = await axios.post(url, data);
       console.log(data);
       //const { accessToken } = res;
       //store token in localStorage
       //localStorage.setItem("accessToken", accessToken);
-      console.log("Help");
-      navigate("/questionCreate");
+      const inputField = document.getElementById("form"); 
+      inputField.reset(); // This resets the prompts so that the page doesn't have to be reloaded to create a new question
+      setData(data_default); // This resets the values for all of the prompts
+      //console.log(data); // This 
+      setError(""); // This resets the error pop-up so it doesn't stick around and bother me
     } catch (error) {
       if (
         error.response &&
@@ -67,6 +77,7 @@ const QuestionCreationPage = () => {
         setError(error.response.data.message);
       }
     }
+    
   };
 
 
@@ -78,7 +89,7 @@ const QuestionCreationPage = () => {
             className="row d-flex justify-content-center h-100 "
             style={backgroundStyling}>
             <div className="col-xl-8 offset-xl-0">
-              <Form>
+              <Form id='form'>
                 <Form.Group className="mb-3" controlId="formBasicPrompt">
                   <Form.Label style={labelStyling}>Question Prompt</Form.Label>
                   <Form.Control type="question" name="question" onChange={handleChange} placeholder="Please enter the prompt that will display for the question."/>
@@ -88,7 +99,7 @@ const QuestionCreationPage = () => {
                 <tr>
                 
                 <td width="50%">
-                  <Form.Group className="mb-3" controlId="formBasicAnswer">
+                <Form.Group className="mb-3" controlId="formBasicAnswer">
                     <Form.Label style={labelStyling}>Correct Answer</Form.Label>
                     <br></br><Form.Text className="text-muted">
                       This is the correct answer to the question, there will only be one correct answer.
@@ -101,9 +112,9 @@ const QuestionCreationPage = () => {
                     />
                     
                   </Form.Group>
-                  <Form.Group className="mb-3" controlId="formQuestionCategory">
+                <Form.Group className="mb-3" controlId="formQuestionCategory">
                   <Form.Label style={labelStyling}>Question Category</Form.Label>
-                  <select name="trivia_category" className="form-control">
+                  <select name="category" id="formQuestionCategory" className="form-control" onChange={handleChange}>
                       <option value="any">Any Category</option>
                       <option value="9">General Knowledge</option>
                       <option value="10">Entertainment: Books</option>
@@ -134,7 +145,7 @@ const QuestionCreationPage = () => {
                 
                 <Form.Group className="mb-3" controlId="formQuestionDifficulty">
                   <Form.Label style={labelStyling}>Question Difficulty</Form.Label>
-                  <select name="difficulty" className="form-control">
+                  <select name="difficulty" id="formQuestionDifficulty" className="form-control" onChange={handleChange}>
                       <option value="any">Any Difficulty</option>
                       <option value="0">Easy</option>
                       <option value="1">Medium</option>
@@ -204,7 +215,15 @@ const QuestionCreationPage = () => {
                   onClick={handleSubmit}
                   style={buttonStyling}
                   className='mt-2'
-                >
+                  disabled = { // Disables the button's functions if options are not filled in
+                    data['question'].length ===0 || 
+                    data['correct_answer'].length ===0 || 
+                    data['incorrect_answer1'].length ===0 || 
+                    data['incorrect_answer2'].length ===0 || 
+                    data['incorrect_answer3'].length ===0 || 
+                    data['category'] ==='any' || 
+                    data['difficulty'] ==='any'
+                  }>
                   Submit question
                 </Button>
               </Form>

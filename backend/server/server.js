@@ -14,6 +14,7 @@ const editQuestionRoute = require('./routes/questionEditQuestion')
 const getQuestionByIdRoute = require('./routes/questionGetQuestionById')
 const deleteQuestion = require('./routes/questionDeleteAll')
 const deleteQID = require('./routes/questionDeleteID')
+const getQuestionByQuestionRoute = require('./routes/questionGetQuestionByQuestion')
 const userAddXp = require("./routes/userAddXp");
 const userGetLevels = require("./routes/userGetLevels");
 const deleteUID = require("./routes/userDeleteID");
@@ -39,6 +40,7 @@ app.use('/question', newQuestionRoute)
 app.use('/question', getAllQuestionsRoute)
 app.use('/question', editQuestionRoute)
 app.use('/question', getQuestionByIdRoute)
+app.use('/question', getQuestionByQuestionRoute)
 app.use('/question', deleteQuestion)
 app.use('/question', deleteQID)
 app.use("/user", userAddXp)

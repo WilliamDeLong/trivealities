@@ -13,8 +13,8 @@ router.post('/create', async (req, res) => {
     const { question, correct_answer, incorrect_answer1, incorrect_answer2, incorrect_answer3, category, difficulty } = req.body
 
     //check if email already exists
-    const user = await newQuestionModel.findOne({ question: question })
-    if (user)
+    const ques = await newQuestionModel.findOne({ question: question })
+    if (ques)
         return res.status(409).send({ message: "There is already a question with that wording in the database. Please create a new one." })
 
     //generates the hash
