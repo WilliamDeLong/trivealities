@@ -20,6 +20,8 @@ const deleteUID = require("./routes/userDeleteID");
 const profileImageUpload = require("./routes/profileImageUpload");
 const profileImageDeleteID = require("./routes/profileImageDeleteID");
 const openTriviaDBquestionGetter = require("./routes/openTriviaDBquestionGetter");
+const userUpdatePassword = require("./routes/userUpdatePassword");
+const userDeleteAccount = require("./routes/userDeleteAccount");
 
 require('dotenv').config();
 const SERVER_PORT = 8081
@@ -45,6 +47,8 @@ app.use("/user", userAddXp)
 app.use("/user", userGetLevels)
 app.use("/user", profileImageUpload)
 app.use("/user", profileImageDeleteID) // Needs to be tested
+app.use("/user", userUpdatePassword);
+app.use("/user", userDeleteAccount);
 
 
 app.listen(SERVER_PORT, (req, res) => {

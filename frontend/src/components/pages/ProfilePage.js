@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import getUserInfo from "../../utilities/decodeJwt";
 
+
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const [profileUrl, setProfileUrl] = useState("/user-icon.png"); // default fallback
@@ -88,8 +89,8 @@ const ProfilePage = () => {
       if (newUrl) setProfileUrl(newUrl);
 
       setSelectedFile(null);
-      setStatus("Profile image updated!");
       setUploadSuccess(true);
+      setStatus("Profile image updated!");
     } catch (err) {
       console.error("UPLOAD error:", err);
       setUploadSuccess(false);
@@ -110,8 +111,18 @@ const ProfilePage = () => {
   return (
     <>
       <div className="card-container">
-        <div className="card">
-          <h3>Welcome</h3>
+        <div className="card" 
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center", 
+          textAlign: "center",
+        }}>
+          <div style= {{ fontWeight: "bold"}}>
+            <p>Welcome back,</p>
+          </div>
+          <h2 className="username" style={{color: "#00d0ff",}}>{username}</h2>
 
           <img
             src={profileUrl}
@@ -126,53 +137,57 @@ const ProfilePage = () => {
             onError={() => setProfileUrl("/user-icon.png")}
           />
 
-          <p className="username">{username}</p>
-
           <div style={{ marginTop: 12 }}>
             <input
               type="file"
               accept="image/*"
               onChange={(e) => {setSelectedFile(e.target.files?.[0] || null); setUploadSuccess(false);}}
             />
-            <button
-              onClick={uploadProfileImage}
-              disabled={!selectedFile}
-              style={{
-                marginTop: 10,
-                marginLeft: 8,
-                padding: "10px 16px",
-                border: "none",
-                borderRadius: "8px",
-                color: "white",
-                fontWeight: "bold",
-                cursor: !selectedFile ? "not-allowed" : "pointer",
-                backgroundColor: !selectedFile
-                  ? "#22c55e"
-                  : uploadSuccess
-                  ? "#22c55e"
-                  : "#ef4444",
-                transition: "background-color 0.3s ease, transform 0.2s ease",
-              }}
-            >
-              {uploadSuccess ? "Upload Successful" : "Upload New Profile Image"}
-            </button>
+            {selectedFile && (
+              <button
+                onClick={uploadProfileImage}
+                style={{
+                  marginTop: 10,
+                  padding: "10px 16px",
+                  border: "none",
+                  borderRadius: "8px",
+                  color: "white",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                  backgroundColor: uploadSuccess ? "#22c55e" : "#22c55e",
+                  transition: "background-color 0.3s ease, transform 0.2s ease",
+                }}
+              >
+                {uploadSuccess ? "Upload Successful" : "Upload New Profile Image"}
+              </button>
+            )}
+          </div>
+          
+          <div className = "card" >
+            <p style = {{ fontWeight: "bold" }}>Profile details:</p>
+            <p className="username">Username: {username}</p>
+            <p className="email">email: {email}</p>
+            <p className="id">User ID: {id}</p>
           </div>
 
           {status && <p style={{ marginTop: 10 }}>{status}</p>}
+          <button onClick={handleLogout} 
+            style={{ 
+              backgroundColor: "#ef4444", 
+              color: "white", 
+              border: "none",  
+              cursor: "pointer", 
+              margin: "10px",
+              padding: "5px 15px",
+              borderRadius: "8px",
+            }}>
+            Log Out
+          </button>
         </div>
-
-        <div className="card">
-          <h3>Your userId in MongoDB is</h3>
-          <p className="userId">{id}</p>
-        </div>
-
-        <div className="card">
-          <h3>Your email is</h3>
-          <p className="email">{email}</p>
-        </div>
+      
       </div>
 
-      <button onClick={handleLogout}>Log Out</button>
+      
     </>
   );
 };
