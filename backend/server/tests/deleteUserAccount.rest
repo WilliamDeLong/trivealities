@@ -1,0 +1,22 @@
+@baseUrl = http://localhost:8081
+@userId = Your_Id_Here
+
+### Delete account with password confirmation
+DELETE {{baseUrl}}/user/{{userId}}/delete-account
+Content-Type: application/json
+
+{
+  "password": "newpass123"
+}
+
+###
+### Try logging in with the deleted account (should fail)
+### Delete account with wrong password
+DELETE {{baseUrl}}/user/{{userId}}
+Content-Type: application/json
+
+{
+  "password": "wrongpassword"
+}
+
+###

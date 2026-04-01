@@ -4,21 +4,27 @@ import getUserInfo from "../../utilities/decodeJwt";
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
-  const [profileUrl, setProfileUrl] = useState("/user-icon.png"); // default fallback
+  const [profileUrl, setProfileUrl] = useState("/user-icon.png");
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [status, setStatus] = useState("");
 
-  const navigate = useNavigate();
+  const [showPasswordDropdown, setShowPasswordDropdown] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordStatus, setPasswordStatus] = useState("");
 
-  // Your server.js mounts profileImageUpload at "/"
-  // So endpoints are:
-  // GET  http://localhost:8081/users/:id
-  // POST http://localhost:8081/users/:id/profile-image
+  const [showDeleteDropdown, setShowDeleteDropdown] = useState(false);
+  const [deletePassword, setDeletePassword] = useState("");
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleteStatus, setDeleteStatus] = useState("");
+
+  const navigate = useNavigate();
   const API_BASE = "http://localhost:8081";
 
   const handleLogout = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     localStorage.removeItem("accessToken");
     navigate("/");
   };
@@ -34,8 +40,8 @@ const ProfilePage = () => {
           console.log("GET profile failed:", res.status, await res.text());
           return;
         }
-        const data = await res.json();
 
+        const data = await res.json();
         const url = data?.user?.profileImage?.imageUrl;
         if (url) setProfileUrl(url);
       } catch (err) {
@@ -50,29 +56,22 @@ const ProfilePage = () => {
     try {
       setStatus("");
 
-      console.log("Selected file:", selectedFile);
       if (!selectedFile || !user?.id) {
         setStatus("No file selected.");
         return;
       }
 
-      // IMPORTANT: key must be "image" to match upload.single("image") on backend
       const formData = new FormData();
       formData.append("image", selectedFile);
 
-      // IMPORTANT: do NOT set Content-Type header manually for FormData
       const res = await fetch(`${API_BASE}/user/${user.id}/profile-image`, {
-         method: "POST", 
-         body: formData 
-        });
+        method: "POST",
+        body: formData,
+      });
 
-      console.log("UPLOAD STATUS:", res.status);
-
-      // Read as text first so you can see errors even if JSON parsing fails
       const bodyText = await res.text();
-      console.log("UPLOAD BODY:", bodyText);
-
       let data;
+
       try {
         data = JSON.parse(bodyText);
       } catch {
@@ -80,7 +79,7 @@ const ProfilePage = () => {
       }
 
       if (!res.ok) {
-        setStatus((data && data.message) || "Upload failed (see console).");
+        setStatus((data && data.message) || "Upload failed.");
         return;
       }
 
@@ -88,13 +87,153 @@ const ProfilePage = () => {
       if (newUrl) setProfileUrl(newUrl);
 
       setSelectedFile(null);
-      setStatus("Profile image updated!");
       setUploadSuccess(true);
+      setStatus("Profile image updated!");
     } catch (err) {
       console.error("UPLOAD error:", err);
       setUploadSuccess(false);
-      setStatus("Upload failed (see console).");
+      setStatus("Upload failed.");
     }
+  };
+
+  const updatePassword = async () => {
+    try {
+      setPasswordStatus("");
+
+      if (!currentPassword || !newPassword || !confirmPassword) {
+        setPasswordStatus("All password fields are required.");
+        return;
+      }
+
+      const res = await fetch(`${API_BASE}/user/${user.id}/password`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          currentPassword,
+          newPassword,
+          confirmPassword,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setPasswordStatus(data.message || "Password update failed.");
+        return;
+      }
+
+      setPasswordStatus("Password updated successfully. Logging out...");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+
+      setTimeout(() => {
+        handleLogout();
+      }, 1500);
+    } catch (err) {
+      console.error("PASSWORD UPDATE ERROR:", err);
+      setPasswordStatus("Password update failed.");
+    }
+  };
+
+  const deleteAccount = async () => {
+    try {
+      setDeleteStatus("");
+
+      if (!deletePassword) {
+        setDeleteStatus("Password is required.");
+        return;
+      }
+
+      if (!confirmDelete) {
+        setDeleteStatus("Please confirm account deletion.");
+        return;
+      }
+
+      const res = await fetch(`${API_BASE}/user/${user.id}/delete-account`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          password: deletePassword,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setDeleteStatus(data.message || "Account deletion failed.");
+        return;
+      }
+
+      setDeleteStatus("Account deleted successfully. Logging out...");
+
+      setTimeout(() => {
+        handleLogout();
+      }, 1500);
+    } catch (err) {
+      console.error("DELETE ACCOUNT ERROR:", err);
+      setDeleteStatus("Account deletion failed.");
+    }
+  };
+
+  const togglePasswordDropdown = () => {
+    setShowPasswordDropdown((prev) => !prev);
+    setShowDeleteDropdown(false);
+    setDeleteStatus("");
+    setDeletePassword("");
+    setConfirmDelete(false);
+  };
+
+  const toggleDeleteDropdown = () => {
+    setShowDeleteDropdown((prev) => !prev);
+    setShowPasswordDropdown(false);
+    setPasswordStatus("");
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+  };
+
+  const dropdownTriggerStyle = {
+    width: "100%",
+    maxWidth: "320px",
+    margin: "0 auto",
+    padding: "12px 16px",
+    borderRadius: "999px",
+    border: "2px solid #a78bfa",
+    backgroundColor: "#ffffff",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    cursor: "pointer",
+    boxSizing: "border-box",
+  };
+
+  const dropdownLeftStyle = {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    fontWeight: "500",
+    color: "#222",
+  };
+
+  const dropdownDotStyle = {
+    width: "8px",
+    height: "8px",
+    borderRadius: "50%",
+    backgroundColor: "#22c55e",
+    display: "inline-block",
+  };
+
+  const dropdownPanelStyle = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+    alignItems: "center",
+    marginTop: 12,
   };
 
   if (!user) {
@@ -110,8 +249,23 @@ const ProfilePage = () => {
   return (
     <>
       <div className="card-container">
-        <div className="card">
-          <h3>Welcome</h3>
+        <div
+          className="card"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+          }}
+        >
+          <div style={{ fontWeight: "bold" }}>
+            <p>Welcome back,</p>
+          </div>
+
+          <h2 className="username" style={{ color: "#00d0ff" }}>
+            {username}
+          </h2>
 
           <img
             src={profileUrl}
@@ -126,53 +280,206 @@ const ProfilePage = () => {
             onError={() => setProfileUrl("/user-icon.png")}
           />
 
-          <p className="username">{username}</p>
-
           <div style={{ marginTop: 12 }}>
             <input
               type="file"
               accept="image/*"
-              onChange={(e) => {setSelectedFile(e.target.files?.[0] || null); setUploadSuccess(false);}}
-            />
-            <button
-              onClick={uploadProfileImage}
-              disabled={!selectedFile}
-              style={{
-                marginTop: 10,
-                marginLeft: 8,
-                padding: "10px 16px",
-                border: "none",
-                borderRadius: "8px",
-                color: "white",
-                fontWeight: "bold",
-                cursor: !selectedFile ? "not-allowed" : "pointer",
-                backgroundColor: !selectedFile
-                  ? "#22c55e"
-                  : uploadSuccess
-                  ? "#22c55e"
-                  : "#ef4444",
-                transition: "background-color 0.3s ease, transform 0.2s ease",
+              onChange={(e) => {
+                setSelectedFile(e.target.files?.[0] || null);
+                setUploadSuccess(false);
               }}
-            >
-              {uploadSuccess ? "Upload Successful" : "Upload New Profile Image"}
-            </button>
+            />
+
+            {selectedFile && (
+              <button
+                onClick={uploadProfileImage}
+                style={{
+                  marginTop: 10,
+                  padding: "10px 16px",
+                  border: "none",
+                  borderRadius: "8px",
+                  color: "white",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                  backgroundColor: "#22c55e",
+                  transition: "background-color 0.3s ease, transform 0.2s ease",
+                }}
+              >
+                {uploadSuccess ? "Upload Successful" : "Upload New Profile Image"}
+              </button>
+            )}
           </div>
 
           {status && <p style={{ marginTop: 10 }}>{status}</p>}
-        </div>
 
-        <div className="card">
-          <h3>Your userId in MongoDB is</h3>
-          <p className="userId">{id}</p>
-        </div>
+          <div className="card">
+            <p style={{ fontWeight: "bold" }}>Profile details:</p>
+            <p className="username">Username: {username}</p>
+            <p className="email">Email: {email}</p>
+            <p className="id">User ID: {id}</p>
+          </div>
 
-        <div className="card">
-          <h3>Your email is</h3>
-          <p className="email">{email}</p>
+          <div style={{ width: "100%", marginTop: 15 }}>
+            <button onClick={togglePasswordDropdown} style={dropdownTriggerStyle}>
+              <span style={dropdownLeftStyle}>
+                <span style={dropdownDotStyle}></span>
+                {showPasswordDropdown ? "Hide Password Update" : "Update Password"}
+              </span>
+              <span
+                style={{
+                  fontSize: "16px",
+                  color: "#555",
+                  transform: showPasswordDropdown ? "rotate(180deg)" : "rotate(0deg)",
+                  transition: "transform 0.2s ease",
+                }}
+              >
+                ▼
+              </span>
+            </button>
+
+            {showPasswordDropdown && (
+              <div style={dropdownPanelStyle}>
+                <input
+                  type="password"
+                  placeholder="Current password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  style={{
+                    padding: "8px",
+                    borderRadius: "8px",
+                    border: "1px solid #ccc",
+                    width: "250px",
+                  }}
+                />
+
+                <input
+                  type="password"
+                  placeholder="New password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  style={{
+                    padding: "8px",
+                    borderRadius: "8px",
+                    border: "1px solid #ccc",
+                    width: "250px",
+                  }}
+                />
+
+                <input
+                  type="password"
+                  placeholder="Confirm new password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  style={{
+                    padding: "8px",
+                    borderRadius: "8px",
+                    border: "1px solid #ccc",
+                    width: "250px",
+                  }}
+                />
+
+                <button
+                  onClick={updatePassword}
+                  style={{
+                    backgroundColor: "#10b981",
+                    color: "white",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: "8px 14px",
+                    borderRadius: "8px",
+                  }}
+                >
+                  Update Password
+                </button>
+
+                {passwordStatus && <p style={{ marginTop: 5 }}>{passwordStatus}</p>}
+              </div>
+            )}
+          </div>
+
+          <div style={{ width: "100%", marginTop: 15 }}>
+            <button onClick={toggleDeleteDropdown} style={dropdownTriggerStyle}>
+              <span style={dropdownLeftStyle}>
+                <span style={dropdownDotStyle}></span>
+                {showDeleteDropdown ? "Hide Delete Account" : "Delete Account"}
+              </span>
+              <span
+                style={{
+                  fontSize: "16px",
+                  color: "#555",
+                  transform: showDeleteDropdown ? "rotate(180deg)" : "rotate(0deg)",
+                  transition: "transform 0.2s ease",
+                }}
+              >
+                ▼
+              </span>
+            </button>
+
+            {showDeleteDropdown && (
+              <div style={dropdownPanelStyle}>
+                <input
+                  type="password"
+                  placeholder="Enter password to confirm"
+                  value={deletePassword}
+                  onChange={(e) => setDeletePassword(e.target.value)}
+                  style={{
+                    padding: "8px",
+                    borderRadius: "8px",
+                    border: "1px solid #ccc",
+                    width: "250px",
+                  }}
+                />
+
+                <label
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={confirmDelete}
+                    onChange={(e) => setConfirmDelete(e.target.checked)}
+                  />
+                  I understand this action cannot be undone
+                </label>
+
+                <button
+                  onClick={deleteAccount}
+                  style={{
+                    backgroundColor: "#b91c1c",
+                    color: "white",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: "8px 14px",
+                    borderRadius: "8px",
+                  }}
+                >
+                  Confirm Delete Account
+                </button>
+
+                {deleteStatus && <p style={{ marginTop: 5 }}>{deleteStatus}</p>}
+              </div>
+            )}
+          </div>
+
+          <button
+            onClick={handleLogout}
+            style={{
+              backgroundColor: "#ef4444",
+              color: "white",
+              border: "none",
+              cursor: "pointer",
+              margin: "10px",
+              padding: "5px 15px",
+              borderRadius: "8px",
+            }}
+          >
+            Log Out
+          </button>
         </div>
       </div>
-
-      <button onClick={handleLogout}>Log Out</button>
     </>
   );
 };
