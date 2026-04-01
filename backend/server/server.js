@@ -1,6 +1,19 @@
 const express = require("express");
+const http = require("http");
+const { Server } = require("socket.io");
 const app = express();
 const cors = require('cors')
+
+const socketController = require("./controllers/socketController");
+const { generateRoomCode } = require("./utilities/roomStore");const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+})
+
+const rooms = require('./utilities/roomStore')
 const loginRoute = require('./routes/userLogin')
 const getAllUsersRoute = require('./routes/userGetAllUsers')
 const registerRoute = require('./routes/userSignUp')
@@ -21,10 +34,16 @@ const profileImageUpload = require("./routes/profileImageUpload");
 const profileImageDeleteID = require("./routes/profileImageDeleteID");
 const openTriviaDBquestionGetter = require("./routes/openTriviaDBquestionGetter");
 
+
+
 require('dotenv').config();
 const SERVER_PORT = 8081
 
 dbConnection()
+
+app.get("/", (req, res) => {
+    res.send("Server Running!")
+});
 app.use(cors({origin: '*'}))
 app.use(express.json())
 app.use("/api", openTriviaDBquestionGetter);
@@ -46,7 +65,8 @@ app.use("/user", userGetLevels)
 app.use("/user", profileImageUpload)
 app.use("/user", profileImageDeleteID) // Needs to be tested
 
+socketController(io, rooms, generateRoomCode);
 
-app.listen(SERVER_PORT, (req, res) => {
+server.listen(SERVER_PORT, () => {
     console.log(`The backend service is running on port ${SERVER_PORT} and waiting for requests.`);
-})
+});
