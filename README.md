@@ -24,6 +24,8 @@ Front End
   The Front End runs on port 8096 which is specified in ui/.env
   The land page is at http://localhost:8096/
   
+  DO NPM INSTALL HE
+  ADD SOCKET IO
 Back End
 --------
   The back end runs on port 8081.
