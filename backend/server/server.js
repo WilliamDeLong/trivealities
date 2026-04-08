@@ -32,7 +32,8 @@ const userAddXp = require("./routes/userAddXp");
 const userGetLevels = require("./routes/userGetLevels");
 const deleteUID = require("./routes/userDeleteID");
 const profileImageUpload = require("./routes/profileImageUpload");
-const profileImageDeleteID = require("./routes/profileImageDeleteID");
+const DeletePiID = require("./routes/profileImageDeleteID");
+const GetAllProfileImage = require("./routes/profileImageGetAll");
 const openTriviaDBquestionGetter = require("./routes/openTriviaDBquestionGetter");
 const userUpdatePassword = require("./routes/userUpdatePassword");
 const userDeleteAccount = require("./routes/userDeleteAccount");
@@ -64,12 +65,13 @@ app.use('/question', getQuestionByIdRoute)
 app.use('/question', getQuestionByQuestionRoute)
 app.use('/question', deleteQuestion)
 app.use('/question', deleteQID)
-app.use("/user", userAddXp)
-app.use("/user", userGetLevels)
-app.use("/user", profileImageUpload)
-app.use("/user", profileImageDeleteID) // Needs to be tested
-app.use("/user", userUpdatePassword);
-app.use("/user", userDeleteAccount);
+app.use('/user', userAddXp)
+app.use('/user', userGetLevels)
+app.use('/user', profileImageUpload)
+app.use('/profileImage', DeletePiID) // Needs to be tested
+app.use('/profileImage', GetAllProfileImage)
+app.use('/user', userUpdatePassword);
+app.use('/user', userDeleteAccount);
 
 socketController(io, rooms, generateRoomCode);
 

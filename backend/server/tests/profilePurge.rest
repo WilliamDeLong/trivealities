@@ -1,0 +1,247 @@
+@baseUrl = http://localhost:8081
+
+### Note: this file was made to purge every unused profile image, it can mostly be ignored
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69a1de74e4dc461716276a66"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69a1de85e4dc461716276a6c"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69a5cdce786811a375acdaf7"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69a7bb1e2188d4120d8362fe"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69a863a9d30efe4be350f4c4"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69a86574a2fef313523be9f6"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69a86615d30efe4be350f4ce"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69a866c9ed39038555090b9a"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69a867b9d30efe4be350f4d6"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69a867e2d30efe4be350f4df"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69a868e61eae65cd012dd444"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69a869571eae65cd012dd44e"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69a86a881eae65cd012dd466"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69a872361eae65cd012dd48d"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69a872661eae65cd012dd494"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69a872811eae65cd012dd49c"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69b189aa85baca6078de8d90"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69b18b2a328c8dea186cd208"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69b18b67328c8dea186cd210"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69b42ea2b460ef3c7e63f8f3"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69b43e16b460ef3c7e63f907"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69b43f85b460ef3c7e63f911"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69b4427db460ef3c7e63f923"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69b4433cb460ef3c7e63f92d"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69b44457b460ef3c7e63f939"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69c6a64b88a5d705e69222de"
+}
+
+
+### Note: Profile ID is the ID of the profile image.
+POST  {{baseUrl}}/profileImage/deletePiID
+Content-Type: application/json
+
+{
+    "profileId" : "69c6a64c88a5d705e69222e1"
+}
+
