@@ -11,7 +11,7 @@ import HomePage from "./components/pages/homePage";
 import Login from "./components/pages/loginPage";
 import Signup from "./components/pages/registerPage";
 import PrivateUserProfile from "./components/pages/privateUserProfilePage";
-//import MbtaAlertsPage from "./components/pages/mbtaAlerts";
+// import MbtaAlertsPage from "./components/pages/mbtaAlerts";
 //import MbtaRoutesPage from "./components/pages/mbtaRoutes";
 import { createContext, useState, useEffect } from "react";
 import getUserInfo from "./utilities/decodeJwt";
@@ -51,6 +51,8 @@ const App = () => {
           <Route exact path="/profile" element={<ProfilePage />} />
           <Route exact path="/questionCreate" element={<QuestionCreationPage />} />
           <Route exact path="/questionDatabase" element={<QuestionDatabasePage />} />
+          {/* <Route exact path="/mbta" element={<MbtaAlertsPage />} /> */}
+          
         </Routes>
       </UserContext.Provider>
     </>

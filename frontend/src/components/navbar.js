@@ -88,7 +88,17 @@ export default function Navbar({ isLightMode, toggleTheme }) {
           >
             Question Creation
           </Nav.Link>
+          
+          <Nav.Link
+            href="/questionDatabase"
+            style={{ color: "white", fontWeight: "600" }}
+          >
+            Question Database
+          </Nav.Link>
         </Nav>
+
+        
+
 
         <div
           style={{

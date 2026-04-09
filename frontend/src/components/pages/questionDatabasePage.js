@@ -1,51 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import Card from 'react-bootstrap/Card';
+//import Card from 'react-bootstrap/Card';
 import axios from 'axios';
+//import tailwindcss from 'tailwindcss';
+import Table from "../Table";
 
 
-function Alerts() {
-  const [alerts, setAlerts] = useState([]);
+const columns = [
+  { label: "ID", accessor: "_id", sortable: true, sortbyOrder: "desc" },
+  { label: "Prompt", accessor: "question", sortable: false },
+  { label: "Category", accessor: "category", sortable: true},
+  { label: "Difficulty", accessor: "difficulty", sortable: true },
+  
+];
+
+
+function DatabasePage() {
+  const [questions, setQuestions] = useState([]);
 
 
   useEffect(() => {
     async function fetchData() {
       const result = await axios(
-        'https://api-v3.mbta.com/alerts?sort=banner&filter%5Bactivity%5D=BOARD%2CEXIT%2CRIDE',
+        'http://localhost:8081/question/getAll',
       );
-      setAlerts(result.data.data);
+      setQuestions(result.data);
     }
     fetchData();
   }, []);
-
-
+  if (questions.length>0){
   return (
-    <div>
-      {alerts.map(alert => (
-        <Card
-        body
-        outline
-        color="success"
-        className="mx-1 my-2"
-        style={{ width: "30rem" }}
-      >
-        <Card.Body>
-        <Card.Title>Alert</Card.Title>
-        <Card.Text>{alert.attributes.header}{alert.attributes.description}</Card.Text>
-        </Card.Body>
-      </Card>
-      ))}
-
-
-        <h1>Alerts!</h1>
-      {alerts.map(alert => (
-        <div key={alert.id}>
-          <h3>{alert.attributes.header}</h3>
-          <p>{alert.attributes.description}</p>
-        </div>
-      ))}
+    <div className="table_container">
+      <h1>Trivealities Question Database V0.0043</h1>
+      <Table
+        data={questions}
+        columns={columns}
+      />
+      <br />
+      <br />
     </div>
-  );
+  );}
 }
 
 
-export default Alerts;
+export default DatabasePage;
