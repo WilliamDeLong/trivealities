@@ -1,4 +1,3 @@
-// src/context/MusicContext.js
 import React, { createContext, useContext, useEffect, useRef, useState } from "react";
 
 const MusicContext = createContext();
@@ -14,7 +13,6 @@ export const MusicProvider = ({ children }) => {
     audio.loop = true;
     audio.preload = "auto";
     audio.volume = 1;
-
     audioRef.current = audio;
 
     return () => {
@@ -27,11 +25,16 @@ export const MusicProvider = ({ children }) => {
 
   const startMusic = async () => {
     if (!audioRef.current) return;
-    if (isMuted) return;
+
+    setHasStartedMusic(true);
+
+    if (isMuted) {
+      audioRef.current.pause();
+      return;
+    }
 
     try {
       await audioRef.current.play();
-      setHasStartedMusic(true);
     } catch (error) {
       console.error("Music failed to start:", error);
     }

@@ -19,6 +19,7 @@ import ProfilePage from "./components/pages/ProfilePage";
 import QuestionCreationPage from "./components/pages/questionCreationPage";
 import QuestionDatabasePage from "./components/pages/questionDatabasePage";
 import AddAccountXpPage from "./components/pages/AddAccountXpPage";
+import ChatPage from "./components/pages/chatPage";
 
 export const UserContext = createContext();
 //test change
@@ -55,6 +56,7 @@ const App = () => {
           {/* <Route exact path="/mbta" element={<MbtaAlertsPage />} /> */}
           
           <Route exact path="/add-xp" element={<AddAccountXpPage />} /> 
+          <Route exact path="/chat" element={<ChatPage />} />
         </Routes>
       </UserContext.Provider>
     </>
