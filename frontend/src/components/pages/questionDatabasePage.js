@@ -36,8 +36,6 @@ function DatabasePage() {
         data={questions}
         columns={columns}
       />
-      <br />
-      <br />
     </div>
   );}
 }
