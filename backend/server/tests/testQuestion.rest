@@ -13,9 +13,38 @@ Content-Type: {{json}}
     "incorrect_answer1" : "True",
     "incorrect_answer2" : "False",
     "incorrect_answer3" : "True and False",
-    "category" : 3,
-    "difficulty" : 3
+    "category" : 9,
+    "difficulty" : 2
 }
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "Experimental Question 1 (ID testing)",
+    "correct_answer" : "Paradox",
+    "incorrect_answer1" : "True",
+    "incorrect_answer2" : "False",
+    "incorrect_answer3" : "True and False",
+    "category" : 9,
+    "difficulty" : 2
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "Experimental Question 5 (Date Testing)",
+    "correct_answer" : "Paradox",
+    "incorrect_answer1" : "True",
+    "incorrect_answer2" : "False",
+    "incorrect_answer3" : "True and False",
+    "category" : 9,
+    "difficulty" : 2
+}
+
 ###
 @questionId1 = {{createQuestion1.response.body.$._id}}
 @questionPrompt1 = {{createQuestion1.response.body.$.question}}
@@ -30,8 +59,8 @@ Content-Type: {{json}}
     "incorrect_answer1" : "IncorrectAnswer",
     "incorrect_answer2" : "OtherIncorrectAnswer",
     "incorrect_answer3" : "EvenMoreIncorrectAnswer",
-    "category" : 3,
-    "difficulty" : 3
+    "category" : 9,
+    "difficulty" : 2
 }
 ###
 @questionId2 = {{createQuestion2.response.body.$._id}}
@@ -102,5 +131,5 @@ GET {{baseUrl}}/question/findQuestion
 Content-Type: {{json}}
 
 {
-    "question_prompt" : "bi"
+    "q_category" : 3
 }

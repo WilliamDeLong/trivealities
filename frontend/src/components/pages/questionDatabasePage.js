@@ -6,11 +6,12 @@ import Table from "../Table";
 
 
 const columns = [
-  { label: "ID", accessor: "_id", sortable: true, sortbyOrder: "desc" },
+  
   { label: "Prompt", accessor: "question", sortable: false },
   { label: "Category", accessor: "category", sortable: true},
   { label: "Difficulty", accessor: "difficulty", sortable: true },
-  
+  { label: "Date Created", accessor: "date", sortable: true },
+  { label: "ID", accessor: "_id", sortable: true, sortbyOrder: "desc" },
 ];
 
 
