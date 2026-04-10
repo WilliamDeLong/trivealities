@@ -8,7 +8,7 @@ import getUserInfo from "../../utilities/decodeJwt";
 const PRIMARY_COLOR = "#cc5c99";
 const SECONDARY_COLOR = '#0c0c1f'
 const url = `${process.env.REACT_APP_BACKEND_SERVER_URI}/question/create`;
-const data_default = { question: "", correct_answer: "", incorrect_answer1: "", incorrect_answer2: "", incorrect_answer3: "", category: 0, difficulty: 0};
+const data_default = { question: "", correct_answer: "", incorrect_answer1: "", incorrect_answer2: "", incorrect_answer3: "", category: "any", difficulty: 'any'};
 
 const QuestionCreationPage = () => {
   const [user, setUser] = useState(null)
