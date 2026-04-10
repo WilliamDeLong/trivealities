@@ -101,6 +101,12 @@ export default function Navbar({ isLightMode, toggleTheme }) {
             >
               Add XP
           </Nav.Link>
+          <Nav.Link
+            href="/chat"
+            style={{ color: "white", fontWeight: "600" }}
+          >
+            Chat
+          </Nav.Link>
         </Nav>
 
         
