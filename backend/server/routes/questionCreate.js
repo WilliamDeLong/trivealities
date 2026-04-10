@@ -22,14 +22,17 @@ router.post('/create', async (req, res) => {
 
     //parse the generated hash into the password
     const hashed_answer = await bcrypt.hash(correct_answer, generateHash)
+    const hashed_answer2 = await bcrypt.hash(incorrect_answer1, generateHash)
+    const hashed_answer3 = await bcrypt.hash(incorrect_answer2, generateHash)
+    const hashed_answer4 = await bcrypt.hash(incorrect_answer3, generateHash)
 
     //creates a new user
     const createQuestion = new newQuestionModel({
         question: question,
         correct_answer: hashed_answer,
-        incorrect_answer1: incorrect_answer1,
-		incorrect_answer2: incorrect_answer2,
-		incorrect_answer3: incorrect_answer3,
+        incorrect_answer1: hashed_answer2,
+		incorrect_answer2: hashed_answer3,
+		incorrect_answer3: hashed_answer4,
         category: category,
         difficulty: difficulty,
 		

@@ -95,3 +95,12 @@ Content-Type: {{json}}
 
 ###
 POST  {{baseUrl}}/question/deleteAll
+
+
+###
+GET {{baseUrl}}/question/findQuestion
+Content-Type: {{json}}
+
+{
+    "question_prompt" : "bi"
+}
