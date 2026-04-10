@@ -11,12 +11,13 @@ import HomePage from "./components/pages/homePage";
 import Login from "./components/pages/loginPage";
 import Signup from "./components/pages/registerPage";
 import PrivateUserProfile from "./components/pages/privateUserProfilePage";
-//import MbtaAlertsPage from "./components/pages/mbtaAlerts";
+// import MbtaAlertsPage from "./components/pages/mbtaAlerts";
 //import MbtaRoutesPage from "./components/pages/mbtaRoutes";
 import { createContext, useState, useEffect } from "react";
 import getUserInfo from "./utilities/decodeJwt";
 import ProfilePage from "./components/pages/ProfilePage";
 import QuestionCreationPage from "./components/pages/questionCreationPage";
+import QuestionDatabasePage from "./components/pages/questionDatabasePage";
 import AddAccountXpPage from "./components/pages/AddAccountXpPage";
 
 export const UserContext = createContext();
@@ -50,7 +51,10 @@ const App = () => {
           <Route path="/privateUserProfile" element={<PrivateUserProfile />} />
           <Route exact path="/profile" element={<ProfilePage />} />
           <Route exact path="/questionCreate" element={<QuestionCreationPage />} />
-          <Route exact path="/add-xp" element={<AddAccountXpPage />} />
+          <Route exact path="/questionDatabase" element={<QuestionDatabasePage />} />
+          {/* <Route exact path="/mbta" element={<MbtaAlertsPage />} /> */}
+          
+          <Route exact path="/add-xp" element={<AddAccountXpPage />} /> 
         </Routes>
       </UserContext.Provider>
     </>

@@ -1,0 +1,67 @@
+
+@baseUrl = http://localhost:8081
+@json = application/json
+
+
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "Who is not a Green Lantern of Earth?",
+    "correct_answer" : "Mogo",
+    "incorrect_answer1" : "Kyle Rayner",
+    "incorrect_answer2" : "Guy Gardner",
+    "incorrect_answer3" : "Jessica Cruz",
+    "category" : 29,
+    "difficulty" : 1
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "In Greek Mythology, this is the inventor credited with many creations, including building the Minoan Labyrinth.",
+    "correct_answer" : "Daedalus",
+    "incorrect_answer1" : "Hephaestus",
+    "incorrect_answer2" : "Apollo",
+    "incorrect_answer3" : "Vulcan",
+    "category" : 20,
+    "difficulty" : 1
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "While this species of Shark can have a lifespan of up to 500 years, it's typical lifespan is about half of that due to parasites attach to their eyes.",
+    "correct_answer" : "Greenland Shark",
+    "incorrect_answer1" : "Great White Shark",
+    "incorrect_answer2" : "Whale Shark",
+    "incorrect_answer3" : "Hammerhead Shark",
+    "category" : 27,
+    "difficulty" : 1
+}
+
+###
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "According to Douglas Adams' Hitch Hiker's Guide to the Galaxy The Ultimate Answer to the Ultimate Question of Life, the Universe and Everything is 42. Who calculated said answer?",
+    "correct_answer" : "Deep Thought",
+    "incorrect_answer1" : "Marvin the Paranoid Android",
+    "incorrect_answer2" : "Earth",
+    "incorrect_answer3" : "Aurther Dent",
+    "category" : 10,
+    "difficulty" : 1
+}
+###
+
+###
+
+###
+GET {{baseUrl}}/question/getAll
+Content-Type: application/json

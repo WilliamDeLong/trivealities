@@ -1,0 +1,6 @@
+@baseUrl = http://localhost:8081
+
+### Gets every profile image in the database
+GET {{baseUrl}}/profileImage/getProfileAll
+Content-Type: application/json
+

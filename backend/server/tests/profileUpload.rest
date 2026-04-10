@@ -44,9 +44,9 @@ POST {{baseUrl}}/user/{{userId}}/profile-image
 ###
 
 ### Note: Profile ID is the ID of the profile image. 
-POST  {{baseUrl}}/user/deletePiID
+POST  {{baseUrl}}/profileImage/deletePiID
 Content-Type: application/json
 
 {
-    "profileId" : "69b19b797098075437cca5f3" 
+    "profileId" : "69a854ac359002e3a4349bc7" 
 }

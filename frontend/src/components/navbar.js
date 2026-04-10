@@ -88,6 +88,13 @@ export default function Navbar({ isLightMode, toggleTheme }) {
           >
             Question Creation
           </Nav.Link>
+          
+          <Nav.Link
+            href="/questionDatabase"
+            style={{ color: "white", fontWeight: "600" }}
+          >
+            Question Database
+          </Nav.Link>
           <Nav.Link
               onClick={() => navigate("/add-xp")}
               style={{ color: "white", fontWeight: "600", cursor: "pointer" }}
@@ -95,6 +102,9 @@ export default function Navbar({ isLightMode, toggleTheme }) {
               Add XP
           </Nav.Link>
         </Nav>
+
+        
+
 
         <div
           style={{
