@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import getUserInfo from "../../utilities/decodeJwt";
-
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const [profileUrl, setProfileUrl] = useState("/user-icon.png");
@@ -29,28 +28,45 @@ const ProfilePage = () => {
     navigate("/");
   };
 
-  useEffect(() => {
-    const u = getUserInfo();
-    setUser(u);
+useEffect(() => {
+  const u = getUserInfo();
 
-    const fetchProfile = async () => {
-      try {
-        const res = await fetch(`${API_BASE}/user/${u.id}`);
-        if (!res.ok) {
-          console.log("GET profile failed:", res.status, await res.text());
-          return;
-        }
+  if (!u?.id) {
+    setUser(null);
+    return;
+  }
 
-        const data = await res.json();
-        const url = data?.user?.profileImage?.imageUrl;
-        if (url) setProfileUrl(url);
-      } catch (err) {
-        console.error("GET profile error:", err);
+  const fetchProfile = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/user/${u.id}`);
+      if (!res.ok) {
+        console.log("GET profile failed:", res.status, await res.text());
+        setUser(u);
+        return;
       }
-    };
 
-    if (u?.id) fetchProfile();
-  }, []);
+      const data = await res.json();
+      const fetchedUser = data?.user;
+
+      if (fetchedUser) {
+        setUser({
+          ...u,
+          ...fetchedUser,
+        });
+
+        const url = fetchedUser?.profileImage?.imageUrl;
+        if (url) setProfileUrl(url);
+      } else {
+        setUser(u);
+      }
+    } catch (err) {
+      console.error("GET profile error:", err);
+      setUser(u);
+    }
+  };
+
+  fetchProfile();
+}, []);
 
   const uploadProfileImage = async () => {
     try {
@@ -244,7 +260,7 @@ const ProfilePage = () => {
     );
   }
 
-  const { id, email, username } = user;
+  const { id, email, username,  accountLevel, accountXp} = user;
 
   return (
     <>
@@ -315,10 +331,25 @@ const ProfilePage = () => {
           <div className="card">
             <p style={{ fontWeight: "bold" }}>Profile details:</p>
             <p className="username">Username: {username}</p>
+            <p className="userId">User ID: {id}</p>
             <p className="email">Email: {email}</p>
-            <p className="id">User ID: {id}</p>
           </div>
 
+          <div className="card">
+            <p className="label">Account Level:</p>
+
+            <p className="accountLevel">Level: {accountLevel}</p>
+
+            <div className="xp-bar-container">
+              <div
+                className="xp-bar-fill"
+                style={{ width: `${Math.min(accountXp, 100)}%` }}
+              ></div>
+            </div>
+
+            <p className="accountXp">XP: {accountXp} / 100</p>
+          </div>
+        
           <div style={{ width: "100%", marginTop: 15 }}>
             <button onClick={togglePasswordDropdown} style={dropdownTriggerStyle}>
               <span style={dropdownLeftStyle}>
@@ -411,7 +442,7 @@ const ProfilePage = () => {
                   transition: "transform 0.2s ease",
                 }}
               >
-                ▼
+                
               </span>
             </button>
 
@@ -463,7 +494,7 @@ const ProfilePage = () => {
               </div>
             )}
           </div>
-
+          
           <button
             onClick={handleLogout}
             style={{

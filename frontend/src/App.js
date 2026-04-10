@@ -17,6 +17,7 @@ import { createContext, useState, useEffect } from "react";
 import getUserInfo from "./utilities/decodeJwt";
 import ProfilePage from "./components/pages/ProfilePage";
 import QuestionCreationPage from "./components/pages/questionCreationPage";
+import AddAccountXpPage from "./components/pages/AddAccountXpPage";
 
 export const UserContext = createContext();
 //test change
@@ -49,6 +50,7 @@ const App = () => {
           <Route path="/privateUserProfile" element={<PrivateUserProfile />} />
           <Route exact path="/profile" element={<ProfilePage />} />
           <Route exact path="/questionCreate" element={<QuestionCreationPage />} />
+          <Route exact path="/add-xp" element={<AddAccountXpPage />} />
         </Routes>
       </UserContext.Provider>
     </>
