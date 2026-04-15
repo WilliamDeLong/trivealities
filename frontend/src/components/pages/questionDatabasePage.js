@@ -70,9 +70,9 @@ function DatabasePage() {
   const handleSubmit = async (e) => {
       e.preventDefault();
       try {
-        console.log("Take 1");
+        //console.log("Take 1");
         fetch_questions();
-        console.log("Take 2");
+        //console.log("Take 2");
         //const inputField = document.getElementById("form"); 
         //inputField.reset(); // This resets the prompts so that the page doesn't have to be reloaded to create a new question
         //setData(default_data); // This resets the values for all of the prompts
