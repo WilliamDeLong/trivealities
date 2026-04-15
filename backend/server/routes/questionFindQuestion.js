@@ -13,10 +13,12 @@ router.param('findQuestion', (req, res, next, id) => {
 
 router.get("/findQuestion", async (req, res) => {
   const query = newQuestionModel.find();
+  var { question_prompt, q_category, q_difficulty} = req.query;
+  //var question_prompt = req.query.question_prompt;
+  //var q_category = req.query.q_category;
+  //var q_difficulty = req.query.q_difficulty;
   //console.log(req.query);
-  //console.log(req.body);
-  //console.log(req);
-  var { question_prompt, q_category, q_difficulty} = req.body;
+  //console.log(question_prompt, q_category, q_difficulty);
   if (question_prompt != null) {
     query.find({question: { "$regex": question_prompt}});
   }
