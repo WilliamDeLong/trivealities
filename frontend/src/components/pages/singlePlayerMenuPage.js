@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import getUserInfo from "../../utilities/decodeJwt";
 import { UserContext } from "../../App";
+import API_BASE from "../../api";
 
 function SinglePlayerMenuPage() {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ function SinglePlayerMenuPage() {
 
       try {
         const res = await axios.get(
-          `http://localhost:8081/user/${userId}/singleplayer-progress`
+          `${API_BASE}/user/${userId}/singleplayer-progress`
         );
 
         setProgress(

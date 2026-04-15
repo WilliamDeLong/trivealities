@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import getUserInfo from "../../utilities/decodeJwt";
 import { UserContext } from "../../App";
-
+import API_BASE from "../../api";
 const difficultyConfig = {
   easy: {
     title: "Easy",
@@ -61,7 +61,7 @@ function SinglePlayerGamePage() {
         setLoading(true);
         setError("");
 
-        const res = await axios.get("http://localhost:8081/api/questions", {
+        const res = await axios.get(`${API_BASE}/api/questions`, {
           params: {
             amount: config.amount,
             difficulty: config.difficulty,
@@ -108,7 +108,7 @@ function SinglePlayerGamePage() {
       }
 
       try {
-        await axios.post(`http://localhost:8081/user/${userId}/xp`, {
+        await axios.post(`/user/${userId}/xp`, {
           xp: earnedXp,
         });
       } catch (err) {
@@ -134,7 +134,7 @@ function SinglePlayerGamePage() {
 
       try {
         await axios.put(
-          `http://localhost:8081/user/${userId}/singleplayer-progress`,
+          `/user/${userId}/singleplayer-progress`,
           { difficulty }
         );
       } catch (err) {

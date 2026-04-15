@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 //import tailwindcss from 'tailwindcss';
 import Table from "../Table";
-
+import API_BASE from '../../api';
 
 const columns = [
   
@@ -22,7 +22,7 @@ function DatabasePage() {
   useEffect(() => {
     async function fetchData() {
       const result = await axios(
-        'http://localhost:8081/question/getAll',
+        `${API_BASE}/question/getAll`,
       );
       setQuestions(result.data);
     }

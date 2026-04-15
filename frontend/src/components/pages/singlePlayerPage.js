@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-
+import API_BASE from "../../api";
 function SinglePlayerPage() {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -36,7 +36,7 @@ function SinglePlayerPage() {
       if (difficulty) params.difficulty = difficulty;
       if (category) params.category = category;
 
-      const res = await axios.get("http://localhost:8081/questions", { params });
+      const res = await axios.get(`${API_BASE}/questions`, { params });
 
       if (!Array.isArray(res.data) || res.data.length === 0) {
         setError("No questions found.");

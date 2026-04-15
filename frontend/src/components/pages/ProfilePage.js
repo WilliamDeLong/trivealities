@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import getUserInfo from "../../utilities/decodeJwt";
+import API_BASE from "../../api";
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const [profileUrl, setProfileUrl] = useState("/user-icon.png");
@@ -20,7 +21,6 @@ const ProfilePage = () => {
   const [deleteStatus, setDeleteStatus] = useState("");
 
   const navigate = useNavigate();
-  const API_BASE = "http://localhost:8081";
 
   const handleLogout = (e) => {
     if (e) e.preventDefault();

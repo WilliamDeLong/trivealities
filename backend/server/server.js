@@ -3,6 +3,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const app = express();
 const cors = require("cors");
+const registerMultiplayerHandlers = require("./socket/registerMultiplayerHandlers");
 
 const socketController = require("./controllers/socketController");
 const { generateRoomCode } = require("./utilities/roomStore");
@@ -13,7 +14,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
         origin: "*",
-        methods: ["GET", "POST"]
+        methods: ["GET", "POST", "PUT", "DELETE"],
     }
 });
 
@@ -84,13 +85,16 @@ app.use("/user", userResetLevel);
 app.use("/user", userGameRoutes);
 
 
-// Existing socket/game controller
-socketController(io, rooms, generateRoomCode);
-
-// Chat socket auth + chat events
 io.use(socketAuth);
-setupChatSocket(io);
 
-server.listen(SERVER_PORT, () => {
+io.on("connection", (socket) => {
+console.log("Socket connected:", socket.id);
+console.log("Socket user:", socket.user);
+
+  registerMultiplayerHandlers(io, socket);
+  setupChatSocket(io, socket);
+});
+
+server.listen(SERVER_PORT,"0.0.0.0", () => {
     console.log(`The backend service is running on port ${SERVER_PORT} and waiting for requests.`);
 });

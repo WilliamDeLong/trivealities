@@ -17,7 +17,7 @@ function AddXpPage() {
     setLoading(true);
 
     try {
-      const res = await axios.post(`http://localhost:8081/user/${userId}/xp`, {
+      const res = await axios.post(`http://10.0.0.132/user/${userId}/xp`, {
         xp: Number(xp),
       });
 
@@ -51,7 +51,7 @@ function AddXpPage() {
 
     try {
       const res = await axios.put(
-        `http://localhost:8081/user/${userId}/reset-xp`
+        `http://10.0.0.132/user/${userId}/reset-xp`
       );
 
       setMessage(res.data.message);
