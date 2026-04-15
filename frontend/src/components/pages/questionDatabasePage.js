@@ -27,7 +27,7 @@ const default_data = {
 
 
 
-const url = `${process.env.REACT_APP_BACKEND_SERVER_URI}/question/findQuestion`;
+const url = `${API_BASE}/question/findQuestion`;
 // `${API_BASE}/question/findQuestion`
 
 function DatabasePage() {
