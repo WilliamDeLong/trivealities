@@ -18,7 +18,7 @@ const newUserSchema = new mongoose.Schema(
     password: {
       required: true,
       type: String,
-      min : 8
+      min: 8,
     },
     profileImage: {
       type: mongoose.Schema.Types.ObjectId,
@@ -38,6 +38,20 @@ const newUserSchema = new mongoose.Schema(
       type: Number,
       default: 0,
       min: 0,
+    },
+    singlePlayerProgress: {
+      easyCompleted: {
+        type: Boolean,
+        default: false,
+      },
+      mediumCompleted: {
+        type: Boolean,
+        default: false,
+      },
+      hardCompleted: {
+        type: Boolean,
+        default: false,
+      },
     },
   },
   { collection: "users" }

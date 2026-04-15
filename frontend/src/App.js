@@ -20,6 +20,9 @@ import QuestionCreationPage from "./components/pages/questionCreationPage";
 import QuestionDatabasePage from "./components/pages/questionDatabasePage";
 import AddAccountXpPage from "./components/pages/AddAccountXpPage";
 import ChatPage from "./components/pages/chatPage";
+import SinglePlayerMenuPage from "./components/pages/singlePlayerMenuPage";
+import SinglePlayerGamePage from "./components/pages/singlePlayerGamePage";
+
 
 export const UserContext = createContext();
 //test change
@@ -54,9 +57,10 @@ const App = () => {
           <Route exact path="/questionCreate" element={<QuestionCreationPage />} />
           <Route exact path="/questionDatabase" element={<QuestionDatabasePage />} />
           {/* <Route exact path="/mbta" element={<MbtaAlertsPage />} /> */}
-          
           <Route exact path="/add-xp" element={<AddAccountXpPage />} /> 
           <Route exact path="/chat" element={<ChatPage />} />
+          <Route path="/singleplayer" element={<SinglePlayerMenuPage />} />
+          <Route path="/singleplayer/:difficulty" element={<SinglePlayerGamePage />} />
         </Routes>
       </UserContext.Provider>
     </>

@@ -103,7 +103,7 @@ const HomePage = () => {
                                 marginBottom: "8px",
                             }}
                         >
-                            Welcome back,
+                            Welcome!
                         </p>
 
                         <h1
@@ -165,6 +165,22 @@ const HomePage = () => {
                                 }}
                             >
                                 Host Game
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => navigate("/singleplayer")}
+                                style={{
+                                    backgroundColor: "#22c55e",
+                                    color: "white",
+                                    padding: "12px 28px",
+                                    borderRadius: "0px",
+                                    fontWeight: "bold",
+                                    border: "none",
+                                    boxShadow: "0 6px 18px rgba(0,0,0,0.25)",
+                                    cursor: "pointer",
+                                }}
+                                >
+                                Single Player
                             </button>
                         </div>
 

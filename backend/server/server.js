@@ -42,6 +42,9 @@ const GetAllProfileImage = require("./routes/profileImageGetAll");
 const openTriviaDBquestionGetter = require("./routes/openTriviaDBquestionGetter");
 const userUpdatePassword = require("./routes/userUpdatePassword");
 const userDeleteAccount = require("./routes/userDeleteAccount");
+const userResetLevel = require("./routes/userResetLevel");
+const userGameRoutes = require("./routes/userGameRoutes");
+
 
 require("dotenv").config();
 const SERVER_PORT = 8081;
@@ -71,13 +74,15 @@ app.use("/question", getQuestionByQuestionRoute);
 app.use("/question", findQuestionRoute);
 app.use("/question", deleteQuestion);
 app.use("/question", deleteQID);
-app.use("/user", userAddXp);
-app.use("/user", userGetLevels);
+
 app.use("/user", profileImageUpload);
 app.use("/user", DeletePiID); // Needs to be tested
 app.use("/user", GetAllProfileImage);
 app.use("/user", userUpdatePassword);
 app.use("/user", userDeleteAccount);
+app.use("/user", userResetLevel);
+app.use("/user", userGameRoutes);
+
 
 // Existing socket/game controller
 socketController(io, rooms, generateRoomCode);
