@@ -20,7 +20,15 @@ import QuestionCreationPage from "./components/pages/questionCreationPage";
 import QuestionDatabasePage from "./components/pages/questionDatabasePage";
 import AddAccountXpPage from "./components/pages/AddAccountXpPage";
 import ChatPage from "./components/pages/chatPage";
+import SinglePlayerMenuPage from "./components/pages/singlePlayerMenuPage";
+import SinglePlayerGamePage from "./components/pages/singlePlayerGamePage";
+import MultiplayerPage from "./components/pages/MultiplayerPage";
 
+import MultiplayerHostPage from "./components/pages/MultiplayerHostPage";
+import MultiplayerJoinPage from "./components/pages/MultiplayerJoinPage";
+import MultiplayerRoomPage from "./components/pages/MultiplayerRoomPage";
+import MultiplayerResultsPage from "./components/pages/MultiplayerResultsPage";
+import MultiplayerLiveGamePage from "./components/pages/MultiplayerLiveGamePage";
 export const UserContext = createContext();
 //test change
 //test again
@@ -54,9 +62,16 @@ const App = () => {
           <Route exact path="/questionCreate" element={<QuestionCreationPage />} />
           <Route exact path="/questionDatabase" element={<QuestionDatabasePage />} />
           {/* <Route exact path="/mbta" element={<MbtaAlertsPage />} /> */}
-          
           <Route exact path="/add-xp" element={<AddAccountXpPage />} /> 
           <Route exact path="/chat" element={<ChatPage />} />
+          <Route path="/singleplayer" element={<SinglePlayerMenuPage />} />
+          <Route path="/singleplayer/:difficulty" element={<SinglePlayerGamePage />} />
+          <Route path="/multiplayer" element={<MultiplayerPage />} />
+          <Route path="/multiplayer/host" element={<MultiplayerHostPage />} />
+          <Route path="/multiplayer/join" element={<MultiplayerJoinPage />} />
+          <Route path="/multiplayer/room/:roomCode" element={<MultiplayerRoomPage />} />
+          <Route path="/multiplayer/results/:roomCode" element={<MultiplayerResultsPage />} />
+          <Route path="/multiplayer/live/:roomCode" element={<MultiplayerLiveGamePage />} />
         </Routes>
       </UserContext.Provider>
     </>

@@ -5,7 +5,7 @@ import Nav from "react-bootstrap/Nav";
 import ReactNavbar from "react-bootstrap/Navbar";
 import { useNavigate } from "react-router-dom";
 import { useMusic } from "../context/MusicContext";
-
+import API_BASE from "../api";
 // Here, we display our Navbar
 export default function Navbar({ isLightMode, toggleTheme }) {
   // We are pulling in the user's info but not using it for now.
@@ -26,7 +26,7 @@ export default function Navbar({ isLightMode, toggleTheme }) {
       try {
         if (!currentUser?.id) return;
 
-        const res = await fetch(`http://localhost:8081/user/${currentUser.id}`);
+        const res = await fetch(`${API_BASE}/user/${currentUser.id}`);
         if (!res.ok) return;
 
         const data = await res.json();

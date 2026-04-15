@@ -9,7 +9,7 @@ const buildMessage = ({ roomId, userId, username, type, content }) => {
     roomId,
     userId,
     username,
-    type, // "text" | "preset" | "emoji"
+    type,
     content,
     createdAt: new Date().toISOString(),
   };
@@ -36,147 +36,168 @@ const removeUserFromRoom = (roomId, userId) => {
   }
 };
 
-const setupChatSocket = (io) => {
-  io.on("connection", (socket) => {
-    console.log(`Chat socket connected: ${socket.id} (${socket.user.username})`);
+const setupChatSocket = (io, socket) => {
+  console.log(`Chat socket connected: ${socket.id} (${socket.user?.username})`);
 
-    socket.on("chat_join_room", ({ roomId }) => {
-      try {
-        if (!roomId || typeof roomId !== "string") {
-          return socket.emit("chat_error", { message: "Valid roomId is required." });
-        }
+  socket.on("chat_join_room", ({ roomId }) => {
+    try {
+      if (!roomId || typeof roomId !== "string") {
+        return socket.emit("chat_error", {
+          message: "Valid roomId is required.",
+        });
+      }
 
-        socket.join(roomId);
-        socket.currentChatRoomId = roomId;
+      socket.join(roomId);
+      socket.currentChatRoomId = roomId;
 
+      if (socket.user) {
         addUserToRoom(roomId, socket.user);
-
-        socket.emit("chat_room_joined", {
-          roomId,
-          message: `Joined chat room ${roomId}`,
-        });
-
-        io.to(roomId).emit("chat_room_users", {
-          roomId,
-          users: Array.from(activeRoomUsers.get(roomId)?.values() || []),
-        });
-      } catch (error) {
-        socket.emit("chat_error", { message: error.message });
       }
-    });
 
-    socket.on("chat_leave_room", ({ roomId }) => {
-      try {
-        if (!roomId || typeof roomId !== "string") return;
+      socket.emit("chat_room_joined", {
+        roomId,
+        message: `Joined chat room ${roomId}`,
+      });
 
-        socket.leave(roomId);
+      io.to(roomId).emit("chat_room_users", {
+        roomId,
+        users: Array.from(activeRoomUsers.get(roomId)?.values() || []),
+      });
+    } catch (error) {
+      socket.emit("chat_error", { message: error.message });
+    }
+  });
+
+  socket.on("chat_leave_room", ({ roomId }) => {
+    try {
+      if (!roomId || typeof roomId !== "string") return;
+
+      socket.leave(roomId);
+
+      if (socket.user) {
         removeUserFromRoom(roomId, socket.user.id);
-
-        io.to(roomId).emit("chat_room_users", {
-          roomId,
-          users: Array.from(activeRoomUsers.get(roomId)?.values() || []),
-        });
-      } catch (error) {
-        socket.emit("chat_error", { message: error.message });
       }
-    });
 
-    socket.on("chat_send_text_message", ({ roomId, message }) => {
-      try {
-        if (!roomId || typeof roomId !== "string") {
-          return socket.emit("chat_error", { message: "Valid roomId is required." });
-        }
+      io.to(roomId).emit("chat_room_users", {
+        roomId,
+        users: Array.from(activeRoomUsers.get(roomId)?.values() || []),
+      });
+    } catch (error) {
+      socket.emit("chat_error", { message: error.message });
+    }
+  });
 
-        if (!message || typeof message !== "string") {
-          return socket.emit("chat_error", { message: "Message must be a string." });
-        }
-
-        const trimmedMessage = message.trim();
-
-        if (!trimmedMessage) {
-          return socket.emit("chat_error", { message: "Message cannot be empty." });
-        }
-
-        if (trimmedMessage.length > 120) {
-          return socket.emit("chat_error", {
-            message: "Message cannot be longer than 120 characters.",
-          });
-        }
-
-        const payload = buildMessage({
-          roomId,
-          userId: socket.user.id,
-          username: socket.user.username,
-          type: "text",
-          content: trimmedMessage,
-        });
-
-        io.to(roomId).emit("chat_receive_message", payload);
-      } catch (error) {
-        socket.emit("chat_error", { message: error.message });
-      }
-    });
-
-    socket.on("chat_send_preset_message", ({ roomId, preset }) => {
-      try {
-        if (!roomId || typeof roomId !== "string") {
-          return socket.emit("chat_error", { message: "Valid roomId is required." });
-        }
-
-        if (!CHAT_PRESETS.includes(preset)) {
-          return socket.emit("chat_error", { message: "Invalid preset message." });
-        }
-
-        const payload = buildMessage({
-          roomId,
-          userId: socket.user.id,
-          username: socket.user.username,
-          type: "preset",
-          content: preset,
-        });
-
-        io.to(roomId).emit("chat_receive_message", payload);
-      } catch (error) {
-        socket.emit("chat_error", { message: error.message });
-      }
-    });
-
-    socket.on("chat_send_emoji", ({ roomId, emoji }) => {
-      try {
-        if (!roomId || typeof roomId !== "string") {
-          return socket.emit("chat_error", { message: "Valid roomId is required." });
-        }
-
-        if (!CHAT_EMOJIS.includes(emoji)) {
-          return socket.emit("chat_error", { message: "Invalid emoji." });
-        }
-
-        const payload = buildMessage({
-          roomId,
-          userId: socket.user.id,
-          username: socket.user.username,
-          type: "emoji",
-          content: emoji,
-        });
-
-        io.to(roomId).emit("chat_receive_message", payload);
-      } catch (error) {
-        socket.emit("chat_error", { message: error.message });
-      }
-    });
-
-    socket.on("disconnect", () => {
-      if (socket.currentChatRoomId) {
-        removeUserFromRoom(socket.currentChatRoomId, socket.user.id);
-
-        io.to(socket.currentChatRoomId).emit("chat_room_users", {
-          roomId: socket.currentChatRoomId,
-          users: Array.from(activeRoomUsers.get(socket.currentChatRoomId)?.values() || []),
+  socket.on("chat_send_text_message", ({ roomId, message }) => {
+    try {
+      if (!roomId || typeof roomId !== "string") {
+        return socket.emit("chat_error", {
+          message: "Valid roomId is required.",
         });
       }
 
-      console.log(`Chat socket disconnected: ${socket.id}`);
-    });
+      if (!message || typeof message !== "string") {
+        return socket.emit("chat_error", {
+          message: "Message must be a string.",
+        });
+      }
+
+      const trimmedMessage = message.trim();
+
+      if (!trimmedMessage) {
+        return socket.emit("chat_error", {
+          message: "Message cannot be empty.",
+        });
+      }
+
+      if (trimmedMessage.length > 120) {
+        return socket.emit("chat_error", {
+          message: "Message cannot be longer than 120 characters.",
+        });
+      }
+
+      const payload = buildMessage({
+        roomId,
+        userId: socket.user?.id,
+        username: socket.user?.username || "Unknown User",
+        type: "text",
+        content: trimmedMessage,
+      });
+
+      io.to(roomId).emit("chat_receive_message", payload);
+    } catch (error) {
+      socket.emit("chat_error", { message: error.message });
+    }
+  });
+
+  socket.on("chat_send_preset_message", ({ roomId, preset }) => {
+    try {
+      if (!roomId || typeof roomId !== "string") {
+        return socket.emit("chat_error", {
+          message: "Valid roomId is required.",
+        });
+      }
+
+      if (!CHAT_PRESETS.includes(preset)) {
+        return socket.emit("chat_error", {
+          message: "Invalid preset message.",
+        });
+      }
+
+      const payload = buildMessage({
+        roomId,
+        userId: socket.user?.id,
+        username: socket.user?.username || "Unknown User",
+        type: "preset",
+        content: preset,
+      });
+
+      io.to(roomId).emit("chat_receive_message", payload);
+    } catch (error) {
+      socket.emit("chat_error", { message: error.message });
+    }
+  });
+
+  socket.on("chat_send_emoji", ({ roomId, emoji }) => {
+    try {
+      if (!roomId || typeof roomId !== "string") {
+        return socket.emit("chat_error", {
+          message: "Valid roomId is required.",
+        });
+      }
+
+      if (!CHAT_EMOJIS.includes(emoji)) {
+        return socket.emit("chat_error", {
+          message: "Invalid emoji.",
+        });
+      }
+
+      const payload = buildMessage({
+        roomId,
+        userId: socket.user?.id,
+        username: socket.user?.username || "Unknown User",
+        type: "emoji",
+        content: emoji,
+      });
+
+      io.to(roomId).emit("chat_receive_message", payload);
+    } catch (error) {
+      socket.emit("chat_error", { message: error.message });
+    }
+  });
+
+  socket.on("disconnect", () => {
+    if (socket.currentChatRoomId && socket.user) {
+      removeUserFromRoom(socket.currentChatRoomId, socket.user.id);
+
+      io.to(socket.currentChatRoomId).emit("chat_room_users", {
+        roomId: socket.currentChatRoomId,
+        users: Array.from(
+          activeRoomUsers.get(socket.currentChatRoomId)?.values() || []
+        ),
+      });
+    }
+
+    console.log(`Chat socket disconnected: ${socket.id}`);
   });
 };
 

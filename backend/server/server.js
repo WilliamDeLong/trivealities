@@ -3,6 +3,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const app = express();
 const cors = require("cors");
+const registerMultiplayerHandlers = require("./socket/registerMultiplayerHandlers");
 
 const socketController = require("./controllers/socketController");
 const { generateRoomCode } = require("./utilities/roomStore");
@@ -13,7 +14,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
         origin: "*",
-        methods: ["GET", "POST"]
+        methods: ["GET", "POST", "PUT", "DELETE"],
     }
 });
 
@@ -42,6 +43,9 @@ const GetAllProfileImage = require("./routes/profileImageGetAll");
 const openTriviaDBquestionGetter = require("./routes/openTriviaDBquestionGetter");
 const userUpdatePassword = require("./routes/userUpdatePassword");
 const userDeleteAccount = require("./routes/userDeleteAccount");
+const userResetLevel = require("./routes/userResetLevel");
+const userGameRoutes = require("./routes/userGameRoutes");
+
 
 require("dotenv").config();
 const SERVER_PORT = 8081;
@@ -71,21 +75,26 @@ app.use("/question", getQuestionByQuestionRoute);
 app.use("/question", findQuestionRoute);
 app.use("/question", deleteQuestion);
 app.use("/question", deleteQID);
-app.use("/user", userAddXp);
-app.use("/user", userGetLevels);
+
 app.use("/user", profileImageUpload);
 app.use("/user", DeletePiID); // Needs to be tested
 app.use("/user", GetAllProfileImage);
 app.use("/user", userUpdatePassword);
 app.use("/user", userDeleteAccount);
+app.use("/user", userResetLevel);
+app.use("/user", userGameRoutes);
 
-// Existing socket/game controller
-socketController(io, rooms, generateRoomCode);
 
-// Chat socket auth + chat events
 io.use(socketAuth);
-setupChatSocket(io);
 
-server.listen(SERVER_PORT, () => {
+io.on("connection", (socket) => {
+console.log("Socket connected:", socket.id);
+console.log("Socket user:", socket.user);
+
+  registerMultiplayerHandlers(io, socket);
+  setupChatSocket(io, socket);
+});
+
+server.listen(SERVER_PORT,"0.0.0.0", () => {
     console.log(`The backend service is running on port ${SERVER_PORT} and waiting for requests.`);
 });

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import "./AddXpPage.css";
 
 function AddXpPage() {
   const [userId, setUserId] = useState("");
@@ -7,6 +8,7 @@ function AddXpPage() {
   const [message, setMessage] = useState("");
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
 
   const handleAddXp = async (e) => {
     e.preventDefault();
@@ -15,7 +17,7 @@ function AddXpPage() {
     setLoading(true);
 
     try {
-      const res = await axios.post(`http://localhost:8081/user/${userId}/xp`, {
+      const res = await axios.post(`http://10.0.0.132/user/${userId}/xp`, {
         xp: Number(xp),
       });
 
@@ -31,137 +33,147 @@ function AddXpPage() {
     }
   };
 
+  const handleResetXpAndLevel = async () => {
+    if (!userId.trim()) {
+      setMessage("Please enter a user ID first.");
+      return;
+    }
+
+    const confirmReset = window.confirm(
+      "Are you sure you want to reset this user's XP and level to 0?"
+    );
+
+    if (!confirmReset) return;
+
+    setMessage("");
+    setUserData(null);
+    setResetLoading(true);
+
+    try {
+      const res = await axios.put(
+        `http://10.0.0.132/user/${userId}/reset-xp`
+      );
+
+      setMessage(res.data.message);
+      setUserData(res.data.user);
+    } catch (error) {
+      setMessage(
+        error.response?.data?.message ||
+          "Something went wrong while resetting XP and levels"
+      );
+    } finally {
+      setResetLoading(false);
+    }
+  };
+
+  const xpProgress = userData ? Math.min(Number(userData.accountXp) || 0, 100) : 0;
+
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "linear-gradient(135deg, #0f172a, #1e293b)",
-        padding: "20px",
-      }}
-    >
-      <div
-        style={{
-          width: "100%",
-          maxWidth: "420px",
-          background: "#ffffff",
-          padding: "25px",
-          borderRadius: "12px",
-          boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
-        }}
-      >
-        <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
-          Add XP
-        </h2>
-
-        <form onSubmit={handleAddXp}>
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ fontWeight: "bold" }}>User ID</label>
-            <input
-              type="text"
-              value={userId}
-              onChange={(e) => setUserId(e.target.value)}
-              placeholder="Enter user ID"
-              required
-              style={{
-                width: "100%",
-                padding: "10px",
-                marginTop: "5px",
-                borderRadius: "6px",
-                border: "1px solid #ccc",
-              }}
-            />
+    <div className="add-xp-page">
+      <div className="add-xp-overlay">
+        <div className="add-xp-card">
+          <div className="add-xp-header">
+            <h1>Add XP</h1>
+            <p>Manage player progression and reset account levels when needed.</p>
           </div>
 
-          <div style={{ marginBottom: "20px" }}>
-            <label style={{ fontWeight: "bold" }}>XP to Add</label>
-            <input
-              type="number"
-              value={xp}
-              onChange={(e) => setXp(e.target.value)}
-              placeholder="Enter XP amount"
-              min="1"
-              step="0.01"
-              required
-              style={{
-                width: "100%",
-                padding: "10px",
-                marginTop: "5px",
-                borderRadius: "6px",
-                border: "1px solid #ccc",
-              }}
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            style={{
-              width: "100%",
-              padding: "12px",
-              background: "#22c55e",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              fontWeight: "bold",
-              cursor: "pointer",
-              transition: "0.2s",
-            }}
-          >
-            {loading ? "Adding XP..." : "Add XP"}
-          </button>
-        </form>
-
-        {message && (
-          <p
-            style={{
-              marginTop: "15px",
-              textAlign: "center",
-              fontWeight: "bold",
-            }}
-          >
-            {message}
-          </p>
-        )}
-
-        {userData && (
-          <div
-            style={{
-              marginTop: "20px",
-              padding: "15px",
-              borderRadius: "8px",
-              background: "#f1f5f9",
-              border: "1px solid #ddd",
-            }}
-          >
-            <p><strong>Level:</strong> {userData.accountLevel}</p>
-            <p><strong>Current XP:</strong> {userData.accountXp}</p>
-            <p><strong>Levels Gained:</strong> {userData.levelsGained}</p>
-            <p><strong>XP Needed:</strong> {userData.xpNeededForNextLevel}</p>
-
-            {/* XP BAR */}
-            <div
-              style={{
-                marginTop: "10px",
-                height: "12px",
-                background: "#ddd",
-                borderRadius: "6px",
-                overflow: "hidden",
-              }}
-            >
-              <div
-                style={{
-                  height: "100%",
-                  width: `${Math.min(userData.accountXp, 100)}%`,
-                  background: "linear-gradient(90deg, #22c55e, #4ade80)",
-                  transition: "width 0.4s ease",
-                }}
+          <form className="add-xp-form" onSubmit={handleAddXp}>
+            <div className="form-group">
+              <label htmlFor="userId">User ID</label>
+              <input
+                id="userId"
+                type="text"
+                value={userId}
+                onChange={(e) => setUserId(e.target.value)}
+                placeholder="Enter user ID"
+                required
               />
             </div>
-          </div>
-        )}
+
+            <div className="form-group">
+              <label htmlFor="xp">XP to Add</label>
+              <input
+                id="xp"
+                type="number"
+                value={xp}
+                onChange={(e) => setXp(e.target.value)}
+                placeholder="Enter XP amount"
+                min="1"
+                step="0.01"
+                required
+              />
+            </div>
+
+            <div className="add-xp-actions">
+              <button
+                type="submit"
+                className="xp-btn xp-btn-primary"
+                disabled={loading || resetLoading}
+              >
+                {loading ? "Adding XP..." : "Add XP"}
+              </button>
+
+              <button
+                type="button"
+                className="xp-btn xp-btn-danger"
+                onClick={handleResetXpAndLevel}
+                disabled={loading || resetLoading}
+              >
+                {resetLoading ? "Resetting..." : "Reset XP and Level"}
+              </button>
+            </div>
+          </form>
+
+          {message && <div className="xp-message">{message}</div>}
+
+          {userData && (
+            <div className="xp-results-card">
+              <h2>Updated Account Stats</h2>
+
+              <div className="xp-stats-grid">
+                <div className="xp-stat-box">
+                  <span className="xp-stat-label">Level</span>
+                  <span className="xp-stat-value">{userData.accountLevel}</span>
+                </div>
+
+                <div className="xp-stat-box">
+                  <span className="xp-stat-label">Current XP</span>
+                  <span className="xp-stat-value">{userData.accountXp}</span>
+                </div>
+
+                <div className="xp-stat-box">
+                  <span className="xp-stat-label">Levels Gained</span>
+                  <span className="xp-stat-value">
+                    {userData.levelsGained !== undefined ? userData.levelsGained : 0}
+                  </span>
+                </div>
+
+                <div className="xp-stat-box">
+                  <span className="xp-stat-label">XP Needed</span>
+                  <span className="xp-stat-value">
+                    {userData.xpNeededForNextLevel !== undefined
+                      ? userData.xpNeededForNextLevel
+                      : 100}
+                  </span>
+                </div>
+              </div>
+
+              <div className="xp-progress-section">
+                <div className="xp-progress-label-row">
+                  <span>Progress to Next Level</span>
+                  <span>{xpProgress.toFixed(0)}%</span>
+                </div>
+
+                <div className="xp-progress-bar">
+                  <div
+                    className="xp-progress-fill"
+                    style={{ width: `${xpProgress}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
