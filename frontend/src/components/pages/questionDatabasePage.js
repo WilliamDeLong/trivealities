@@ -3,9 +3,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 //import tailwindcss from 'tailwindcss';
 import Table from "../Table";
-import API_BASE from '../../api';import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
+import API_BASE from '../../api';
 import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 
 
 
@@ -39,6 +39,9 @@ function DatabasePage() {
   useEffect(() => {
     const fetch_questions = async () => {
     const result = await axios.get(url);
+    // Following is unused as of current due to me severely changing this page over time.
+    // Also I'm still trying to fix the functions
+    //`${API_BASE}/question/getAll`,
     //const flterd = result.data.filter(item => item.question === {"$regex": question_prompt})
     setQuestions(result.data);};
       fetch_questions();
