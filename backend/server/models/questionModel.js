@@ -8,7 +8,8 @@ const newQuestionSchema = new mongoose.Schema(
 	  type: String,
 	  required: true,
 	  label: "Question Prompt",
-	  min : 1
+	  min : 1,
+	  max : 200
 	},
 	correct_answer: {
 	  type: String,
