@@ -1,110 +1,118 @@
-import React, { useEffect, useState } from "react";
-import { connectSocket, disconnectSocket, getSocket } from "../../service/socket";
+import React, { useContext } from "react";
+import { UserContext } from "../../App";
+import GameChatPanel from "../chat/GameChatPanel";
 
-const ChatPage = ({ roomId = "room-1" }) => {
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
-
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) return;
-
-    const socket = connectSocket(token);
-
-    socket.emit("chat_join_room", { roomId });
-
-    socket.on("chat_receive_message", (incomingMessage) => {
-      setMessages((prev) => [...prev, incomingMessage]);
-    });
-
-    socket.on("chat_error", (error) => {
-      console.error("Chat error:", error.message);
-    });
-
-    return () => {
-      socket.emit("chat_leave_room", { roomId });
-      socket.off("chat_receive_message");
-      socket.off("chat_error");
-      disconnectSocket();
-    };
-  }, [roomId]);
-
-  const sendMessage = () => {
-    const socket = getSocket();
-    if (!socket || !message.trim()) return;
-
-    socket.emit("chat_send_text_message", {
-      roomId,
-      message,
-    });
-
-    setMessage("");
-  };
-
-  const sendPreset = (preset) => {
-    const socket = getSocket();
-    if (!socket) return;
-
-    socket.emit("chat_send_preset_message", {
-      roomId,
-      preset,
-    });
-  };
-
-  const sendEmoji = (emoji) => {
-    const socket = getSocket();
-    if (!socket) return;
-
-    socket.emit("chat_send_emoji", {
-      roomId,
-      emoji,
-    });
-  };
+const ChatPage = () => {
+  const { isLightMode } = useContext(UserContext);
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h3>Chat Test</h3>
-
+    <GameChatPanel roomId="room-1" allowFreeChat={true}>
       <div
         style={{
-          border: "1px solid #ccc",
-          borderRadius: "8px",
-          minHeight: "200px",
-          padding: "10px",
-          marginBottom: "10px",
-          background: "white",
-          color: "black",
+          minHeight: "100vh",
+          background: isLightMode
+            ? "linear-gradient(135deg, #f8fafc, #dbeafe, #ede9fe)"
+            : "linear-gradient(135deg, #020617, #0f172a, #1e1b4b)",
+          padding: "24px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        {messages.map((msg) => (
-          <div key={msg.id} style={{ marginBottom: "8px" }}>
-            <strong>{msg.username}</strong> [{msg.type}]: {msg.content}
+        <div
+          style={{
+            width: "100%",
+            maxWidth: "900px",
+            background: isLightMode
+              ? "rgba(255,255,255,0.78)"
+              : "rgba(15,23,42,0.88)",
+            padding: "32px",
+            borderRadius: "22px",
+            border: isLightMode
+              ? "1px solid rgba(0,0,0,0.08)"
+              : "1px solid rgba(255,255,255,0.08)",
+            boxShadow: "0 18px 40px rgba(0,0,0,0.18)",
+            textAlign: "center",
+          }}
+        >
+          <h1
+            style={{
+              marginTop: 0,
+              marginBottom: "10px",
+              color: isLightMode ? "#7c3aed" : "#00d0ff",
+            }}
+          >
+            Chat Demo Page
+          </h1>
+
+          <p
+            style={{
+              color: isLightMode ? "#374151" : "#cbd5e1",
+              marginBottom: "24px",
+              fontSize: "1rem",
+            }}
+          >
+            This is a preview of the multiplayer side chat panel.
+            The panel is open by default, can be closed, and supports
+            preset messages, emojis, join/leave system messages, unread count,
+            and theme-aware styling.
+          </p>
+
+          <div
+            style={{
+              display: "grid",
+              gap: "14px",
+              textAlign: "left",
+            }}
+          >
+            <div
+              style={{
+                padding: "16px",
+                borderRadius: "16px",
+                background: isLightMode
+                  ? "rgba(124,58,237,0.08)"
+                  : "rgba(30,41,59,0.85)",
+                color: isLightMode ? "#1f2937" : "white",
+              }}
+            >
+              <strong>Demo Notes</strong>
+              <div style={{ marginTop: "8px", opacity: 0.9 }}>
+                • Right-side panel
+                <br />
+                • Open by default
+                <br />
+                • Close to a small unread-count button
+                <br />
+                • Preset messages only
+                <br />
+                • Emoji reactions
+                <br />
+                • Join/leave confirmations
+                <br />
+                • Profile image, username, and time since sent
+              </div>
+            </div>
+
+            <div
+              style={{
+                padding: "16px",
+                borderRadius: "16px",
+                background: isLightMode
+                  ? "rgba(59,130,246,0.08)"
+                  : "rgba(30,41,59,0.85)",
+                color: isLightMode ? "#1f2937" : "white",
+              }}
+            >
+              <strong>Test Tip</strong>
+              <div style={{ marginTop: "8px", opacity: 0.9 }}>
+                Open this page in another browser or incognito window with a
+                different logged-in user and use the same room id to test live chat.
+              </div>
+            </div>
           </div>
-        ))}
+        </div>
       </div>
-
-      <input
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="Type a message"
-        style={{ marginRight: "10px", padding: "8px" }}
-      />
-      <button onClick={sendMessage}>Send</button>
-
-      <div style={{ marginTop: "12px" }}>
-        <button onClick={() => sendPreset("Good luck!")}>Good luck!</button>
-        <button onClick={() => sendPreset("Nice one!")} style={{ marginLeft: "8px" }}>
-          Nice one!
-        </button>
-      </div>
-
-      <div style={{ marginTop: "12px" }}>
-        <button onClick={() => sendEmoji("🔥")}>🔥</button>
-        <button onClick={() => sendEmoji("😂")} style={{ marginLeft: "8px" }}>
-          😂
-        </button>
-      </div>
-    </div>
+    </GameChatPanel>
   );
 };
 

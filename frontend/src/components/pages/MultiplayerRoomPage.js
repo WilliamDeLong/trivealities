@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import getUserInfo from "../../utilities/decodeJwt";
 import socket from "../../socket";
+import GameChatPanel from "../chat/GameChatPanel";
 
 function MultiplayerRoomPage() {
   const { roomCode } = useParams();
@@ -85,131 +86,136 @@ function MultiplayerRoomPage() {
   };
 
   return (
-    <div style={pageStyle}>
-      <div style={panelStyle}>
-        <h1 style={{ color: "#00d0ff", marginTop: 0 }}>{room?.roomName || "Room"}</h1>
-        <p style={{ color: "#cbd5e1" }}>Code: {roomCode}</p>
+    <GameChatPanel roomId={roomCode} allowFreeChat={true}>
+      <div style={pageStyle}>
+        <div style={panelStyle}>
+          <h1 style={{ color: "#00d0ff", marginTop: 0 }}>{room?.roomName || "Room"}</h1>
+          <p style={{ color: "#cbd5e1" }}>Code: {roomCode}</p>
 
-        <div style={metaGrid}>
-          <div style={metaCard}>
-            <strong>Question Source</strong>
-            <div>
-              {room?.questionSource === "database"
-                ? "User-Created Questions"
-                : "OpenTriviaDB"}
+          <div style={metaGrid}>
+            <div style={metaCard}>
+              <strong>Question Source</strong>
+              <div>
+                {room?.questionSource === "database"
+                  ? "User-Created Questions"
+                  : "OpenTriviaDB"}
+              </div>
+            </div>
+
+            <div style={metaCard}>
+              <strong>Players</strong>
+              <div>
+                {room?.playerCount || 0}/{room?.maxPlayers || 0}
+              </div>
+            </div>
+
+            <div style={metaCard}>
+              <strong>Question Count</strong>
+              <div>{room?.questionCount || 0}</div>
+            </div>
+
+            <div style={metaCard}>
+              <strong>Status</strong>
+              <div>{room?.status || "lobby"}</div>
             </div>
           </div>
 
-          <div style={metaCard}>
-            <strong>Players</strong>
-            <div>
-              {room?.playerCount || 0}/{room?.maxPlayers || 0}
-            </div>
-          </div>
+          <h2 style={{ color: "white", marginTop: "24px" }}>Players</h2>
 
-          <div style={metaCard}>
-            <strong>Question Count</strong>
-            <div>{room?.questionCount || 0}</div>
-          </div>
-
-          <div style={metaCard}>
-            <strong>Status</strong>
-            <div>{room?.status || "lobby"}</div>
-          </div>
-        </div>
-
-        <h2 style={{ color: "white", marginTop: "24px" }}>Players</h2>
-
-        <div style={playerGrid}>
-          {room?.players?.map((player) => (
-            <div
-              key={player.socketId}
-              style={{
-                ...playerCard,
-                border: player.isHost
-                  ? "1px solid rgba(250,204,21,0.6)"
-                  : "1px solid rgba(255,255,255,0.08)",
-                boxShadow: player.isHost
-                  ? "0 0 18px rgba(250,204,21,0.4)"
-                  : "0 10px 20px rgba(0,0,0,0.2)",
-              }}
-            >
-              <img
-                src={player.profileImage || "https://via.placeholder.com/64"}
-                alt={player.username}
+          <div style={playerGrid}>
+            {room?.players?.map((player) => (
+              <div
+                key={player.socketId}
                 style={{
-                  width: "64px",
-                  height: "64px",
-                  borderRadius: "50%",
-                  objectFit: "cover",
+                  ...playerCard,
                   border: player.isHost
-                    ? "2px solid #facc15"
-                    : "2px solid rgba(255,255,255,0.15)",
+                    ? "1px solid rgba(250,204,21,0.6)"
+                    : "1px solid rgba(255,255,255,0.08)",
+                  boxShadow: player.isHost
+                    ? "0 0 18px rgba(250,204,21,0.4)"
+                    : "0 10px 20px rgba(0,0,0,0.2)",
                 }}
-              />
+              >
+                <img
+                  src={player.profileImage || "/user-icon.png"}
+                  alt={player.username}
+                  onError={(e) => {
+                    e.currentTarget.src = "/user-icon.png";
+                  }}
+                  style={{
+                    width: "64px",
+                    height: "64px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    border: player.isHost
+                      ? "2px solid #facc15"
+                      : "2px solid rgba(255,255,255,0.15)",
+                  }}
+                />
 
-              <div style={{ marginTop: "10px", fontWeight: "bold", color: "white" }}>
-                {player.username}
-              </div>
-
-              <div style={{ color: "#cbd5e1", fontSize: "0.92rem" }}>
-                Level {player.accountLevel || 0}
-              </div>
-
-              {player.isHost && (
-                <div style={hostBadge}>
-                  Host
+                <div style={{ marginTop: "10px", fontWeight: "bold", color: "white" }}>
+                  {player.username}
                 </div>
-              )}
-            </div>
-          ))}
-        </div>
 
-        {room?.latestResults?.length > 0 && (
-          <>
-            <h2 style={{ color: "white", marginTop: "24px" }}>Last Game Results</h2>
-            <div style={{ display: "grid", gap: "10px" }}>
-              {room.latestResults.map((entry, index) => (
-                <div key={entry.socketId} style={leaderboardRow}>
-                  <span>
-                    #{index + 1} {entry.username}
-                  </span>
-                  <span>
-                    {entry.correctAnswers} correct • Streak {entry.highestStreak}
-                  </span>
+                <div style={{ color: "#cbd5e1", fontSize: "0.92rem" }}>
+                  Level {player.accountLevel || 0}
                 </div>
-              ))}
-            </div>
-          </>
-        )}
 
-        {message && <p style={{ color: "#fca5a5" }}>{message}</p>}
+                {player.isHost && (
+                  <div style={hostBadge}>
+                    Host
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
 
-        <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginTop: "22px" }}>
-          {isHost && (
+          {room?.latestResults?.length > 0 && (
             <>
-              <button style={primaryButton} onClick={handleStartGame}>
-                Start Game
-              </button>
-
-              <button style={dangerButton} onClick={handleDisbandRoom}>
-                Disband Room
-              </button>
+              <h2 style={{ color: "white", marginTop: "24px" }}>Last Game Results</h2>
+              <div style={{ display: "grid", gap: "10px" }}>
+                {room.latestResults.map((entry, index) => (
+                  <div key={entry.socketId} style={leaderboardRow}>
+                    <span>
+                      #{index + 1} {entry.username}
+                    </span>
+                    <span>
+                      {entry.correctAnswers} correct • Streak {entry.highestStreak}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </>
           )}
 
-          {!isHost && (
-            <button style={secondaryButton} onClick={handleLeaveRoom}>
-              Leave Room
-            </button>
-          )}
+          {message && <p style={{ color: "#fca5a5" }}>{message}</p>}
 
-          <button style={secondaryButton} onClick={() => navigate("/multiplayer")}>
-            Back
-          </button>
+          <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginTop: "22px" }}>
+            {isHost && (
+              <>
+                <button style={primaryButton} onClick={handleStartGame}>
+                  Start Game
+                </button>
+
+                <button style={dangerButton} onClick={handleDisbandRoom}>
+                  Disband Room
+                </button>
+              </>
+            )}
+
+            {!isHost && (
+              <button style={secondaryButton} onClick={handleLeaveRoom}>
+                Leave Room
+              </button>
+            )}
+
+            <button style={secondaryButton} onClick={() => navigate("/multiplayer")}>
+              Back
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </GameChatPanel>
   );
 }
 

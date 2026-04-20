@@ -16,6 +16,7 @@ function MultiplayerHostPage() {
   const [questionCount, setQuestionCount] = useState(10);
   const [message, setMessage] = useState("");
   const [creating, setCreating] = useState(false);
+  connectSocket();
 
   const handleCreate = () => {
     if (creating) return;

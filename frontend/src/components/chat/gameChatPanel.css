@@ -1,0 +1,352 @@
+.game-layout {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.game-content {
+  flex: 1;
+  min-width: 0;
+  transition: width 0.25s ease;
+}
+
+.game-content.with-chat {
+  width: 70%;
+}
+
+.game-chat-panel {
+  width: 30%;
+  min-width: 320px;
+  max-width: 420px;
+  height: calc(100vh - 32px);
+  margin: 16px 16px 16px 0;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+  transition: all 0.25s ease;
+}
+
+.game-chat-panel.light {
+  background: #f7f3fb;
+  color: #1f2937;
+}
+
+.game-chat-panel.dark {
+  background: #111827;
+  color: #f9fafb;
+}
+
+.game-chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 18px 12px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.game-chat-panel.light .game-chat-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.game-chat-title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.game-chat-title h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.game-chat-title span {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.game-chat-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.game-chat-icon-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+
+.game-chat-panel.light .game-chat-icon-btn {
+  color: #374151;
+}
+
+.game-chat-panel.dark .game-chat-icon-btn {
+  color: #f9fafb;
+}
+
+.game-chat-body {
+  flex: 1;
+  padding: 14px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chat-message-row {
+  display: flex;
+  width: 100%;
+}
+
+.chat-message-row.own {
+  justify-content: flex-end;
+}
+
+.chat-message-row.other {
+  justify-content: flex-start;
+}
+
+.chat-message-row.system {
+  justify-content: center;
+}
+
+.chat-message-bubble {
+  max-width: 85%;
+  border-radius: 18px;
+  padding: 10px 12px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.game-chat-panel.light .chat-message-bubble.other {
+  background: #ffffff;
+}
+
+.game-chat-panel.dark .chat-message-bubble.other {
+  background: #1f2937;
+}
+
+.chat-message-bubble.own {
+  background: #a855f7;
+  color: white;
+}
+
+.chat-message-bubble.system {
+  background: transparent;
+  color: inherit;
+  opacity: 0.8;
+  font-size: 0.85rem;
+  padding: 4px 10px;
+}
+
+.chat-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.chat-message-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.chat-message-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chat-username {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.chat-time {
+  font-size: 0.72rem;
+  opacity: 0.65;
+}
+
+.chat-text {
+  font-size: 0.95rem;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.game-chat-controls {
+  padding: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.game-chat-panel.light .game-chat-controls {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.chat-section-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  opacity: 0.75;
+  margin-bottom: 4px;
+}
+
+.chat-preset-row,
+.chat-emoji-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chat-preset-btn,
+.chat-emoji-btn {
+  border: none;
+  cursor: pointer;
+  border-radius: 999px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.chat-preset-btn:hover,
+.chat-emoji-btn:hover,
+.chat-closed-button:hover,
+.game-chat-icon-btn:hover {
+  transform: scale(1.04);
+}
+
+.chat-preset-btn {
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.game-chat-panel.light .chat-preset-btn {
+  background: #ffffff;
+  color: #4b5563;
+}
+
+.game-chat-panel.dark .chat-preset-btn {
+  background: #374151;
+  color: #f9fafb;
+}
+
+.chat-emoji-btn {
+  width: 38px;
+  height: 38px;
+  font-size: 1.15rem;
+}
+
+.game-chat-panel.light .chat-emoji-btn {
+  background: #ffffff;
+}
+
+.game-chat-panel.dark .chat-emoji-btn {
+  background: #374151;
+}
+
+.chat-toast-stack {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 20;
+}
+
+.chat-toast {
+  min-width: 220px;
+  max-width: 280px;
+  border-radius: 16px;
+  padding: 10px 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  animation: fadeToast 0.25s ease;
+}
+
+.chat-toast.light {
+  background: #ffffff;
+  color: #111827;
+}
+
+.chat-toast.dark {
+  background: #1f2937;
+  color: #f9fafb;
+}
+
+.chat-toast-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chat-toast-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-toast-text strong {
+  font-size: 0.9rem;
+}
+
+.chat-toast-text span {
+  font-size: 0.78rem;
+  opacity: 0.7;
+}
+
+.chat-closed-button {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 18px;
+  cursor: pointer;
+  font-weight: 700;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
+}
+
+.chat-closed-button.light {
+  background: #ffffff;
+  color: #111827;
+}
+
+.chat-closed-button.dark {
+  background: #1f2937;
+  color: #f9fafb;
+}
+
+.chat-unread-badge {
+  min-width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: #ef4444;
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+@keyframes fadeToast {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
