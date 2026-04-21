@@ -7,7 +7,7 @@ import { connectSocket } from "../../socket";
 function MultiplayerHostPage() {
   const navigate = useNavigate();
   const user = getUserInfo();
-
+ 
   const [roomName, setRoomName] = useState(
     `${user?.username || "Host"}'s room`
   );
@@ -16,7 +16,7 @@ function MultiplayerHostPage() {
   const [questionCount, setQuestionCount] = useState(10);
   const [message, setMessage] = useState("");
   const [creating, setCreating] = useState(false);
-
+  connectSocket();
   const handleCreate = () => {
     if (creating) return;
 
