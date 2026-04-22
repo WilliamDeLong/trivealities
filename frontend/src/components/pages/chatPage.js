@@ -1,9 +1,12 @@
 import React, { useContext } from "react";
 import { UserContext } from "../../App";
 import GameChatPanel from "../chat/GameChatPanel";
+import { useMusic } from "../../context/MusicContext";
+
 
 const ChatPage = () => {
   const { isLightMode } = useContext(UserContext);
+  
 
   return (
     <GameChatPanel roomId="room-1" allowFreeChat={true}>

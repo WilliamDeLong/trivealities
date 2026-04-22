@@ -7,6 +7,7 @@ import ChatToast from "./ChatToast";
 import CHAT_PRESETS from "./constants/chatPresets";
 import CHAT_EMOJIS from "./constants/chatEmojis";
 import "./gameChatPanel.css";
+import API_BASE from "../../api";
 
 const GameChatPanel = ({ roomId, children, allowFreeChat = false }) => {
   const { isLightMode } = useContext(UserContext);
@@ -77,7 +78,7 @@ const GameChatPanel = ({ roomId, children, allowFreeChat = false }) => {
 
         if (incomingMessage.userId) {
           try {
-            const res = await fetch(`http://localhost:8081/user/${incomingMessage.userId}`);
+            const res = await fetch(`${API_BASE}/user/${incomingMessage.userId}`);
             if (res.ok) {
               const data = await res.json();
               profileUrl = data?.user?.profileImage?.imageUrl || "/user-icon.png";

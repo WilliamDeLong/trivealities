@@ -1,11 +1,12 @@
 import { io } from "socket.io-client";
+import API_BASE from "../api";
 
 let socket = null;
 
 export const connectSocket = (token) => {
   if (socket && socket.connected) return socket;
 
-  socket = io("http://localhost:8081", {
+  socket = io(API_BASE, {
     auth: {
       token,
     },
