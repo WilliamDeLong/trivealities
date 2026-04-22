@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { UserContext } from '../App';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 const TableHead = ({ columns, handleSorting }) => {
   const [sortField, setSortField] = useState("");
   const [order, setOrder] = useState("asc");
+  const { isLightMode } = useContext(UserContext);
 
   const handleSortingChange = (accessor) => {
     const sortOrder =
@@ -12,7 +14,7 @@ const TableHead = ({ columns, handleSorting }) => {
   };
 
   return (
-    <thead>
+    <thead >
       <tr>
         {columns.map(({ label, accessor, sortable }) => {
           const cl = sortable
@@ -26,7 +28,8 @@ const TableHead = ({ columns, handleSorting }) => {
             <th
               key={accessor}
               onClick={sortable ? () => handleSortingChange(accessor) : null}
-              className={cl}
+              className={cl} 
+              style={{color: isLightMode? "#7b0445": "#cc5c99"}}
             >
               {label}
             </th>

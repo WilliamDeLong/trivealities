@@ -43,6 +43,7 @@ router.post('/create', async (req, res) => {
         const saveNewQuestion = await createQuestion.save();
         res.send(saveNewQuestion);
     } catch (error) {
+        
         res.status(400).send({ message: "Error trying to create new question" });
     }
 

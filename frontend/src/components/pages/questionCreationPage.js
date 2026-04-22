@@ -22,8 +22,13 @@ const QuestionCreationPage = () => {
   const [bgText, setBgText] = useState('Light Mode')
   const navigate = useNavigate();
 
+  let TextyStyling = {
+    color: isLightMode? "#0c0c0c": "#ffe5f3",
+    //fontWeight: "lighter",
+  };
+ 
   let labelStyling = {
-    color: PRIMARY_COLOR,
+    color: isLightMode? "#7b0445": "#cc5c99",
     fontWeight: "bold",
     textDecoration: "none",
   };
@@ -36,7 +41,7 @@ const QuestionCreationPage = () => {
 
   const handleChange = ({ currentTarget: input }) => {
     //console.log(input.name);
-    console.log(input.name+":",input.value);
+    //console.log(input.name+":",input.value);
     //const ques = newQuestionModel.findOne({ question: input.value });
     //console.log(ques);
     setData({ ...data, [input.name]: input.value });
@@ -45,7 +50,7 @@ const QuestionCreationPage = () => {
 
   useEffect(() => {
     setUser(getUserInfo());
-    console.log(isLightMode);
+    //console.log(isLightMode);
     if (isLightMode) {
       setBgColor("white");
       setBgText('Dark mode')
@@ -59,9 +64,9 @@ const QuestionCreationPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log(data);
+      //console.log(data);
       const { data: res } = await axios.post(url, data);
-      console.log(data);
+      //console.log(data);
       //const { accessToken } = res;
       //store token in localStorage
       //localStorage.setItem("accessToken", accessToken);
@@ -89,10 +94,8 @@ const QuestionCreationPage = () => {
         <div className="container-fluid h-custom vh-100">
           <div
             className="row d-flex justify-content-center h-100 "
-            style={{background: true ? isLightMode
-                            ? "linear-gradient(135deg, #dbeafe, #bfdbfe, #e0f2fe)"
-                            : "linear-gradient(135deg, #0f172a, #1e3a8a, #0f172a)"
-                        : "#000",}}>
+            style={{background: isLightMode ? "linear-gradient(135deg, #f8fafc, #dbeafe, #ede9fe)": "linear-gradient(135deg, #020617, #0f172a, #1e1b4b)",
+                        color: isLightMode? "#000000": "#ffffff"}}>
             <div className="col-xl-8 offset-xl-0">
               <Form id='form'>
                 <Form.Group className="mb-3" controlId="formBasicPrompt">
@@ -106,7 +109,7 @@ const QuestionCreationPage = () => {
                 <td width="50%">
                 <Form.Group className="mb-3" controlId="formBasicAnswer">
                     <Form.Label style={labelStyling}>Correct Answer</Form.Label>
-                    <br></br><Form.Text className="text-muted">
+                    <br></br><Form.Text className="text" style={TextyStyling}>
                       This is the correct answer to the question, there will only be one correct answer.
                     </Form.Text>
                     <Form.Control
@@ -165,7 +168,7 @@ const QuestionCreationPage = () => {
                 <Form.Group className="mb-3" controlId="formBasicWrongAnswer1">
                   <Form.Label style={labelStyling}>Incorrect Answer 1</Form.Label>
                   <br></br>
-                  <Form.Text className="text-muted">
+                  <Form.Text className="text" style={TextyStyling}>
                     This is where you put the incorrect answers, try to play some mindgames.
                   </Form.Text>
                   <Form.Control

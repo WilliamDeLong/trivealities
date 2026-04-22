@@ -24,8 +24,8 @@ caption {
 }
 
 .table th {
-  background: #fff;
-  padding: 8px 10px;
+  background: #ffffff;
+  /* padding: 8px 10px; */
   border-bottom: 1.5px solid #1a1a1a;
   font-weight: bold;
   text-align: left;
@@ -51,16 +51,17 @@ th.down {
 .table td {
   border-top: 1px solid #ddd;
   padding: 8px 20px;
+  color:#ffffff;
 }
 
 .table tbody tr:first-child td {
   border-top: none;
 }
 
-.table tbody tr:nth-child(n) td {
+/* .table tbody tr:nth-child(n) td {
   background: #eff0f0;
 }
 
 .table tbody tr:nth-child(2n) td {
   background: #fff;
-}
+} */

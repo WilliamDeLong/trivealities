@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 //import Card from 'react-bootstrap/Card';
 import axios from 'axios';
 //import tailwindcss from 'tailwindcss';
@@ -6,6 +6,8 @@ import Table from "../Table";
 import API_BASE from '../../api';
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import getUserInfo from "../../utilities/decodeJwt";
+import { UserContext } from '../../App';
 
 
 
@@ -34,6 +36,7 @@ function DatabasePage() {
   const [questions, setQuestions] = useState([]);
   const [data, setData] = useState(default_data);
   const [error, setError] = useState("");
+  const { isLightMode } = useContext(UserContext);
   const [seed, setSeed] = useState(1);
   const fetch_questions = async () => {
       try {
@@ -94,77 +97,82 @@ function DatabasePage() {
   
   if (questions.length>0){
   return (
-    <div className="table_container">
-      <h1>Trivealities Question Database V0.0074</h1>
-      <Form>
-        <Form.Group className="mb-3" controlId="formBasicPrompt">
-          <table>
-            <tbody>
-              <tr>
-                <td width="45%">
-                  <Form.Label>Question Prompt</Form.Label>
-                  <Form.Control type="question_prompt" name="question_prompt" onChange={handleChange} placeholder="Please enter words that appear in the question"/>
-                </td>
-                <td width="20%">
-                  <Form.Label>Question Category</Form.Label>
-                      <select name="q_category" id="formQuestionCategory" className="form-control" onChange={handleChange}>
-                          <option value="null">Any Category</option>
-                          <option value="9">General Knowledge</option>
-                          <option value="10">Entertainment: Books</option>
-                          <option value="11">Entertainment: Film</option>
-                          <option value="12">Entertainment: Music</option>
-                          <option value="13">Entertainment: Musicals &amp; Theatres</option>
-                          <option value="14">Entertainment: Television</option>
-                          <option value="15">Entertainment: Video Games</option>
-                          <option value="16">Entertainment: Board Games</option>
-                          <option value="17">Science &amp; Nature</option>
-                          <option value="18">Science: Computers</option>
-                          <option value="19">Science: Mathematics</option>
-                          <option value="20">Mythology</option>
-                          <option value="21">Sports</option>
-                          <option value="22">Geography</option>
-                          <option value="23">History</option>
-                          <option value="24">Politics</option>
-                          <option value="25">Art</option>
-                          <option value="26">Celebrities</option>
-                          <option value="27">Animals</option>
-                          <option value="28">Vehicles</option>
-                          <option value="29">Entertainment: Comics</option>
-                          <option value="30">Science: Gadgets</option>
-                          <option value="31">Entertainment: Japanese Anime &amp; Manga</option>
-                          <option value="32">Entertainment: Cartoon &amp; Animations</option>
-                      </select>
+    <div style={{background: isLightMode ? "linear-gradient(135deg, #f8fafc, #dbeafe, #ede9fe)": "linear-gradient(135deg, #020617, #0f172a, #1e1b4b)",
+                        color: isLightMode? "#7b0445": "#cc5c99"}}>
+      <div className="table_container">
+        <h1>Trivealities Question Database V0.0074</h1>
+        <Form>
+          <Form.Group className="mb-3" controlId="formBasicPrompt">
+            <table>
+              <tbody>
+                <tr>
+                  <td width="45%">
+                    <Form.Label>Question Prompt</Form.Label>
+                    <Form.Control type="question_prompt" name="question_prompt" onChange={handleChange} placeholder="Please enter words that appear in the question"/>
                   </td>
                   <td width="20%">
-                    <Form.Label>Question Difficulty</Form.Label>
-                    <select name="q_difficulty" id="formQuestionDifficulty" className="form-control" onChange={handleChange}>
-                        <option value="null">Any Difficulty</option>
-                        <option value="0">Easy</option>
-                        <option value="1">Medium</option>
-                        <option value="2">Hard</option>
-                    </select>
-                  </td>
-                  <td width="10%">
-                    <br/>
-                    <Button
-                      variant="primary"
-                      type="submit"
-                      onClick={handleSubmit}
-                      className='mt-2'>
-                      Filter
-                    </Button>
-                  </td>
-                </tr>
-                </tbody>
-          </table>
-        </Form.Group>
-      </Form>
-      {error && <div className='pt-3'>{error}</div>}
-      <Table
-        key={seed}
-        data={questions}
-        columns={columns}
-      />
+                    <Form.Label>Question Category</Form.Label>
+                        <select name="q_category" id="formQuestionCategory" className="form-control" onChange={handleChange}>
+                            <option value="null">Any Category</option>
+                            <option value="9">General Knowledge</option>
+                            <option value="10">Entertainment: Books</option>
+                            <option value="11">Entertainment: Film</option>
+                            <option value="12">Entertainment: Music</option>
+                            <option value="13">Entertainment: Musicals &amp; Theatres</option>
+                            <option value="14">Entertainment: Television</option>
+                            <option value="15">Entertainment: Video Games</option>
+                            <option value="16">Entertainment: Board Games</option>
+                            <option value="17">Science &amp; Nature</option>
+                            <option value="18">Science: Computers</option>
+                            <option value="19">Science: Mathematics</option>
+                            <option value="20">Mythology</option>
+                            <option value="21">Sports</option>
+                            <option value="22">Geography</option>
+                            <option value="23">History</option>
+                            <option value="24">Politics</option>
+                            <option value="25">Art</option>
+                            <option value="26">Celebrities</option>
+                            <option value="27">Animals</option>
+                            <option value="28">Vehicles</option>
+                            <option value="29">Entertainment: Comics</option>
+                            <option value="30">Science: Gadgets</option>
+                            <option value="31">Entertainment: Japanese Anime &amp; Manga</option>
+                            <option value="32">Entertainment: Cartoon &amp; Animations</option>
+                        </select>
+                    </td>
+                    <td width="20%">
+                      <Form.Label>Question Difficulty</Form.Label>
+                      <select name="q_difficulty" id="formQuestionDifficulty" className="form-control" onChange={handleChange}>
+                          <option value="null">Any Difficulty</option>
+                          <option value="0">Easy</option>
+                          <option value="1">Medium</option>
+                          <option value="2">Hard</option>
+                      </select>
+                    </td>
+                    <td width="10%">
+                      <br/>
+                      <Button
+                        variant="primary"
+                        type="submit"
+                        onClick={handleSubmit}
+                        className='mt-2'
+                        style = {{background: isLightMode? "#7b0445": "#cc5c99", border: isLightMode? "#000000": "#ffffff"}}
+                        >
+                        Filter
+                      </Button>
+                    </td>
+                  </tr>
+                  </tbody>
+            </table>
+          </Form.Group>
+        </Form>
+        {error && <div className='pt-3'>{error}</div>}
+        <Table
+          key={seed}
+          data={questions}
+          columns={columns}
+        />
+      </div>
     </div>
   );}
 }
