@@ -134,7 +134,7 @@ function SinglePlayerGamePage() {
 
       try {
         await axios.put(
-          `/user/${userId}/singleplayer-progress`,
+          `${API_BASE}/user/${userId}/singleplayer-progress`,
           { difficulty }
         );
       } catch (err) {

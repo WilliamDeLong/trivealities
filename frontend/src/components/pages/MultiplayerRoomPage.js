@@ -262,7 +262,7 @@ function MultiplayerRoomPage() {
 const pageStyle = {
   minHeight: "100vh",
   background: "linear-gradient(135deg, #020617, #0f172a, #1e1b4b)",
-  padding: "24px",
+  padding: "24px 380px 24px 24px",
   width: "100%",
   boxSizing: "border-box",
 };
