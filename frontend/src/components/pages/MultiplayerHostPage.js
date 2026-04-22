@@ -32,8 +32,7 @@ function MultiplayerHostPage() {
     const payload = {
       userId: user?._id || user?.id || null,
       username: user?.username || "Host",
-      profileImage: user?.profileImage || "",
-      accountLevel: user?.accountLevel || 0,
+      profileImage: user?.profileImage?.imageUrl || user?.profileImage || "",      accountLevel: user?.accountLevel || 0,
       roomName,
       questionSource,
       maxPlayers: Number(maxPlayers),

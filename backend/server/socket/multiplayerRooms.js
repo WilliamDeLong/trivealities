@@ -80,6 +80,9 @@ const createRoom = ({
     highestStreakHolder: null,
     questions: [],
     currentQuestionIndex: 0,
+    questionTimer: null,
+    questionTimeLeft: 20,
+    answersReceived: {},
   };
 
   return rooms[roomCode];
@@ -263,6 +266,15 @@ const setRoomQuestions = (roomCode, questions) => {
 
   room.questions = questions;
   room.currentQuestionIndex = 0;
+  
+  room.questionTimeLeft = 20;
+  room.answersReceived = {};
+
+  if (room.questionTimer) {
+    clearInterval(room.questionTimer);
+    room.questionTimer = null;
+  }
+
   return room;
 };
 module.exports = {

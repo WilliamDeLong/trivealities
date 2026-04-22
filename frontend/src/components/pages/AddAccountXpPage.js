@@ -52,7 +52,7 @@ function AddXpPage() {
 
     try {
       const res = await axios.put(
-        `http://10.0.0.132/user/${userId}/reset-xp`
+        `${API_BASE}/user/${userId}/reset-xp`,{}
       );
 
       setMessage(res.data.message);

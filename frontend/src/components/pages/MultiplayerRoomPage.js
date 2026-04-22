@@ -11,9 +11,16 @@ function MultiplayerRoomPage() {
 
   const [room, setRoom] = useState(null);
   const [message, setMessage] = useState("");
-
+  const [playerImageMap, setPlayerImageMap] = useState({});
   useEffect(() => {
-    socket.emit("get_multiplayer_rooms", () => {});
+    socket.emit("get_multiplayer_room_by_code", { roomCode }, (response) => {
+      if (!response?.success) {
+        setMessage(response?.message || "Room not found");
+        return;
+      }
+  
+      setRoom(response.room);
+    });
 
     const handleRoomUpdated = (updatedRoom) => {
       if (updatedRoom.roomCode === roomCode) {
@@ -54,7 +61,36 @@ function MultiplayerRoomPage() {
       socket.off("room_disbanded", handleRoomDisbanded);
     };
   }, [navigate, roomCode]);
+  useEffect(() => {
+  const fetchPlayerImages = async () => {
+    if (!room?.players?.length) return;
 
+    const entries = await Promise.all(
+      room.players.map(async (player) => {
+        if (!player.userId) {
+          return [player.socketId, "/user-icon.png"];
+        }
+
+        try {
+          const res = await fetch(`http://localhost:8081/user/${player.userId}`);
+          if (!res.ok) {
+            return [player.socketId, "/user-icon.png"];
+          }
+
+          const data = await res.json();
+          const imageUrl = data?.user?.profileImage?.imageUrl || "/user-icon.png";
+          return [player.socketId, imageUrl];
+        } catch (error) {
+          return [player.socketId, "/user-icon.png"];
+        }
+      })
+    );
+
+    setPlayerImageMap(Object.fromEntries(entries));
+  };
+
+  fetchPlayerImages();
+}, [room]);
   const currentPlayer = room?.players?.find(
     (player) => player.userId === (user?._id || user?.id)
   );
@@ -93,6 +129,10 @@ function MultiplayerRoomPage() {
           <p style={{ color: "#cbd5e1" }}>Code: {roomCode}</p>
 
           <div style={metaGrid}>
+            <div style={metaCard}>
+              <strong>Timer</strong>
+              <div>20 seconds per question</div>
+            </div>
             <div style={metaCard}>
               <strong>Question Source</strong>
               <div>
@@ -137,7 +177,7 @@ function MultiplayerRoomPage() {
                 }}
               >
                 <img
-                  src={player.profileImage || "/user-icon.png"}
+                  src={playerImageMap[player.socketId] || "/user-icon.png"}
                   alt={player.username}
                   onError={(e) => {
                     e.currentTarget.src = "/user-icon.png";
@@ -223,15 +263,19 @@ const pageStyle = {
   minHeight: "100vh",
   background: "linear-gradient(135deg, #020617, #0f172a, #1e1b4b)",
   padding: "24px",
+  width: "100%",
+  boxSizing: "border-box",
 };
 
 const panelStyle = {
+  width: "100%",
   maxWidth: "1100px",
-  margin: "0 auto",
+  margin: "0",
   background: "rgba(15,23,42,0.85)",
   padding: "28px",
   borderRadius: "18px",
   border: "1px solid rgba(255,255,255,0.08)",
+  boxSizing: "border-box",
 };
 
 const metaGrid = {

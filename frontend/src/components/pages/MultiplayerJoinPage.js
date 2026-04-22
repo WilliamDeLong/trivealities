@@ -42,8 +42,7 @@ function MultiplayerJoinPage() {
         enteredCode,
         userId: user?._id || user?.id || null,
         username: user?.username || "Player",
-        profileImage: user?.profileImage || "",
-        accountLevel: user?.accountLevel || 0,
+        profileImage: user?.profileImage?.imageUrl || user?.profileImage || "",        accountLevel: user?.accountLevel || 0,
       },
       (response) => {
         if (!response?.success) {
@@ -53,7 +52,7 @@ function MultiplayerJoinPage() {
 
         navigate(`/multiplayer/room/${response.roomCode}`);
       }
-    );
+    ); 
   };
 
   return (
