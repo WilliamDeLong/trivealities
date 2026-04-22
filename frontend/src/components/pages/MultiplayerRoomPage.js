@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import getUserInfo from "../../utilities/decodeJwt";
 import socket from "../../socket";
 import GameChatPanel from "../chat/GameChatPanel";
+import API_BASE from "../../api";
 
 function MultiplayerRoomPage() {
   const { roomCode } = useParams();
@@ -72,7 +73,7 @@ function MultiplayerRoomPage() {
         }
 
         try {
-          const res = await fetch(`http://localhost:8081/user/${player.userId}`);
+          const res = await fetch(`${API_BASE}/user/${player.userId}`);
           if (!res.ok) {
             return [player.socketId, "/user-icon.png"];
           }

@@ -4,6 +4,7 @@ import socket from "../../socket";
 import getUserInfo from "../../utilities/decodeJwt";
 import { connectSocket } from "../../socket";
 import GameChatPanel from "../chat/GameChatPanel";
+import  API_BASE  from "../../api";
 
 function MultiplayerLiveGamePage() {
   const { roomCode } = useParams();
@@ -144,7 +145,7 @@ function MultiplayerLiveGamePage() {
         });
     }
   }, [timeLeft, currentQuestion, answerLocked, roomCode]);
-  const handleAnswerClick = (answer) => {
+  const handleAnswerClick = async (answer) => {
     if (!currentQuestion || answerLocked || timeLeft <= 0) return;
   
     setSelectedAnswer(answer);
@@ -158,16 +159,33 @@ function MultiplayerLiveGamePage() {
     });
   
     if (isCorrect) {
-      setLocalCorrectCount((prev) => prev + 1);
-      setLocalStreak((prev) => {
-        const next = prev + 1;
-        setHighestLocalStreak((highest) => Math.max(highest, next));
-        return next;
-      });
-    } else {
-      setLocalStreak(0);
-    }
-  };
+  const userId = user?._id || user?.id;
+
+        if (userId) {
+          try {
+            await fetch(`${API_BASE}/user/${userId}/xp`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+              body: JSON.stringify({ xp: 20 }),
+            });
+          } catch (error) {
+            console.error("XP award error:", error);
+          }
+        }
+
+        setLocalCorrectCount((prev) => prev + 1);
+        setLocalStreak((prev) => {
+          const next = prev + 1;
+          setHighestLocalStreak((highest) => Math.max(highest, next));
+          return next;
+        });
+      } else {
+        setLocalStreak(0);
+      }
+        };
 
   if (loadingQuestions) {
     return (
