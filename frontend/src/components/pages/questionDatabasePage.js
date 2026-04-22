@@ -59,9 +59,9 @@ function DatabasePage() {
     };
   
   useEffect(() => {
-    
     fetch_questions();
     }, []);
+    
   const handleChange = ({ currentTarget: input }) => {
       setData({ ...data, [input.name]: input.value });
       //console.log(data);
@@ -94,7 +94,7 @@ function DatabasePage() {
   if (questions.length>0){
   return (
     <div className="table_container">
-      <h1>Trivealities Question Database V0.0043</h1>
+      <h1>Trivealities Question Database V0.0074</h1>
       <Form>
         <Form.Group className="mb-3" controlId="formBasicPrompt">
           <table>

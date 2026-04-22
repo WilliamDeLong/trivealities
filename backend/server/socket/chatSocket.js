@@ -1,5 +1,5 @@
-const CHAT_PRESETS = require("../constants/chatPresets");
-const CHAT_EMOJIS = require("../constants/chatEmojis");
+const CHAT_PRESETS = require("../../../frontend/src/components/chat/constants/chatPresets");
+const CHAT_EMOJIS = require("../../../frontend/src/components/chat/constants/chatEmojis");
 
 const activeRoomUsers = new Map();
 

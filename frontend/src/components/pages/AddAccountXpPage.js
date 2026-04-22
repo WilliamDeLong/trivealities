@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import "./AddXpPage.css";
+import API_BASE from '../../api';
 
 function AddXpPage() {
   const [userId, setUserId] = useState("");
@@ -17,7 +18,7 @@ function AddXpPage() {
     setLoading(true);
 
     try {
-      const res = await axios.post(`http://10.0.0.132/user/${userId}/xp`, {
+      const res = await axios.post(`${API_BASE}/user/${userId}/xp`, {
         xp: Number(xp),
       });
 

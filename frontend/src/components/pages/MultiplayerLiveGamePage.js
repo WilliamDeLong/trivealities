@@ -1,10 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import he from "he";
 import socket from "../../socket";
 import getUserInfo from "../../utilities/decodeJwt";
 import { connectSocket } from "../../socket";
-
+import GameChatPanel from "../chat/GameChatPanel";
 
 function MultiplayerLiveGamePage() {
   const { roomCode } = useParams();
@@ -21,48 +20,50 @@ function MultiplayerLiveGamePage() {
   const [localCorrectCount, setLocalCorrectCount] = useState(0);
   const [localStreak, setLocalStreak] = useState(0);
   const [highestLocalStreak, setHighestLocalStreak] = useState(0);
-useEffect(() => {
-  connectSocket();
-}, []);
-useEffect(() => {
-  const handleRoomUpdated = (updatedRoom) => {
-    if (updatedRoom.roomCode === roomCode) {
-      setRoom(updatedRoom);
-    }
-  };
 
-  const handleGameStarted = ({
-    roomCode: startedRoomCode,
-    questions: startedQuestions,
-  }) => {
-    if (startedRoomCode === roomCode) {
-      setQuestions(startedQuestions || []);
-      setLoadingQuestions(false);
-    }
-  };
+  useEffect(() => {
+    connectSocket();
+  }, []);
 
-  const handleGameFinished = ({
-    roomCode: finishedRoomCode,
-    leaderboard,
-    highestStreakHolder,
-  }) => {
-    if (finishedRoomCode === roomCode) {
-      navigate(`/multiplayer/results/${roomCode}`, {
-        state: { leaderboard, highestStreakHolder },
-      });
-    }
-  };
+  useEffect(() => {
+    const handleRoomUpdated = (updatedRoom) => {
+      if (updatedRoom.roomCode === roomCode) {
+        setRoom(updatedRoom);
+      }
+    };
 
-  socket.on("room_updated", handleRoomUpdated);
-  socket.on("multiplayer_game_started", handleGameStarted);
-  socket.on("multiplayer_game_finished", handleGameFinished);
+    const handleGameStarted = ({
+      roomCode: startedRoomCode,
+      questions: startedQuestions,
+    }) => {
+      if (startedRoomCode === roomCode) {
+        setQuestions(startedQuestions || []);
+        setLoadingQuestions(false);
+      }
+    };
 
-  return () => {
-    socket.off("room_updated", handleRoomUpdated);
-    socket.off("multiplayer_game_started", handleGameStarted);
-    socket.off("multiplayer_game_finished", handleGameFinished);
-  };
-}, [navigate, roomCode]);
+    const handleGameFinished = ({
+      roomCode: finishedRoomCode,
+      leaderboard,
+      highestStreakHolder,
+    }) => {
+      if (finishedRoomCode === roomCode) {
+        navigate(`/multiplayer/results/${roomCode}`, {
+          state: { leaderboard, highestStreakHolder },
+        });
+      }
+    };
+
+    socket.on("room_updated", handleRoomUpdated);
+    socket.on("multiplayer_game_started", handleGameStarted);
+    socket.on("multiplayer_game_finished", handleGameFinished);
+
+    return () => {
+      socket.off("room_updated", handleRoomUpdated);
+      socket.off("multiplayer_game_started", handleGameStarted);
+      socket.off("multiplayer_game_finished", handleGameFinished);
+    };
+  }, [navigate, roomCode]);
 
   useEffect(() => {
     setLoadingQuestions(true);
@@ -88,13 +89,13 @@ useEffect(() => {
       }
 
       if (currentRoom.questions && currentRoom.questions.length > 0) {
-            setQuestions(currentRoom.questions);
-            setLoadingQuestions(false);
-            return;
-    }
+        setQuestions(currentRoom.questions);
+        setLoadingQuestions(false);
+        return;
+      }
 
-setMessage("Waiting for host to start the game...");
-setLoadingQuestions(false);
+      setMessage("Waiting for host to start the game...");
+      setLoadingQuestions(false);
     });
   }, [roomCode]);
 
@@ -163,109 +164,115 @@ setLoadingQuestions(false);
 
   if (loadingQuestions) {
     return (
-      <div style={pageStyle}>
-        <div style={panelStyle}>
-          <h1 style={{ color: "#00d0ff", marginTop: 0 }}>Loading Game...</h1>
-          <p style={{ color: "#cbd5e1" }}>Fetching multiplayer questions.</p>
+      <GameChatPanel roomId={roomCode} allowFreeChat={false}>
+        <div style={pageStyle}>
+          <div style={panelStyle}>
+            <h1 style={{ color: "#00d0ff", marginTop: 0 }}>Loading Game...</h1>
+            <p style={{ color: "#cbd5e1" }}>Fetching multiplayer questions.</p>
+          </div>
         </div>
-      </div>
+      </GameChatPanel>
     );
   }
 
   if (!currentQuestion) {
     return (
-      <div style={pageStyle}>
-        <div style={panelStyle}>
-          <h1 style={{ color: "#00d0ff", marginTop: 0 }}>No Questions Loaded</h1>
-          <p style={{ color: "#fca5a5" }}>
-            {message || "Could not load the live game questions."}
-          </p>
-          <button
-            style={buttonStyle}
-            onClick={() => navigate(`/multiplayer/room/${roomCode}`)}
-          >
-            Back to Room
-          </button>
+      <GameChatPanel roomId={roomCode}>
+        <div style={pageStyle}>
+          <div style={panelStyle}>
+            <h1 style={{ color: "#00d0ff", marginTop: 0 }}>No Questions Loaded</h1>
+            <p style={{ color: "#fca5a5" }}>
+              {message || "Could not load the live game questions."}
+            </p>
+            <button
+              style={buttonStyle}
+              onClick={() => navigate(`/multiplayer/room/${roomCode}`)}
+            >
+              Back to Room
+            </button>
+          </div>
         </div>
-      </div>
+      </GameChatPanel>
     );
   }
 
   return (
-    <div style={pageStyle}>
-      <div style={panelStyle}>
-        <div style={topBarStyle}>
-          <div>
-            <h1 style={{ color: "#00d0ff", margin: 0 }}>Live Multiplayer Game</h1>
-            <p style={{ color: "#cbd5e1", marginTop: "6px" }}>
-              Room {roomCode} • OpenTriviaDB
+    <GameChatPanel roomId={roomCode}>
+      <div style={pageStyle}>
+        <div style={panelStyle}>
+          <div style={topBarStyle}>
+            <div>
+              <h1 style={{ color: "#00d0ff", margin: 0 }}>Live Multiplayer Game</h1>
+              <p style={{ color: "#cbd5e1", marginTop: "6px" }}>
+                Room {roomCode} • OpenTriviaDB
+              </p>
+            </div>
+
+            <div style={scoreBoxStyle}>
+              <div>Correct: {localCorrectCount}</div>
+              <div>Streak: {localStreak}</div>
+              <div>Best Streak: {highestLocalStreak}</div>
+            </div>
+          </div>
+
+          <div style={questionMetaStyle}>
+            <span>
+              Question {currentQuestionIndex + 1} / {questions.length}
+            </span>
+            <span>{currentQuestion.category}</span>
+            <span style={{ textTransform: "capitalize" }}>
+              {currentQuestion.difficulty}
+            </span>
+          </div>
+
+          <div style={questionCardStyle}>
+            <h2 style={{ color: "white", marginTop: 0, lineHeight: 1.5 }}>
+              {currentQuestion.question}
+            </h2>
+          </div>
+
+          <div style={answersGridStyle}>
+            {currentQuestion.answers.map((answer) => {
+              const isCorrect = answer === currentQuestion.correctAnswer;
+              const isSelected = selectedAnswer === answer;
+
+              let background = "rgba(30,41,59,0.88)";
+              let border = "1px solid rgba(255,255,255,0.08)";
+
+              if (answerLocked && isCorrect) {
+                background = "rgba(34,197,94,0.22)";
+                border = "1px solid rgba(34,197,94,0.5)";
+              } else if (answerLocked && isSelected && !isCorrect) {
+                background = "rgba(239,68,68,0.22)";
+                border = "1px solid rgba(239,68,68,0.5)";
+              }
+
+              return (
+                <button
+                  key={answer}
+                  style={{
+                    ...answerButtonStyle,
+                    background,
+                    border,
+                    cursor: answerLocked ? "default" : "pointer",
+                  }}
+                  onClick={() => handleAnswerClick(answer)}
+                  disabled={answerLocked}
+                >
+                  {answer}
+                </button>
+              );
+            })}
+          </div>
+
+          {message && (
+            <p style={{ color: "#facc15", textAlign: "center", marginTop: "20px" }}>
+              {message}
             </p>
-          </div>
-
-          <div style={scoreBoxStyle}>
-            <div>Correct: {localCorrectCount}</div>
-            <div>Streak: {localStreak}</div>
-            <div>Best Streak: {highestLocalStreak}</div>
-          </div>
+          )}
         </div>
-
-        <div style={questionMetaStyle}>
-          <span>
-            Question {currentQuestionIndex + 1} / {questions.length}
-          </span>
-          <span>{currentQuestion.category}</span>
-          <span style={{ textTransform: "capitalize" }}>
-            {currentQuestion.difficulty}
-          </span>
-        </div>
-
-        <div style={questionCardStyle}>
-          <h2 style={{ color: "white", marginTop: 0, lineHeight: 1.5 }}>
-            {currentQuestion.question}
-          </h2>
-        </div>
-
-        <div style={answersGridStyle}>
-          {currentQuestion.answers.map((answer) => {
-            const isCorrect = answer === currentQuestion.correctAnswer;
-            const isSelected = selectedAnswer === answer;
-
-            let background = "rgba(30,41,59,0.88)";
-            let border = "1px solid rgba(255,255,255,0.08)";
-
-            if (answerLocked && isCorrect) {
-              background = "rgba(34,197,94,0.22)";
-              border = "1px solid rgba(34,197,94,0.5)";
-            } else if (answerLocked && isSelected && !isCorrect) {
-              background = "rgba(239,68,68,0.22)";
-              border = "1px solid rgba(239,68,68,0.5)";
-            }
-
-            return (
-              <button
-                key={answer}
-                style={{
-                  ...answerButtonStyle,
-                  background,
-                  border,
-                  cursor: answerLocked ? "default" : "pointer",
-                }}
-                onClick={() => handleAnswerClick(answer)}
-                disabled={answerLocked}
-              >
-                {answer}
-              </button>
-            );
-          })}
-        </div>
-
-        {message && (
-          <p style={{ color: "#facc15", textAlign: "center", marginTop: "20px" }}>
-            {message}
-          </p>
-        )}
       </div>
-    </div>
+    </GameChatPanel>
   );
 }
 
