@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import API_BASE from '../../api';
 import getUserInfo from "../../utilities/decodeJwt";
+import { UserContext } from '../../App';
 
 const PRIMARY_COLOR = "#cc5c99";
 const SECONDARY_COLOR = '#0c0c1f'
@@ -12,11 +13,12 @@ const url = `${API_BASE}/question/create`;
 const data_default = { question: "", correct_answer: "", incorrect_answer1: "", incorrect_answer2: "", incorrect_answer3: "", category: "any", difficulty: 'any'};
 
 const QuestionCreationPage = () => {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState({})
   const [data, setData] = useState(data_default);
   const [error, setError] = useState("");
   const [light, setLight] = useState(false);
   const [bgColor, setBgColor] = useState(SECONDARY_COLOR);
+  const { isLightMode } = useContext(UserContext);
   const [bgText, setBgText] = useState('Light Mode')
   const navigate = useNavigate();
 
@@ -42,11 +44,9 @@ const QuestionCreationPage = () => {
   };
 
   useEffect(() => {
-
-    const obj = getUserInfo(user)
-    setUser(obj)
-
-    if (light) {
+    setUser(getUserInfo());
+    console.log(isLightMode);
+    if (isLightMode) {
       setBgColor("white");
       setBgText('Dark mode')
     } else {
@@ -54,7 +54,8 @@ const QuestionCreationPage = () => {
       setBgText('Light mode')
     }
   }, [light]);
-
+  const { username } = user;
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -88,7 +89,10 @@ const QuestionCreationPage = () => {
         <div className="container-fluid h-custom vh-100">
           <div
             className="row d-flex justify-content-center h-100 "
-            style={backgroundStyling}>
+            style={{background: true ? isLightMode
+                            ? "linear-gradient(135deg, #dbeafe, #bfdbfe, #e0f2fe)"
+                            : "linear-gradient(135deg, #0f172a, #1e3a8a, #0f172a)"
+                        : "#000",}}>
             <div className="col-xl-8 offset-xl-0">
               <Form id='form'>
                 <Form.Group className="mb-3" controlId="formBasicPrompt">
@@ -198,17 +202,6 @@ const QuestionCreationPage = () => {
                 </table>
 
                 
-                <div className="form-check form-switch">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id="flexSwitchCheckDefault"
-                    onChange={() => { setLight(!light) }}
-                  />
-                  <label className="form-check-label text-muted" htmlFor="flexSwitchCheckDefault">
-                    {bgText}
-                  </label>
-                </div>
                 {error && <div style={labelStyling} className='pt-3'>{error}</div>}
                 <Button
                   variant="primary"

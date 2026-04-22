@@ -35,6 +35,7 @@ router.post('/create', async (req, res) => {
 		incorrect_answer3: hashed_answer4,
         category: category,
         difficulty: difficulty,
+        hash: generateHash,
 		
     });
 

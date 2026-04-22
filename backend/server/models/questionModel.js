@@ -42,6 +42,11 @@ const newQuestionSchema = new mongoose.Schema(
 		required: true,
 		label : "Question difficulty."
 	},
+	hash : {
+		type: String,
+		required: true,
+		label : "Internal Answer Hash."
+	},
 	date: {
 	  type: Date,
 	  default: Date.now,

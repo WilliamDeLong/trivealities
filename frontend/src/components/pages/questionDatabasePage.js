@@ -45,6 +45,7 @@ function DatabasePage() {
           data["q_difficulty"] = null;
         };
         const result = await axios.get(url, {params: data});
+        console.log(result);
         setQuestions(result.data);
         setSeed(Math.random());
       } catch (error) {
