@@ -1,5 +1,6 @@
 const axios = require("axios");
 const he = require("he");
+const QUESTION_TIME = 20;
 const {
   createRoom,
   getRoom,
@@ -50,7 +51,67 @@ const emitRoomState = (io, room) => {
     highestStreakHolder: room.highestStreakHolder || null,
   });
 };
+function startQuestionTimer(io, roomCode) {
+  const room = getRoom(roomCode);
+  if (!room) return;
 
+  if (room.questionTimer) {
+    clearInterval(room.questionTimer);
+  }
+
+  room.questionTimeLeft = QUESTION_TIME;
+  room.answersReceived = {};
+
+  io.to(roomCode).emit("question_update", {
+    roomCode,
+    questionIndex: room.currentQuestionIndex,
+    timeLeft: room.questionTimeLeft,
+  });
+
+  room.questionTimer = setInterval(() => {
+    const activeRoom = getRoom(roomCode);
+    if (!activeRoom) return;
+
+    activeRoom.questionTimeLeft--;
+
+    io.to(roomCode).emit("timer_tick", {
+      roomCode,
+      timeLeft: activeRoom.questionTimeLeft,
+    });
+
+    if (activeRoom.questionTimeLeft <= 0) {
+      clearInterval(activeRoom.questionTimer);
+      activeRoom.questionTimer = null;
+
+      moveToNextQuestionOrFinish(io, roomCode);
+    }
+  }, 1000);
+}
+function moveToNextQuestionOrFinish(io, roomCode) {
+  const room = getRoom(roomCode);
+  if (!room) return;
+
+  const isLast =
+    room.currentQuestionIndex >= room.questions.length - 1;
+
+  if (isLast) {
+    const result = finalizeGameResults(roomCode);
+
+    if (!result) return;
+
+    io.to(roomCode).emit("multiplayer_game_finished", {
+      roomCode,
+      leaderboard: result.leaderboard,
+      highestStreakHolder: result.highestStreakHolder,
+    });
+
+    return;
+  }
+
+  room.currentQuestionIndex++;
+
+  startQuestionTimer(io, roomCode);
+}
 const registerMultiplayerHandlers = (io, socket) => {
   socket.on("get_multiplayer_rooms", (callback) => {
     const rooms = getPublicRooms();
@@ -291,11 +352,14 @@ socket.on("get_multiplayer_room_by_code", ({ roomCode }, callback) => {
     emitRoomState(io, updatedRoom);
 
     io.to(roomCode).emit("multiplayer_game_started", {
+      
       roomCode,
       questionSource: updatedRoom.questionSource,
       questionCount: updatedRoom.questionCount,
       questions: updatedRoom.questions,
     });
+    // ✅ START TIMER
+    startQuestionTimer(io, roomCode);
 
     callback?.({ success: true });
   } catch (error) {
@@ -306,45 +370,37 @@ socket.on("get_multiplayer_room_by_code", ({ roomCode }, callback) => {
     });
   }
 });
-  socket.on("finish_multiplayer_game", ({ roomCode }, callback) => {
-    const room = getRoom(roomCode);
+socket.on("submit_multiplayer_answer_result", ({ roomCode, isCorrect }) => {
+  const room = getRoom(roomCode);
+  if (!room) return;
 
-    if (!room) {
-      return callback?.({ success: false, message: "Room not found" });
-    }
+  // prevent double answering
+  if (!room.answersReceived) room.answersReceived = {};
 
-    if (room.hostSocketId !== socket.id) {
-      return callback?.({
-        success: false,
-        message: "Only the host can finish the game",
-      });
-    }
+  if (room.answersReceived[socket.id]) return;
 
-    const result = finalizeGameResults(roomCode);
+  room.answersReceived[socket.id] = true;
 
-    if (!result) {
-      return callback?.({
-        success: false,
-        message: "Could not finalize game",
-      });
-    }
-
-    emitRoomList(io);
-    emitRoomState(io, result.room);
-
-    io.to(roomCode).emit("multiplayer_game_finished", {
-      roomCode,
-      leaderboard: result.leaderboard,
-      highestStreakHolder: result.highestStreakHolder,
-    });
-
-    callback?.({
-      success: true,
-      leaderboard: result.leaderboard,
-      highestStreakHolder: result.highestStreakHolder,
-    });
+  updatePlayerAnswerStats({
+    roomCode,
+    socketId: socket.id,
+    isCorrect,
   });
 
+  const totalPlayers = room.players.length;
+  const answeredCount = Object.keys(room.answersReceived).length;
+
+  // if everyone answered early → skip timer
+  if (answeredCount >= totalPlayers) {
+    clearInterval(room.questionTimer);
+    room.questionTimer = null;
+
+    setTimeout(() => {
+      moveToNextQuestionOrFinish(io, roomCode);
+    }, 1200);
+  }
+});
+  
   socket.on("disconnect", () => {
     const room = findRoomBySocketId(socket.id);
     if (!room) return;

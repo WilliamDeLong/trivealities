@@ -108,7 +108,7 @@ function SinglePlayerGamePage() {
       }
 
       try {
-        await axios.post(`/user/${userId}/xp`, {
+        await axios.post(`${API_BASE}/user/${userId}/xp`, {
           xp: earnedXp,
         });
       } catch (err) {

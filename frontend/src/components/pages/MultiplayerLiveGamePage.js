@@ -9,7 +9,7 @@ function MultiplayerLiveGamePage() {
   const { roomCode } = useParams();
   const navigate = useNavigate();
   const user = getUserInfo();
-
+  const [timeLeft, setTimeLeft] = useState(20);
   const [room, setRoom] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [loadingQuestions, setLoadingQuestions] = useState(true);
@@ -53,7 +53,27 @@ function MultiplayerLiveGamePage() {
         });
       }
     };
-
+    const handleQuestionUpdate = ({
+      roomCode: updatedRoomCode,
+      questionIndex,
+      timeLeft,
+    }) => {
+      if (updatedRoomCode === roomCode) {
+        setCurrentQuestionIndex(questionIndex);
+        setTimeLeft(timeLeft);
+        setSelectedAnswer("");
+        setAnswerLocked(false);
+        setMessage("");
+      }
+    };
+    
+    const handleTimerTick = ({ roomCode: updatedRoomCode, timeLeft }) => {
+      if (updatedRoomCode === roomCode) {
+        setTimeLeft(timeLeft);
+      }
+    };
+    socket.on("question_update", handleQuestionUpdate);
+    socket.on("timer_tick", handleTimerTick);
     socket.on("room_updated", handleRoomUpdated);
     socket.on("multiplayer_game_started", handleGameStarted);
     socket.on("multiplayer_game_finished", handleGameFinished);
@@ -62,9 +82,12 @@ function MultiplayerLiveGamePage() {
       socket.off("room_updated", handleRoomUpdated);
       socket.off("multiplayer_game_started", handleGameStarted);
       socket.off("multiplayer_game_finished", handleGameFinished);
+      socket.off("question_update", handleQuestionUpdate);
+      socket.off("timer_tick", handleTimerTick);
     };
   }, [navigate, roomCode]);
 
+    
   useEffect(() => {
     setLoadingQuestions(true);
     setMessage("");
@@ -108,20 +131,32 @@ function MultiplayerLiveGamePage() {
   const currentQuestion = useMemo(() => {
     return questions[currentQuestionIndex] || null;
   }, [questions, currentQuestionIndex]);
-
+    useEffect(() => {
+      if (!currentQuestion || answerLocked) return;
+    
+      if (timeLeft === 0) {
+        setAnswerLocked(true);
+        setSelectedAnswer("");
+    
+        socket.emit("submit_multiplayer_answer_result", {
+          roomCode,
+          isCorrect: false,
+        });
+    }
+  }, [timeLeft, currentQuestion, answerLocked, roomCode]);
   const handleAnswerClick = (answer) => {
-    if (!currentQuestion || answerLocked) return;
-
+    if (!currentQuestion || answerLocked || timeLeft <= 0) return;
+  
     setSelectedAnswer(answer);
     setAnswerLocked(true);
-
+  
     const isCorrect = answer === currentQuestion.correctAnswer;
-
+  
     socket.emit("submit_multiplayer_answer_result", {
       roomCode,
       isCorrect,
     });
-
+  
     if (isCorrect) {
       setLocalCorrectCount((prev) => prev + 1);
       setLocalStreak((prev) => {
@@ -132,34 +167,6 @@ function MultiplayerLiveGamePage() {
     } else {
       setLocalStreak(0);
     }
-
-    setTimeout(() => {
-      const isLastQuestion = currentQuestionIndex >= questions.length - 1;
-
-      if (isLastQuestion) {
-        if (isHost) {
-          socket.emit("finish_multiplayer_game", { roomCode }, (response) => {
-            if (response?.success) {
-              navigate(`/multiplayer/results/${roomCode}`, {
-                state: {
-                  leaderboard: response.leaderboard,
-                  highestStreakHolder: response.highestStreakHolder,
-                },
-              });
-            } else {
-              setMessage(response?.message || "Could not finish the game.");
-            }
-          });
-        } else {
-          setMessage("Waiting for the host to finish the game...");
-        }
-        return;
-      }
-
-      setCurrentQuestionIndex((prev) => prev + 1);
-      setSelectedAnswer("");
-      setAnswerLocked(false);
-    }, 1200);
   };
 
   if (loadingQuestions) {
@@ -212,6 +219,7 @@ function MultiplayerLiveGamePage() {
               <div>Correct: {localCorrectCount}</div>
               <div>Streak: {localStreak}</div>
               <div>Best Streak: {highestLocalStreak}</div>
+              <div style={{ color: "#facc15", fontWeight: "bold" }}>⏱ {timeLeft}s</div>
             </div>
           </div>
 
