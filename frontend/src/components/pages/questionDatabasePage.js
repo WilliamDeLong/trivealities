@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 //import Card from 'react-bootstrap/Card';
 import axios from 'axios';
 //import tailwindcss from 'tailwindcss';
@@ -6,7 +6,7 @@ import Table from "../Table";
 import API_BASE from '../../api';
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import getUserInfo from "../../utilities/decodeJwt";
+//import getUserInfo from "../../utilities/decodeJwt";
 import { UserContext } from '../../App';
 
 
@@ -98,7 +98,7 @@ function DatabasePage() {
   if (questions.length>0){
   return (
     <div style={{background: isLightMode ? "linear-gradient(135deg, #f8fafc, #dbeafe, #ede9fe)": "linear-gradient(135deg, #020617, #0f172a, #1e1b4b)",
-                        color: isLightMode? "#7b0445": "#cc5c99"}}>
+                        color: isLightMode? "#7b0445": "#cc5c99", border: isLightMode? "#ffffff": "#000000"}}>
       <div className="table_container">
         <h1>Trivealities Question Database V0.0074</h1>
         <Form>
@@ -167,7 +167,7 @@ function DatabasePage() {
           </Form.Group>
         </Form>
         {error && <div className='pt-3'>{error}</div>}
-        <Table
+        <Table 
           key={seed}
           data={questions}
           columns={columns}
