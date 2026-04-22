@@ -98,7 +98,7 @@ function DatabasePage() {
   if (questions.length>0){
   return (
     <div style={{background: isLightMode ? "linear-gradient(135deg, #f8fafc, #dbeafe, #ede9fe)": "linear-gradient(135deg, #020617, #0f172a, #1e1b4b)",
-                        color: isLightMode? "#7b0445": "#cc5c99", border: isLightMode? "#ffffff": "#000000"}}>
+                        color: isLightMode? "#7b0445": "#f18900", border: isLightMode? "#ffffff": "#000000"}}>
       <div className="table_container">
         <h1>Trivealities Question Database V0.0074</h1>
         <Form>
@@ -156,7 +156,7 @@ function DatabasePage() {
                         type="submit"
                         onClick={handleSubmit}
                         className='mt-2'
-                        style = {{background: isLightMode? "#7b0445": "#cc5c99", border: isLightMode? "#000000": "#ffffff"}}
+                        style = {{background: isLightMode? "#7b0445": "#f18900", border: isLightMode? "#000000": "#ffffff"}}
                         >
                         Filter
                       </Button>

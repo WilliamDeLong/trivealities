@@ -44,20 +44,20 @@ const TableBody = ({ tableData, columns }) => {
             {columns.map(({ accessor }) => { 
               if (accessor === "category") {
                 const tData = categories[data[accessor]] ? categories[data[accessor]] : 'Unknown Category';
-                return <td key={accessor} style={{color: isLightMode? "#7b0445": "#cc5c99"}}>{tData}</td>;
+                return <td key={accessor} style={{color: isLightMode? "#7b0445": "#f18900"}}>{tData}</td>;
               }
               else if (accessor === "difficulty") {
                 const tData = difficulties[data[accessor]] ? difficulties[data[accessor]] : 'Unknown Difficulty';
-                return <td key={accessor} style={{color: isLightMode? "#7b0445": "#cc5c99"}}>{tData}</td>;
+                return <td key={accessor} style={{color: isLightMode? "#7b0445": "#f18900"}}>{tData}</td>;
               }
               else if (accessor === "date") {
 
                 const tData = data[accessor] ? new Date(data[accessor]).toLocaleDateString() : "invalid date";
-                return <td key={accessor} style={{color: isLightMode? "#7b0445": "#cc5c99"}}>{tData}</td>;
+                return <td key={accessor} style={{color: isLightMode? "#7b0445": "#f18900"}}>{tData}</td>;
               }
               else {
                 const tData = data[accessor] ? data[accessor] : "——";
-                return <td key={accessor} style={{color: isLightMode? "#7b0445": "#cc5c99"}}>{tData}</td>;
+                return <td key={accessor} style={{color: isLightMode? "#7b0445": "#f18900"}}>{tData}</td>;
               }
             })}
           </tr>

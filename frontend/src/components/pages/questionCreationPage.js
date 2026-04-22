@@ -7,7 +7,7 @@ import API_BASE from '../../api';
 import getUserInfo from "../../utilities/decodeJwt";
 import { UserContext } from '../../App';
 
-const PRIMARY_COLOR = "#cc5c99";
+const PRIMARY_COLOR = "#f18900";
 const SECONDARY_COLOR = '#0c0c1f'
 const url = `${API_BASE}/question/create`;
 const data_default = { question: "", correct_answer: "", incorrect_answer1: "", incorrect_answer2: "", incorrect_answer3: "", category: "any", difficulty: 'any'};
@@ -28,13 +28,13 @@ const QuestionCreationPage = () => {
   };
  
   let labelStyling = {
-    color: isLightMode? "#7b0445": "#cc5c99",
+    color: isLightMode? "#7b0445": "#f18900",
     fontWeight: "bold",
     textDecoration: "none",
   };
   let backgroundStyling = { background: bgColor};
   let buttonStyling = {
-    background: PRIMARY_COLOR,
+    background: isLightMode? "#7b0445": "#f18900",
     borderStyle: "none",
     color: bgColor,
   };

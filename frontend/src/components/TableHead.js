@@ -29,7 +29,7 @@ const TableHead = ({ columns, handleSorting }) => {
               key={accessor}
               onClick={sortable ? () => handleSortingChange(accessor) : null}
               className={cl} 
-              style={{color: isLightMode? "#7b0445": "#cc5c99"}}
+              style={{color: isLightMode? "#7b0445": "#f18900"}}
             >
               {label}
             </th>
