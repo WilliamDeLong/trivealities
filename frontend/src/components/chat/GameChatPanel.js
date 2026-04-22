@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { UserContext } from "../../App";
 import getUserInfo from "../../utilities/decodeJwt";
-import { connectSocket, getSocket } from "../../services/socket";
+import socket, { connectSocket } from "../../socket";
 import ChatMessageItem from "./chatMessageItem";
 import ChatToast from "./ChatToast";
 import CHAT_PRESETS from "./constants/chatPresets";
@@ -53,9 +53,7 @@ const GameChatPanel = ({ roomId, children, allowFreeChat = false }) => {
     const token = localStorage.getItem("accessToken");
     if (!token) return;
 
-    const socket = connectSocket(token);
-
-    socket.emit("chat_join_room", { roomId });
+    connectSocket();
 
     const handleReceiveMessage = async (incomingMessage) => {
       if (incomingMessage.roomId !== roomId) return;
@@ -94,7 +92,10 @@ const GameChatPanel = ({ roomId, children, allowFreeChat = false }) => {
           {
             id: toastId,
             username: incomingMessage.username,
-            text: incomingMessage.systemType === "join" ? "joined the chat" : "left the chat",
+            text:
+              incomingMessage.systemType === "join"
+                ? "joined the chat"
+                : "left the chat",
             profileUrl,
           },
         ]);
@@ -118,13 +119,15 @@ const GameChatPanel = ({ roomId, children, allowFreeChat = false }) => {
     socket.on("chat_room_users", handleRoomUsers);
     socket.on("chat_error", handleChatError);
 
+    socket.emit("chat_join_room", { roomId });
+
     return () => {
       socket.emit("chat_leave_room", { roomId });
       socket.off("chat_receive_message", handleReceiveMessage);
       socket.off("chat_room_users", handleRoomUsers);
       socket.off("chat_error", handleChatError);
     };
-  }, [roomId, isOpen]);
+  }, [roomId]);
 
   useEffect(() => {
     if (isOpen) {
@@ -145,7 +148,6 @@ const GameChatPanel = ({ roomId, children, allowFreeChat = false }) => {
   }, [messages]);
 
   const sendTextMessage = () => {
-    const socket = getSocket();
     const trimmedMessage = textMessage.trim();
 
     if (!socket || !roomId || !trimmedMessage) return;
@@ -167,7 +169,6 @@ const GameChatPanel = ({ roomId, children, allowFreeChat = false }) => {
   };
 
   const sendPreset = (preset) => {
-    const socket = getSocket();
     if (!socket || !roomId) return;
 
     socket.emit("chat_send_preset_message", {
@@ -177,7 +178,6 @@ const GameChatPanel = ({ roomId, children, allowFreeChat = false }) => {
   };
 
   const sendEmoji = (emoji) => {
-    const socket = getSocket();
     if (!socket || !roomId) return;
 
     socket.emit("chat_send_emoji", {
