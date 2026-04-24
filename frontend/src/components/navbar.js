@@ -111,13 +111,13 @@ export default function Navbar({ isLightMode, toggleTheme }) {
           >
             Question Database
           </Nav.Link>
-          <Nav.Link
+          {isAdmin && <Nav.Link
               onClick={() => navigate("/add-xp")}
               style={{ color: "white", fontWeight: "600", cursor: "pointer" }}
-              hidden= {!isAdmin}
+              //hidden= {!isAdmin}
             >
-              Add XP
-          </Nav.Link>
+              Add XP 
+          </Nav.Link>}
           <Nav.Link
             href="/chat"
             style={{ color: "white", fontWeight: "600" }}
