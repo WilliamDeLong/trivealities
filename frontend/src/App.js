@@ -17,6 +17,8 @@ import { createContext, useState, useEffect } from "react";
 import getUserInfo from "./utilities/decodeJwt";
 import ProfilePage from "./components/pages/ProfilePage";
 import QuestionCreationPage from "./components/pages/questionCreationPage";
+import QuestionModificationPage from "./components/pages/questionModificationPage";
+
 import QuestionDatabasePage from "./components/pages/questionDatabasePage";
 import AddAccountXpPage from "./components/pages/AddAccountXpPage";
 import ChatPage from "./components/pages/chatPage";
@@ -60,6 +62,7 @@ const App = () => {
           <Route path="/privateUserProfile" element={<PrivateUserProfile />} />
           <Route exact path="/profile" element={<ProfilePage />} />
           <Route exact path="/questionCreate" element={<QuestionCreationPage />} />
+          <Route exact path="/questionModify" element={<QuestionModificationPage />} />
           <Route exact path="/questionDatabase" element={<QuestionDatabasePage />} />
           {/* <Route exact path="/mbta" element={<MbtaAlertsPage />} /> */}
           <Route exact path="/add-xp" element={<AddAccountXpPage />} /> 

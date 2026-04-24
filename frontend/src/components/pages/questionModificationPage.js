@@ -10,10 +10,11 @@ import { UserContext } from '../../App';
 const PRIMARY_COLOR = "#f18900";
 const SECONDARY_COLOR = '#0c0c1f'
 const url = `${API_BASE}/question/create`;
-const data_default = { question: "", correct_answer: "", incorrect_answer1: "", incorrect_answer2: "", incorrect_answer3: "", category: "any", difficulty: 'any'};
+const data_default = { _id: "", question: "", correct_answer: "", incorrect_answer1: "", incorrect_answer2: "", incorrect_answer3: "", category: "any", difficulty: 'any'};
 
-const QuestionCreationPage = () => {
-  const [user, setUser] = useState({})
+const QuestionModificationPage = () => {
+  const [user, setUser] = useState(getUserInfo());
+  const [admin, setAdmin] = useState(false);
   const [data, setData] = useState(data_default);
   const [error, setError] = useState("");
   const [light, setLight] = useState(false);
@@ -47,9 +48,20 @@ const QuestionCreationPage = () => {
     setData({ ...data, [input.name]: input.value });
     //console.log(data);
   };
+  const fetch_admin = async () => {
+    if (user["id"]) {
+      //console.log(user["id"]);
+      //console.log(!user["id"]);
+      const result = await axios.get(`${API_BASE}/user/${user["id"]}/admin`);
+      //console.log(result);
+      //const otherRes = result.then(result2 => result2.data.success);
+      setAdmin(result.data.success);
+    }
+  };
 
   useEffect(() => {
     setUser(getUserInfo());
+	fetch_admin();
     //console.log(isLightMode);
     if (isLightMode) {
       setBgColor("white");
@@ -59,7 +71,7 @@ const QuestionCreationPage = () => {
       setBgText('Light mode')
     }
   }, [light]);
-  //const { username } = user;
+  const { username } = user;
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -87,10 +99,10 @@ const QuestionCreationPage = () => {
     
   };
 
-  if (!user) return (
-        <div><h4>Log in to view this page.</h4></div>
+  if (!admin) return (
+        <div><h4>Only Administrative accounts have access to this page.</h4></div>
     ) 
-  else return (
+  return (
     <>
       <section className="vh-100">
         <div className="container-fluid h-custom vh-100">
@@ -234,4 +246,4 @@ const QuestionCreationPage = () => {
   );
 };
 
-export default QuestionCreationPage;
+export default QuestionModificationPage;
