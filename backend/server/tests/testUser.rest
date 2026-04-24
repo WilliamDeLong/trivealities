@@ -46,28 +46,16 @@ Content-Type: application/json
 }
 
 ###
-GET  http://localhost:8081/user/getUserById
+GET  http://localhost:8081/user/69a872661eae65cd012dd496
 Content-Type: application/json 
 
-{
-    "userId" : "69b19b797098075437cca5f5"
-}
-
 ###
-GET  http://localhost:8081/user/getUserById
+GET  http://localhost:8081/user/697117139e6a43431cf663cd
 Content-Type: application/json 
 
-{
-    "userId" : "697117139e6a43431cf663cd"
-}
-
 ###
-POST  http://localhost:8081/user/deleteUID
+POST  http://localhost:8081/user/69eb956e5131ddfa0dd1e56a/delete
 Content-Type: application/json
-
-{
-    "userId" : "69b19b797098075437cca5f5" 
-}
 
 ###
 POST  http://localhost:8081/user/deleteAll

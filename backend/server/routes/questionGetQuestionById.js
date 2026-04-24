@@ -5,15 +5,16 @@ const bcrypt = require("bcrypt");
 
 const newQuestionModel = require("../models/questionModel");
 
-router.get("/getQuestionById", async (req, res) => {
-  var { questionId } = req.body;
-
-  newQuestionModel.findById(questionId, function (err, question) {
+router.get("/:id", async (req, res) => {
+  var { id } = req.params;
+  //console.log(req.params);
+  //console.log(id);
+  newQuestionModel.findById(id, function (err, question) {
     if (err) {
       console.log(err);
     }
     if (question==null) {
-      res.status(404).send("questionId does not exist.");
+      res.status(404).send("QuestionId does not exist.");
     } 
     else {
       return res.json(question);

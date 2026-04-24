@@ -5,10 +5,10 @@ const bcrypt = require("bcrypt");
 
 const newUserModel = require("../models/userModel");
 
-router.get("/getUserById", async (req, res) => {
-  var { userId } = req.body;
+router.get("/:id", async (req, res) => {
+  var { id } = req.params;
 
-  newUserModel.findById(userId, function (err, user) {
+  newUserModel.findById(id, function (err, user) {
     if (err) {
       console.log(err);
     }

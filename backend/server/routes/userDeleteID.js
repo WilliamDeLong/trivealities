@@ -5,20 +5,23 @@ const bcrypt = require("bcrypt");
 
 const newUserModel = require("../models/userModel");
 
-router.post("/deleteUID", async (req, res) => {
-  var { userId } = req.body;
-  
-  newUserModel.deleteOne({_id: userId}, function (err, user) {
-    if (err) {
-      console.log(err);
-    }
-    if (user==null) {
-      res.status(404).send("userId does not exist.");
-    } 
-    else {
-      return res.json(user);
-    }
-  });
+router.post("/:id/delete", async (req, res) => {
+  res.status(404).send("Function does not exist.");
+  if (false) {
+    var { id } = req.params;
+    
+    newUserModel.deleteOne({_id: id}, function (err, user) {
+      if (err) {
+        console.log(err);
+      }
+      if (user==null) {
+        res.status(404).send("userId does not exist.");
+      } 
+      else {
+        return res.json(user);
+      }
+    });
+  }
 });
 
 module.exports = router;

@@ -68,6 +68,11 @@ Content-Type: {{json}}
 ###
 
 ###
+GET {{baseUrl}}/question/{{questionId1}}/
+Content-Type: application/json
+
+
+###
 GET {{baseUrl}}/question/getAll
 Content-Type: application/json
 
@@ -88,20 +93,14 @@ Content-Type: {{json}}
 }
 
 ###Input ID for question created by the 2nd "question create"
-GET  {{baseUrl}}/question/getQuestionById
+GET  {{baseUrl}}/question/{{questionId1}}
 Content-Type: {{json}}
 
-{
-    "questionId" : "{{questionId1}}" 
-}
 
 ###Input ID for question created by the 1st "question create"
-GET  {{baseUrl}}/question/getQuestionById
+GET  {{baseUrl}}/question/{{questionId1}}
 Content-Type: {{json}}
 
-{
-    "questionId" : "{{questionId1}}" 
-}
 
 ###
 ###Input ID for question created by the 1st "question create"
