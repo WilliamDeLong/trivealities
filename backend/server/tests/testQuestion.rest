@@ -68,7 +68,7 @@ Content-Type: {{json}}
 ###
 
 ###
-GET {{baseUrl}}/question/69e8efbfbd0e53dfad96ac7a/
+GET {{baseUrl}}/question/id=69e8efbfbd0e53dfad96ac7a/
 Content-Type: application/json
 
 
