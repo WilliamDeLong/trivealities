@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
@@ -7,7 +7,7 @@ import API_BASE from '../../api';
 import getUserInfo from "../../utilities/decodeJwt";
 import { UserContext } from '../../App';
 
-const PRIMARY_COLOR = "#f18900";
+//const PRIMARY_COLOR = "#f18900";
 const SECONDARY_COLOR = '#0c0c1f'
 const url = `${API_BASE}/question/create`;
 const data_default = { _id: "", question: "", correct_answer: "", incorrect_answer1: "", incorrect_answer2: "", incorrect_answer3: "", category: "any", difficulty: 'any'};
@@ -17,11 +17,9 @@ const QuestionModificationPage = () => {
   const [admin, setAdmin] = useState(false);
   const [data, setData] = useState(data_default);
   const [error, setError] = useState("");
-  const [light, setLight] = useState(false);
   const [bgColor, setBgColor] = useState(SECONDARY_COLOR);
   const { isLightMode } = useContext(UserContext);
-  const [bgText, setBgText] = useState('Light Mode')
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   let TextyStyling = {
     color: isLightMode? "#0c0c0c": "#ffe5f3",
@@ -33,7 +31,6 @@ const QuestionModificationPage = () => {
     fontWeight: "bold",
     textDecoration: "none",
   };
-  let backgroundStyling = { background: bgColor};
   let buttonStyling = {
     background: isLightMode? "#7b0445": "#f18900",
     borderStyle: "none",
@@ -65,13 +62,11 @@ const QuestionModificationPage = () => {
     //console.log(isLightMode);
     if (isLightMode) {
       setBgColor("white");
-      setBgText('Dark mode')
     } else {
       setBgColor(SECONDARY_COLOR);
-      setBgText('Light mode')
     }
-  }, [light]);
-  const { username } = user;
+  }, []);
+  //const { username } = user;
   
   const handleSubmit = async (e) => {
     e.preventDefault();

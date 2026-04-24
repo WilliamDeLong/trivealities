@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 
 const newQuestionModel = require("../models/questionModel");
 
-router.get("/:id", async (req, res) => {
+router.get("/quesById/:id", async (req, res) => {
   var { id } = req.params;
   //console.log(req.params);
   //console.log(id);
