@@ -1,15 +1,47 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import "./AddXpPage.css";
 import API_BASE from '../../api';
+import getUserInfo from '../../utilities/decodeJwt';
+
 
 function AddXpPage() {
+  const [user, setUser] = useState(getUserInfo());
+  const [adminny, setAdminy] = useState();
   const [userId, setUserId] = useState("");
   const [xp, setXp] = useState("");
   const [message, setMessage] = useState("");
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
+  //console.log(user["id"]);
+  const fetch_admin = async () => {
+    if (user["id"]) {
+      //console.log(user["id"]);
+      //console.log(!user["id"]);
+      const result = await axios.get(`${API_BASE}/user/${user["id"]}/admin`);
+      //console.log(result);
+      //const otherRes = result.then(result2 => result2.data.success);
+      setAdminy(result.data.success);
+    }
+  };
+  useEffect(() => {
+    //console.log("Attempting to do things");
+    if (user==undefined)
+      setUser(getUserInfo());
+    //console.log(user);
+    fetch_admin();
+    //console.log(adminny);
+      }, []);
+  if (adminny!=true) {
+    return (
+      <div><h4>Only Admins can access this page.</h4></div>
+    );
+  }
+  //console.log(axios.get(admin_verification).body);
+  
+  
+  
 
   const handleAddXp = async (e) => {
     e.preventDefault();
@@ -68,7 +100,7 @@ function AddXpPage() {
   };
 
   const xpProgress = userData ? Math.min(Number(userData.accountXp) || 0, 100) : 0;
-
+  
   return (
     <div className="add-xp-page">
       <div className="add-xp-overlay">

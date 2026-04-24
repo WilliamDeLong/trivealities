@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import API_BASE from '../../api';
 
 const timeAgo = (isoTime) => {
   const now = Date.now();
@@ -20,7 +21,7 @@ const ChatMessageItem = ({ message, isOwnMessage }) => {
       if (!message?.userId || message.type === "system") return;
 
       try {
-        const res = await fetch(`http://localhost:8081/user/${message.userId}`);
+        const res = await fetch(`${API_BASE}/user/${message.userId}`);
         if (!res.ok) return;
         const data = await res.json();
         const imageUrl = data?.user?.profileImage?.imageUrl;

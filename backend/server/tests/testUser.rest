@@ -1,11 +1,16 @@
+
+# @name createAdmin
 POST http://localhost:8081/user/signup
 Content-Type: application/json 
 
 {
-    "username" : "1tochiamanze",
-    "email" : "1cdon@gmail.com",
-    "password" : "tochi12345"
+    "username" : "Admin_Test_5",
+    "email" : "Nope@NotGonna.com",
+    "password" : "passwordMoreLikePissword"
 }
+
+###
+@adminTestId1 = {{createAdmin.response.body.$._id}}
 
 ###
 
@@ -16,6 +21,13 @@ Content-Type: application/json
     "username" : "1tochiamanze",
     "password" : "tochi12345"
 }
+
+###
+GET http://localhost:8081/user/69a872661eae65cd012dd496/admin
+Content-Type: application/json
+
+###
+
 
 ###
 GET http://localhost:8081/user/getAll

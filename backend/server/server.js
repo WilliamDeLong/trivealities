@@ -45,6 +45,7 @@ const userUpdatePassword = require("./routes/userUpdatePassword");
 const userDeleteAccount = require("./routes/userDeleteAccount");
 const userResetLevel = require("./routes/userResetLevel");
 const userGameRoutes = require("./routes/userGameRoutes");
+const userCheckAdmin = require("./routes/userCheckAdmin");
 
 
 require("dotenv").config();
@@ -83,6 +84,7 @@ app.use("/user", userUpdatePassword);
 app.use("/user", userDeleteAccount);
 app.use("/user", userResetLevel);
 app.use("/user", userGameRoutes);
+app.use("/user", userCheckAdmin);
 
 
 io.use(socketAuth);

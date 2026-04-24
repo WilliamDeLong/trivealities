@@ -53,6 +53,10 @@ const newUserSchema = new mongoose.Schema(
         default: false,
       },
     },
+    adminAccount: {
+      type: Boolean,
+      default: false
+    }
   },
   { collection: "users" }
 );
