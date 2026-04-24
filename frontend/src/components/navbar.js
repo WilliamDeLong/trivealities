@@ -3,6 +3,7 @@ import getUserInfo from "../utilities/decodeJwt";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import ReactNavbar from "react-bootstrap/Navbar";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useMusic } from "../context/MusicContext";
 import API_BASE from "../api";
@@ -11,16 +12,29 @@ export default function Navbar({ isLightMode, toggleTheme }) {
   // We are pulling in the user's info but not using it for now.
   // Warning disabled:
   // eslint-disable-next-line
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(getUserInfo());
   const [profileUrl, setProfileUrl] = useState("/user-icon.png");
   const [isProfileAreaHovered, setIsProfileAreaHovered] = useState(false);
+  const [isAdmin, setAdmin] = useState();
 
   const navigate = useNavigate();
   const { isMuted, toggleMute, stopAndResetMusic } = useMusic();
+  
 
+  const fetch_admin = async () => {
+    if (user["id"]) {
+      //console.log(user["id"]);
+      //console.log(!user["id"]);
+      const result = await axios.get(`${API_BASE}/user/${user["id"]}/admin`);
+      //console.log(result);
+      //const otherRes = result.then(result2 => result2.data.success);
+      setAdmin(result.data.success);
+    }
+  };
   useEffect(() => {
     const currentUser = getUserInfo();
     setUser(currentUser);
+    fetch_admin();
 
     const fetchProfileImage = async () => {
       try {
@@ -51,6 +65,8 @@ export default function Navbar({ isLightMode, toggleTheme }) {
     stopAndResetMusic();
     navigate("/");
   };
+
+  
 
   if (!user?.id) return null; // for now, let's show the bar even not logged in.
   // we have an issue with getUserInfo() returning null after a few minutes
@@ -98,6 +114,7 @@ export default function Navbar({ isLightMode, toggleTheme }) {
           <Nav.Link
               onClick={() => navigate("/add-xp")}
               style={{ color: "white", fontWeight: "600", cursor: "pointer" }}
+              hidden= {!isAdmin}
             >
               Add XP
           </Nav.Link>
