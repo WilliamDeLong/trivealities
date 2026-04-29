@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -10,15 +10,16 @@ import { UserContext } from '../../App';
 //const PRIMARY_COLOR = "#f18900";
 const SECONDARY_COLOR = '#0c0c1f'
 const url = `${API_BASE}/question/create`;
-const data_default = { _id: "", question: "", correct_answer: "", incorrect_answer1: "", incorrect_answer2: "", incorrect_answer3: "", category: "any", difficulty: 'any'};
+const data_default = { question: "", correct_answer: "", incorrect_answer1: "", incorrect_answer2: "", incorrect_answer3: "", category: "any", difficulty: 'any'};
 
 const QuestionModificationPage = () => {
   const [user, setUser] = useState(getUserInfo());
-  const [admin, setAdmin] = useState(false);
+  const [admin, setAdmin] = useState(null);
   const [data, setData] = useState(data_default);
   const [error, setError] = useState("");
   const [bgColor, setBgColor] = useState(SECONDARY_COLOR);
   const { isLightMode } = useContext(UserContext);
+  //console.log(isLightMode);
   //const navigate = useNavigate();
 
   let TextyStyling = {
@@ -45,38 +46,35 @@ const QuestionModificationPage = () => {
     setData({ ...data, [input.name]: input.value });
     //console.log(data);
   };
-  const fetch_admin = async () => {
-    if (user["id"]) {
-      //console.log(user["id"]);
-      //console.log(!user["id"]);
-      const result = await axios.get(`${API_BASE}/user/${user["id"]}/admin`);
-      //console.log(result);
-      //const otherRes = result.then(result2 => result2.data.success);
-      setAdmin(result.data.success);
-    }
-  };
+  
 
   useEffect(() => {
-    setUser(getUserInfo());
-	fetch_admin();
+    const fetch_admin = async () => {
+      if (user["id"]) {
+        //console.log(user["id"]);
+        //console.log(!user["id"]);
+        const result = await axios.get(`${API_BASE}/user/${user["id"]}/admin`);
+        //console.log(result.data.success);
+        //const otherRes = result.then(result2 => result2.data.success);
+        setAdmin(result.data.success);
+      }
+    };
+    if (user === undefined || user === null) setUser(getUserInfo());
+    if (admin===null || admin===undefined) fetch_admin();
     //console.log(isLightMode);
     if (isLightMode) {
       setBgColor("white");
     } else {
       setBgColor(SECONDARY_COLOR);
     }
-  }, []);
+  }, [isLightMode, user, admin]);
   //const { username } = user;
   
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       //console.log(data);
-      const { data: res } = await axios.post(url, data);
-      //console.log(data);
-      //const { accessToken } = res;
-      //store token in localStorage
-      //localStorage.setItem("accessToken", accessToken);
+      await axios.post(url, data);
       const inputField = document.getElementById("form"); 
       inputField.reset(); // This resets the prompts so that the page doesn't have to be reloaded to create a new question
       setData(data_default); // This resets the values for all of the prompts
@@ -99,6 +97,7 @@ const QuestionModificationPage = () => {
     ) 
   return (
     <>
+    {/* <UserContext.Consumer> { isLightMode => (*/}
       <section className="vh-100">
         <div className="container-fluid h-custom vh-100">
           <div
@@ -237,6 +236,7 @@ const QuestionModificationPage = () => {
           </div>
         </div>
       </section>
+      {/*)} </UserContext.Consumer> */}
     </>
   );
 };

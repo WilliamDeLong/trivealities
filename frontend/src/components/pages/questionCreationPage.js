@@ -65,11 +65,8 @@ const QuestionCreationPage = () => {
     e.preventDefault();
     try {
       //console.log(data);
-      const { data: res } = await axios.post(url, data);
+      await axios.post(url, data);
       //console.log(data);
-      //const { accessToken } = res;
-      //store token in localStorage
-      //localStorage.setItem("accessToken", accessToken);
       const inputField = document.getElementById("form"); 
       inputField.reset(); // This resets the prompts so that the page doesn't have to be reloaded to create a new question
       setData(data_default); // This resets the values for all of the prompts

@@ -45,7 +45,9 @@ const App = () => {
   }, [location.pathname]);
 
   const toggleTheme = () => {
+    //console.log(isLightMode);
     setIsLightMode((prev) => !prev);
+    //console.log(isLightMode);
   };
 
   return (
