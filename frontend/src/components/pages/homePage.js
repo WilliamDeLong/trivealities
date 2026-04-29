@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import getUserInfo from '../../utilities/decodeJwt';
 import { UserContext } from '../../App';
+import { useMusic } from '../../context/MusicContext';
 
 const HomePage = () => {
     const [user, setUser] = useState({});
@@ -9,24 +10,27 @@ const HomePage = () => {
     const navigate = useNavigate();
     const videoRef = useRef(null);
     const { isLightMode } = useContext(UserContext);
+    const { isMuted, hasStartedMusic, startMusic } = useMusic();
+
     const homeButtonStyle = {
-            width: "220px",
-            minHeight: "180px",
-            borderRadius: "18px",
-            border: "1px solid rgba(255,255,255,0.18)",
-            padding: "20px",
-            boxShadow: "0 10px 30px rgba(0,0,0,0.28)",
-            backdropFilter: "blur(10px)",
-            WebkitBackdropFilter: "blur(10px)",
-            transition: "transform 0.25s ease, box-shadow 0.25s ease",
-            cursor: "pointer",
-            background: "rgba(15,23,42,0.66)",
-            color: "white",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-        };
+        width: "220px",
+        minHeight: "180px",
+        borderRadius: "18px",
+        border: "1px solid rgba(255,255,255,0.18)",
+        padding: "20px",
+        boxShadow: "0 10px 30px rgba(0,0,0,0.28)",
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
+        transition: "transform 0.25s ease, box-shadow 0.25s ease",
+        cursor: "pointer",
+        background: "rgba(15,23,42,0.66)",
+        color: "white",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+    };
+
     const handleClick = (e) => {
         e.preventDefault();
         localStorage.removeItem('accessToken');
@@ -36,6 +40,14 @@ const HomePage = () => {
     useEffect(() => {
         setUser(getUserInfo());
     }, []);
+
+    useEffect(() => {
+        if (!isMuted && !hasStartedMusic) {
+            startMusic().catch((err) => {
+                console.log("Home page music auto-start failed:", err?.message || err);
+            });
+        }
+    }, [isMuted, hasStartedMusic, startMusic]);
 
     if (!user) return (
         <div><h4>Log in to view this page.</h4></div>
@@ -153,57 +165,57 @@ const HomePage = () => {
                             }}
                         >
                             <div
-  style={{
-    display: "flex",
-    justifyContent: "center",
-    gap: "20px",
-    flexWrap: "wrap",
-  }}
->
-  {/* MULTIPLAYER */}
-  <button
-        onClick={() => navigate("/multiplayer")}
-        style={homeButtonStyle}
-        onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "translateY(-6px) scale(1.02)";
-            e.currentTarget.style.boxShadow = "0 0 30px rgba(59,130,246,0.6)";
-        }}
-        onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "translateY(0) scale(1)";
-            e.currentTarget.style.boxShadow = "0 10px 30px rgba(0,0,0,0.28)";
-        }}
-        >
-        <div style={{ fontSize: "2rem", marginBottom: "10px" }}>🌐</div>
-        <h3 style={{ margin: 0 }}>Multiplayer</h3>
-        <p style={{ margin: "6px 0 0", fontSize: "0.9rem", opacity: 0.8 }}>
-            Join or host a live game
-        </p>
-    </button>
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    gap: "20px",
+                                    flexWrap: "wrap",
+                                }}
+                            >
+                                {/* MULTIPLAYER */}
+                                <button
+                                    onClick={() => navigate("/multiplayer")}
+                                    style={homeButtonStyle}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.transform = "translateY(-6px) scale(1.02)";
+                                        e.currentTarget.style.boxShadow = "0 0 30px rgba(59,130,246,0.6)";
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.transform = "translateY(0) scale(1)";
+                                        e.currentTarget.style.boxShadow = "0 10px 30px rgba(0,0,0,0.28)";
+                                    }}
+                                >
+                                    <div style={{ fontSize: "2rem", marginBottom: "10px" }}>🌐</div>
+                                    <h3 style={{ margin: 0 }}>Multiplayer</h3>
+                                    <p style={{ margin: "6px 0 0", fontSize: "0.9rem", opacity: 0.8 }}>
+                                        Join or host a live game
+                                    </p>
+                                </button>
 
-  {/* SINGLE PLAYER */}
-  <button
-    onClick={() => navigate("/singleplayer")}
-    style={{
-      ...homeButtonStyle,
-      boxShadow: "0 0 20px rgba(34,197,94,0.35)",
-      border: "1px solid rgba(34,197,94,0.4)",
-    }}
-    onMouseEnter={(e) => {
-      e.currentTarget.style.transform = "translateY(-6px) scale(1.02)";
-      e.currentTarget.style.boxShadow = "0 0 30px rgba(34,197,94,0.6)";
-    }}
-    onMouseLeave={(e) => {
-      e.currentTarget.style.transform = "translateY(0) scale(1)";
-      e.currentTarget.style.boxShadow = "0 0 20px rgba(34,197,94,0.35)";
-    }}
-  >
-    <div style={{ fontSize: "2rem", marginBottom: "10px" }}>🔥</div>
-    <h3 style={{ margin: 0 }}>Single Player</h3>
-    <p style={{ margin: "6px 0 0", fontSize: "0.9rem", opacity: 0.8 }}>
-      Play solo and level up
-    </p>
-  </button>
-</div>
+                                {/* SINGLE PLAYER */}
+                                <button
+                                    onClick={() => navigate("/singleplayer")}
+                                    style={{
+                                        ...homeButtonStyle,
+                                        boxShadow: "0 0 20px rgba(34,197,94,0.35)",
+                                        border: "1px solid rgba(34,197,94,0.4)",
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.transform = "translateY(-6px) scale(1.02)";
+                                        e.currentTarget.style.boxShadow = "0 0 30px rgba(34,197,94,0.6)";
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.transform = "translateY(0) scale(1)";
+                                        e.currentTarget.style.boxShadow = "0 0 20px rgba(34,197,94,0.35)";
+                                    }}
+                                >
+                                    <div style={{ fontSize: "2rem", marginBottom: "10px" }}>🔥</div>
+                                    <h3 style={{ margin: 0 }}>Single Player</h3>
+                                    <p style={{ margin: "6px 0 0", fontSize: "0.9rem", opacity: 0.8 }}>
+                                        Play solo and level up
+                                    </p>
+                                </button>
+                            </div>
                         </div>
 
                         {videoFailed && (

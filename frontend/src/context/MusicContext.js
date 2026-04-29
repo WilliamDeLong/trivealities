@@ -2,61 +2,113 @@ import React, { createContext, useContext, useEffect, useRef, useState } from "r
 
 const MusicContext = createContext();
 
+// Shared audio instance for the whole app session
+let sharedAudio = null;
+
+const getSharedAudio = () => {
+  if (!sharedAudio) {
+    sharedAudio = new Audio("/trivialities-theme.mp3");
+    sharedAudio.loop = true;
+    sharedAudio.preload = "auto";
+    sharedAudio.volume = 1;
+  }
+  return sharedAudio;
+};
+
 export const MusicProvider = ({ children }) => {
   const audioRef = useRef(null);
 
-  const [hasStartedMusic, setHasStartedMusic] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [hasStartedMusic, setHasStartedMusic] = useState(() => {
+    return sessionStorage.getItem("hasStartedMusic") === "true";
+  });
+
+  const [isMuted, setIsMuted] = useState(() => {
+    return sessionStorage.getItem("isMuted") === "true";
+  });
 
   useEffect(() => {
-    const audio = new Audio("/trivialities-theme.mp3");
-    audio.loop = true;
-    audio.preload = "auto";
-    audio.volume = 1;
+    const audio = getSharedAudio();
     audioRef.current = audio;
 
-    return () => {
+    const savedTime = Number(sessionStorage.getItem("musicCurrentTime") || "0");
+    if (!Number.isNaN(savedTime) && savedTime > 0 && Math.abs(audio.currentTime - savedTime) > 1) {
+      audio.currentTime = savedTime;
+    }
+
+    const saveTime = () => {
       if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
+        sessionStorage.setItem(
+          "musicCurrentTime",
+          String(audioRef.current.currentTime || 0)
+        );
       }
     };
-  }, []);
+
+    audio.addEventListener("timeupdate", saveTime);
+
+    if (hasStartedMusic && !isMuted && audio.paused) {
+      audio.play().catch((error) => {
+        console.error("Music failed to resume:", error);
+      });
+    }
+
+    return () => {
+      audio.removeEventListener("timeupdate", saveTime);
+    };
+  }, [hasStartedMusic, isMuted]);
+
+  useEffect(() => {
+    sessionStorage.setItem("hasStartedMusic", String(hasStartedMusic));
+  }, [hasStartedMusic]);
+
+  useEffect(() => {
+    sessionStorage.setItem("isMuted", String(isMuted));
+  }, [isMuted]);
 
   const startMusic = async () => {
-    if (!audioRef.current) return;
+    const audio = audioRef.current || getSharedAudio();
+    audioRef.current = audio;
 
     setHasStartedMusic(true);
 
-    if (isMuted) {
-      audioRef.current.pause();
-      return;
-    }
+    if (isMuted) return;
+    if (!audio.paused) return;
 
     try {
-      await audioRef.current.play();
+      await audio.play();
     } catch (error) {
       console.error("Music failed to start:", error);
     }
   };
 
-  const muteMusic = () => {
-    if (!audioRef.current) return;
+  const pauseMusic = () => {
+    const audio = audioRef.current || getSharedAudio();
+    audioRef.current = audio;
 
-    audioRef.current.pause();
+    audio.pause();
+    sessionStorage.setItem("musicCurrentTime", String(audio.currentTime || 0));
+  };
+
+  const muteMusic = () => {
+    const audio = audioRef.current || getSharedAudio();
+    audioRef.current = audio;
+
+    audio.pause();
     setIsMuted(true);
+    sessionStorage.setItem("musicCurrentTime", String(audio.currentTime || 0));
   };
 
   const unmuteMusic = async () => {
-    if (!audioRef.current) return;
+    const audio = audioRef.current || getSharedAudio();
+    audioRef.current = audio;
 
     setIsMuted(false);
 
     if (hasStartedMusic) {
       try {
-        await audioRef.current.play();
+        await audio.play();
       } catch (error) {
-        console.error("Music failed to resume:", error);
+        console.error("Music failed to unmute:", error);
       }
     }
   };
@@ -69,13 +121,34 @@ export const MusicProvider = ({ children }) => {
     }
   };
 
-  const stopAndResetMusic = () => {
-    if (!audioRef.current) return;
+  const setMusicVolume = (volume) => {
+    const audio = audioRef.current || getSharedAudio();
+    audioRef.current = audio;
 
-    audioRef.current.pause();
-    audioRef.current.currentTime = 0;
+    const safeVolume = Math.max(0, Math.min(1, volume));
+    audio.volume = safeVolume;
+  };
+
+  const getMusicVolume = () => {
+    const audio = audioRef.current || getSharedAudio();
+    audioRef.current = audio;
+    return audio.volume;
+  };
+
+  const stopAndResetMusic = () => {
+    const audio = audioRef.current || getSharedAudio();
+    audioRef.current = audio;
+
+    audio.pause();
+    audio.currentTime = 0;
+    audio.volume = 1;
+
     setHasStartedMusic(false);
     setIsMuted(false);
+
+    sessionStorage.removeItem("hasStartedMusic");
+    sessionStorage.removeItem("isMuted");
+    sessionStorage.removeItem("musicCurrentTime");
   };
 
   return (
@@ -84,9 +157,12 @@ export const MusicProvider = ({ children }) => {
         hasStartedMusic,
         isMuted,
         startMusic,
+        pauseMusic,
         muteMusic,
         unmuteMusic,
         toggleMute,
+        setMusicVolume,
+        getMusicVolume,
         stopAndResetMusic,
       }}
     >
