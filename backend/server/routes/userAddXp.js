@@ -9,18 +9,20 @@ const xp_per_level = 100;
 const round2 = (n) => Math.round((n + Number.EPSILON) * 100) / 100;
 
 router.post("/:id/xp", async (req, res) => {
+  //console.log("WHAT THE HELL");
   try {
     const { id } = req.params;
     const xpToAdd = Number(req.body.xp);
+    //console.log(xpToAdd);
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid user id" });
     }
 
-    if (!Number.isFinite(xpToAdd) || xpToAdd <= 0) {
-      return res.status(400).json({ message: "XP must be a positive number" });
+    if (!Number.isFinite(xpToAdd) || xpToAdd <= 0 || xpToAdd >= 500) {
+      return res.status(400).json({ message: "XP must be a positive number that is less than 100000000" });
     }
-
+    console.log(xpToAdd);
     const user = await newUserModel.findById(id).select("accountLevel accountXp");
     if (!user) return res.status(404).json({ message: "User not found" });
 

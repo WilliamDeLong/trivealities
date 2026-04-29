@@ -50,6 +50,8 @@ function AddXpPage() {
     setLoading(true);
 
     try {
+      //console.log(xp);
+      //console.log((`${API_BASE}/user/${userId}/xp`));
       const res = await axios.post(`${API_BASE}/user/${userId}/xp`, {
         xp: Number(xp),
       });

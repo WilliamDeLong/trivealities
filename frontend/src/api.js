@@ -1,4 +1,4 @@
-const API_BASE = "http://10.196.19.54:8081"; // your laptop IP
+const API_BASE = "http://192.168.56.1:8081"; // your laptop IP
 
 export default API_BASE;
 
