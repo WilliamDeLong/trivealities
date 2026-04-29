@@ -2,8 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import getUserInfo from "../../utilities/decodeJwt";
 import API_BASE from "../../api";
+import axios from 'axios';
 const ProfilePage = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(getUserInfo());
+  const [user_profData, setUser_profData] = useState(null);
+  const [error, setError] = useState("");
+  const [accountLevel, setAccLvl] = useState();
+  const [accountXp, setAccXP] = useState();
   const [profileUrl, setProfileUrl] = useState("/user-icon.png");
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadSuccess, setUploadSuccess] = useState(false);
@@ -27,9 +32,37 @@ const ProfilePage = () => {
     localStorage.removeItem("accessToken");
     navigate("/");
   };
+  const fetch_user = async () => {
+      try {
+        //console.log(data);
+        //const result = await axios.get(url, {params: data});
+        //console.log(`${API_BASE}/user/${id}`);
+        const result = await axios.get(`${API_BASE}/user/${id}`);
+        //const { accountLevel, accountXp} = result;
+        //console.log(username);
+        //console.log(result);
+        //console.log(accountXp);
+        const { accountLevel, accountXp} = result.data;
+        setAccLvl(accountLevel);
+        setAccXP(accountXp);
+        //console.log(result);
+        //setUser_profData(result.data);
+        //setSeed(Math.random());
+      } catch (error) {
+        if (
+          error.response &&
+          error.response.status >= 400 &&
+          error.response.status <= 500
+        ) {
+          setError(error.response.data.message);
+        }
+      }
+    };
 
 useEffect(() => {
   const u = getUserInfo();
+  
+  fetch_user();
 
   if (!u?.id) {
     setUser(null);
@@ -260,7 +293,8 @@ useEffect(() => {
     );
   }
 
-  const { id, email, username,  accountLevel, accountXp} = user;
+  const { id, email, username} = user;
+  
 
   return (
     <>

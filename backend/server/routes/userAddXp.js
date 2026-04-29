@@ -19,7 +19,7 @@ router.post("/:id/xp", async (req, res) => {
       return res.status(400).json({ message: "Invalid user id" });
     }
 
-    if (!Number.isFinite(xpToAdd) || xpToAdd <= 0 || xpToAdd >= 500) {
+    if (!Number.isFinite(xpToAdd) || xpToAdd <= 0) {
       return res.status(400).json({ message: "XP must be a positive number that is less than 100000000" });
     }
     console.log(xpToAdd);
