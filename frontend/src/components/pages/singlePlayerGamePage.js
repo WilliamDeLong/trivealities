@@ -1,9 +1,11 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import getUserInfo from "../../utilities/decodeJwt";
 import { UserContext } from "../../App";
+import { useMusic } from "../../context/MusicContext";
 import API_BASE from "../../api";
+
 const difficultyConfig = {
   easy: {
     title: "Easy",
@@ -29,6 +31,17 @@ function SinglePlayerGamePage() {
   const { difficulty } = useParams();
   const navigate = useNavigate();
   const { isLightMode } = useContext(UserContext);
+  const {
+    isMuted,
+    hasStartedMusic,
+    startMusic,
+    setMusicVolume,
+    getMusicVolume,
+  } = useMusic();
+
+  const rightSoundRef = useRef(null);
+  const wrongSoundRef = useRef(null);
+  const previousVolumeRef = useRef(1);
 
   const [user, setUser] = useState(null);
   const [questions, setQuestions] = useState([]);
@@ -45,9 +58,39 @@ function SinglePlayerGamePage() {
   const config = difficultyConfig[difficulty];
 
   useEffect(() => {
+    rightSoundRef.current = new Audio("/right-answer-sound.mp3");
+    wrongSoundRef.current = new Audio("/wrong-answer-sound.mp3");
+
+    rightSoundRef.current.preload = "auto";
+    wrongSoundRef.current.preload = "auto";
+    rightSoundRef.current.volume = 1;
+    wrongSoundRef.current.volume = 1;
+
+    return () => {
+      if (rightSoundRef.current) {
+        rightSoundRef.current.pause();
+        rightSoundRef.current.currentTime = 0;
+      }
+      if (wrongSoundRef.current) {
+        wrongSoundRef.current.pause();
+        wrongSoundRef.current.currentTime = 0;
+      }
+      setMusicVolume(previousVolumeRef.current || 1);
+    };
+  }, [setMusicVolume]);
+
+  useEffect(() => {
     const decodedUser = getUserInfo();
     setUser(decodedUser || null);
   }, []);
+
+  useEffect(() => {
+    if (!isMuted && !hasStartedMusic) {
+      startMusic().catch((err) => {
+        console.log("Single player music auto-start failed:", err?.message || err);
+      });
+    }
+  }, [isMuted, hasStartedMusic, startMusic]);
 
   useEffect(() => {
     if (!config) {
@@ -147,12 +190,42 @@ function SinglePlayerGamePage() {
     saveProgress();
   }, [gameFinished, isPerfectRun, progressSaved, user, difficulty]);
 
-  const handleAnswerClick = (answer) => {
+  const playAnswerSound = async (isCorrect) => {
+    if (isMuted) return;
+
+    const sound = isCorrect ? rightSoundRef.current : wrongSoundRef.current;
+    if (!sound) return;
+
+    try {
+      previousVolumeRef.current = getMusicVolume();
+      setMusicVolume(0.18);
+
+      sound.currentTime = 0;
+      sound.volume = 1;
+
+      const restoreVolume = () => {
+        sound.removeEventListener("ended", restoreVolume);
+        setMusicVolume(previousVolumeRef.current || 1);
+      };
+
+      sound.addEventListener("ended", restoreVolume, { once: true });
+      await sound.play();
+    } catch (err) {
+      console.log("Answer sound failed:", err.message);
+      setMusicVolume(previousVolumeRef.current || 1);
+    }
+  };
+
+  const handleAnswerClick = async (answer) => {
     if (selectedAnswer || !currentQuestion) return;
 
     setSelectedAnswer(answer);
 
-    if (answer === currentQuestion.correctAnswer) {
+    const isCorrect = answer === currentQuestion.correctAnswer;
+
+    playAnswerSound(isCorrect);
+
+    if (isCorrect) {
       setScore((prev) => prev + 1);
       setEarnedXp((prev) => prev + 5);
     }
