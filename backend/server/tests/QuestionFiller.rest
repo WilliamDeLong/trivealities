@@ -70,7 +70,7 @@ Content-Type: {{json}}
     "incorrect_answer2" : "Spiders",
     "incorrect_answer3" : "That somewhere, somehow a duck is watching him",
     "category" : 9,
-    "difficulty" : 1
+    "difficulty" : 0
 }
 ###
 ###
