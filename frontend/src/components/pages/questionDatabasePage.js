@@ -43,7 +43,9 @@ function DatabasePage() {
 
   let PStyling = {
     background: isLightMode ? "linear-gradient(135deg, #f8fafc, #dbeafe, #ede9fe)": "linear-gradient(135deg, #020617, #0f172a, #1e1b4b)",
-    color: isLightMode? "#7b0445": "#f18900", border: isLightMode? "#ffffff": "#000000"
+    color: isLightMode? "#7b0445": "#f18900", border: isLightMode? "#ffffff": "#000000",
+    height:"fit-content",
+    minHeight: "663px"
   };
   const fetch_admin = async () => {
     if (user["id"]) {
@@ -115,7 +117,6 @@ function DatabasePage() {
   
   if (questions.length>0){
   return (
-    <>
     <div style={PStyling}>
       <div className="table_container" >
         <h1>Trivealities Question Database V1</h1>
@@ -192,7 +193,6 @@ function DatabasePage() {
         />
       </div>
     </div>
-    </>
   );}
 }
 

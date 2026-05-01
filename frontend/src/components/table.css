@@ -1,0 +1,66 @@
+/* <!--
+Source - https://stackoverflow.com/a/29512692
+Posted by tsayen, modified by community. See post 'Timeline' for change history
+Retrieved 2026-05-01, License - CC BY-SA 3.0
+--> */
+
+.modTable {
+    height: 10em;
+}
+.modTable table {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+    width: 100%;
+}
+.modTable table thead {
+    /* head takes the height it requires, 
+    and it's not scaled when table is resized */
+    flex: 0 0 auto;
+    width: calc(100% - 0.9em);
+}
+.modTable table tbody {
+    /* body takes all the remaining available space */
+    flex: 1 1 auto;
+    display: block;
+    overflow-y: scroll;
+}
+.modTable table tbody tr {
+    width: 100%;
+}
+.modTable table thead, table tbody tr {
+    display: table;
+    table-layout: fixed;
+}
+
+/* .modTable {
+    width: 100%;
+    border-spacing: 0;
+}
+
+.modTable thead, tbody, tr, th, td { display: block; }
+
+.modTable thead tr {
+    / * fallback * /
+    width: 100%;
+    / * minus scroll bar width * /
+    
+}
+
+.modTable tr:after {  / * clearing float * /
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+
+.modTable tbody {
+    height: 80%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.modTable tbody td, thead th {
+    width: 11%;  / * 19% is less than (100% / 5 cols) = 20% * /
+    float: left;
+} */
