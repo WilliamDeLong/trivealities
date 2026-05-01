@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-//import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -20,6 +20,7 @@ const QuestionModificationPage = () => {
   const [bgColor, setBgColor] = useState(SECONDARY_COLOR);
   const { isLightMode } = useContext(UserContext);
   //console.log(isLightMode);
+  const location = useLocation();
   //const navigate = useNavigate();
 
   let TextyStyling = {
@@ -61,6 +62,7 @@ const QuestionModificationPage = () => {
     };
     if (user === undefined || user === null) setUser(getUserInfo());
     if (admin===null || admin===undefined) fetch_admin();
+    console.log(location.state);
     //console.log(isLightMode);
     if (isLightMode) {
       setBgColor("white");

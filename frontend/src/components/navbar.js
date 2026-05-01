@@ -112,6 +112,13 @@ export default function Navbar({ isLightMode, toggleTheme }) {
             Question Database
           </Nav.Link>
           {isAdmin && <Nav.Link
+              onClick={() => navigate("/questionDatabase-A")}
+              style={{ color: "white", fontWeight: "600", cursor: "pointer" }}
+              //hidden= {!isAdmin}
+            >
+              Question Editing Page 
+          </Nav.Link>}
+          {isAdmin && <Nav.Link
               onClick={() => navigate("/add-xp")}
               style={{ color: "white", fontWeight: "600", cursor: "pointer" }}
               //hidden= {!isAdmin}

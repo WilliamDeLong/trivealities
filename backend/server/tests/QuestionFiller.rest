@@ -74,6 +74,33 @@ Content-Type: {{json}}
 }
 ###
 ###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "Who wrote the songs used in the credits of Portal, Portal 2 and Lego Dimensions",
+    "correct_answer" : "Jonathan Coulton",
+    "incorrect_answer1" : "Carlos Eiene",
+    "incorrect_answer2" : "Toby Fox",
+    "incorrect_answer3" : "Kanye West",
+    "category" : 15,
+    "difficulty" : 1
+}
+###
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "How many fingers does a typical human hand have?",
+    "correct_answer" : "4",
+    "incorrect_answer1" : "3",
+    "incorrect_answer2" : "5",
+    "incorrect_answer3" : "8",
+    "category" : 9,
+    "difficulty" : 0
+}
+###
 
 ###
 GET {{baseUrl}}/question/getAll

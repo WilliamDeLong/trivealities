@@ -19,7 +19,10 @@ import ProfilePage from "./components/pages/ProfilePage";
 import QuestionCreationPage from "./components/pages/questionCreationPage";
 import QuestionModificationPage from "./components/pages/questionModificationPage";
 
+import ExperimentalTableTest from "./components/Users";
+
 import QuestionDatabasePage from "./components/pages/questionDatabasePage";
+import AdminDatabasePage from "./components/pages/AdminDatabasePage";
 import AddAccountXpPage from "./components/pages/AddAccountXpPage";
 import ChatPage from "./components/pages/chatPage";
 import SinglePlayerMenuPage from "./components/pages/singlePlayerMenuPage";
@@ -66,6 +69,8 @@ const App = () => {
           <Route exact path="/questionCreate" element={<QuestionCreationPage />} />
           <Route exact path="/questionModify" element={<QuestionModificationPage />} />
           <Route exact path="/questionDatabase" element={<QuestionDatabasePage />} />
+          <Route exact path="/questionDatabase-A" element={<AdminDatabasePage />} />
+          <Route exact path="/usors" element={<ExperimentalTableTest />} />
           {/* <Route exact path="/mbta" element={<MbtaAlertsPage />} /> */}
           <Route exact path="/add-xp" element={<AddAccountXpPage />} /> 
           <Route exact path="/chat" element={<ChatPage />} />

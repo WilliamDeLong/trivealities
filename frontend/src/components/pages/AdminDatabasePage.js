@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 //import Card from 'react-bootstrap/Card';
 import axios from 'axios';
 //import tailwindcss from 'tailwindcss';
-import Table from "../Table";
+import ModTable from "../Tables/ModTable";
 import API_BASE from '../../api';
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -12,12 +12,18 @@ import { UserContext } from '../../App';
 
 
 const columns = [
-  
-  { label: "Prompt", accessor: "question", sortable: false },
+  //{ label: "ID", accessor: "_id", sortable: true, sortbyOrder: "desc" },
+  { label: "Prompt", accessor: "question", sortable: false, sortbyOrder: "desc"  },
   { label: "Category", accessor: "category", sortable: true},
   { label: "Difficulty", accessor: "difficulty", sortable: true },
   { label: "Date", accessor: "date", sortable: true },
-  { label: "ID", accessor: "_id", sortable: true, sortbyOrder: "desc" },
+  { label: "Correct Answer", accessor: "correct_answer", sortable: false },
+  { label: "Incorrect Answer 1", accessor: "incorrect_answer1", sortable: false },
+  { label: "Incorrect Answer 2", accessor: "incorrect_answer2", sortable: false },
+  { label: "Incorrect Answer 3", accessor: "incorrect_answer3", sortable: false },
+  //{ label: "Edit Question", accessor: "no", sortable: true, sortbyOrder: "desc" },
+  
+  
 ];
 
 
@@ -32,11 +38,11 @@ const default_data = {
 const url = `${API_BASE}/question/findQuestion`;
 // `${API_BASE}/question/findQuestion`
 
-function DatabasePage() {
+function AdminDatabasePage() {
   const [user, setUser] = useState(getUserInfo());
   const [questions, setQuestions] = useState([]);
   const [data, setData] = useState(default_data);
-  const [adminny, setAdminy] = useState();
+  const [isAdmin, setAdmin] = useState();
   const [error, setError] = useState("");
   const { isLightMode } = useContext(UserContext);
   const [seed, setSeed] = useState(1);
@@ -52,7 +58,7 @@ function DatabasePage() {
       const result = await axios.get(`${API_BASE}/user/${user["id"]}/admin`);
       //console.log(result);
       //const otherRes = result.then(result2 => result2.data.success);
-      setAdminy(result.data.success);
+      setAdmin(result.data.success);
     }
   };
   const fetch_questions = async () => {
@@ -115,13 +121,12 @@ function DatabasePage() {
   
   if (questions.length>0){
   return (
-    <>
     <div style={PStyling}>
-      <div className="table_container" >
+      <div className="modTable">
         <h1>Trivealities Question Database V0.0074</h1>
         <Form>
           <Form.Group className="mb-3" controlId="formBasicPrompt">
-            <table>
+            <table >
               <tbody>
                 <tr>
                   <td width="45%">
@@ -185,16 +190,16 @@ function DatabasePage() {
           </Form.Group>
         </Form>
         {error && <div className='pt-3'>{error}</div>}
-        <Table 
+        {isAdmin && <ModTable 
+          width='100'
           key={seed}
           data={questions}
           columns={columns}
-        />
+        />}
       </div>
     </div>
-    </>
   );}
 }
 
 
-export default DatabasePage;
+export default AdminDatabasePage;

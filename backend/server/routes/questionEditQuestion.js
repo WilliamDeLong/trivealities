@@ -16,15 +16,15 @@ router.post('/editQuestion', async (req, res) =>
     if (ques && questionIdReg !== questionId) return res.status(409).send({ message: "There is already a question with the same wording in the database. Please create another." })
 
     // generates the hash
-    const generateHash = await bcrypt.genSalt(Number(10))
+    //const generateHash = await bcrypt.genSalt(Number(10))
 
     // parse the generated hash into the correct answer
-    const hashCorrect_Answer = await bcrypt.hash(correct_answer, generateHash)
+    //const hashCorrect_Answer = await bcrypt.hash(correct_answer, generateHash)
 
     // find and update question using stored information
     query_data = {
         question : question, 
-        correct_answer : hashCorrect_Answer, 
+        correct_answer : correct_answer, 
         incorrect_answer1: incorrect_answer1,
 		incorrect_answer2: incorrect_answer2,
 		incorrect_answer3: incorrect_answer3,
