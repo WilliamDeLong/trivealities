@@ -35,14 +35,14 @@ export default function GenericCustomTable(props) {
             let columnWidth = `col-md-${columnsToDisplay[index].columnSize}`;
             if (item.visible) {
                 if (item.renderer) {
+                    //console.log(item.fieldName);
+                    //console.log(item.renderer);
                     return (
                         <div className={columnWidth} key={index}>
                             {item.renderer(data, item.fieldName)}
                         </div>
                     );
                 } else {
-                    //console.log(item.fieldName);
-                    //console.log(item.renderer);
                     return (
                         <div className={columnWidth} key={index}>
                             {data[item.fieldName]}
@@ -50,15 +50,14 @@ export default function GenericCustomTable(props) {
                     );
                 }
             } else {
-                
                 return null;
             }
         });
     };
 
     const renderRows = () => {
-        let dataKeys = /* clonedeep */ JSON.parse(JSON.stringify(columnsToDisplay));
-        let dataRows = /* clonedeep */ JSON.parse(JSON.stringify(currentTableData));
+        let dataKeys = /* clonedeep */(columnsToDisplay);
+        let dataRows = /* clonedeep */(currentTableData);
         if (dataRows.length > 0) {
             return dataRows.map((row, index) => {
                 return (

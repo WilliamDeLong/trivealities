@@ -35,7 +35,7 @@ const ModTableHead = ({ columns, handleSorting }) => {
             </th>
           );
         })}
-        <th key="Edit" style={{color: isLightMode? "#7b0445": "#f18900"}}>Edit</th>
+        <th key="Edit Question" style={{color: isLightMode? "#7b0445": "#f18900"}}>Edit Question</th>
       </tr>
       
     </thead>

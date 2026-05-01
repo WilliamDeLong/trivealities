@@ -44,7 +44,6 @@ const ModTableBody = ({ tableData, columns }) => {
     <tbody >
       {tableData.map((data) => {
         return (
-          <>
           <tr key={data._id} >
             {columns.map(({ accessor }) => { 
               if (accessor === "category") {
@@ -68,11 +67,10 @@ const ModTableBody = ({ tableData, columns }) => {
             <td 
             key="Edit" 
             //onClick={EditSty = {color:"#1500ff"}}
-            style={{color: isLightMode? "#7b0445": EditSty}}>
-              Edit Question
+            style={{color: isLightMode? "#7b0445": "#f18900"}}>
+              Edit
               </td>
           </tr>
-          </>
         );
       })}
     </tbody>

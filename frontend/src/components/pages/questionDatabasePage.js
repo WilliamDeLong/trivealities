@@ -118,7 +118,7 @@ function DatabasePage() {
     <>
     <div style={PStyling}>
       <div className="table_container" >
-        <h1>Trivealities Question Database V0.0074</h1>
+        <h1>Trivealities Question Database V1</h1>
         <Form>
           <Form.Group className="mb-3" controlId="formBasicPrompt">
             <table>

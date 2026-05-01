@@ -13,10 +13,10 @@ import { UserContext } from '../../App';
 
 const columns = [
   //{ label: "ID", accessor: "_id", sortable: true, sortbyOrder: "desc" },
-  { label: "Prompt", accessor: "question", sortable: false, sortbyOrder: "desc"  },
+  { label: "Prompt", accessor: "question", sortable: false },
   { label: "Category", accessor: "category", sortable: true},
   { label: "Difficulty", accessor: "difficulty", sortable: true },
-  { label: "Date", accessor: "date", sortable: true },
+  { label: "Date", accessor: "date", sortable: true ,sortbyOrder: "desc"  },
   { label: "Correct Answer", accessor: "correct_answer", sortable: false },
   { label: "Incorrect Answer 1", accessor: "incorrect_answer1", sortable: false },
   { label: "Incorrect Answer 2", accessor: "incorrect_answer2", sortable: false },
@@ -49,7 +49,8 @@ function AdminDatabasePage() {
 
   let PStyling = {
     background: isLightMode ? "linear-gradient(135deg, #f8fafc, #dbeafe, #ede9fe)": "linear-gradient(135deg, #020617, #0f172a, #1e1b4b)",
-    color: isLightMode? "#7b0445": "#f18900", border: isLightMode? "#ffffff": "#000000"
+    color: isLightMode? "#7b0445": "#f18900", border: isLightMode? "#ffffff": "#000000",
+    height: "100%"
   };
   const fetch_admin = async () => {
     if (user["id"]) {
@@ -123,7 +124,8 @@ function AdminDatabasePage() {
   return (
     <div style={PStyling}>
       <div className="modTable">
-        <h1>Trivealities Question Database V0.0074</h1>
+        <h1>Trivealities Question Editing Database V0.0074</h1>
+        <text>This is a work in progress so don't be surprised that nothing works</text>
         <Form>
           <Form.Group className="mb-3" controlId="formBasicPrompt">
             <table >
