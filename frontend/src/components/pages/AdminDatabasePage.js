@@ -50,10 +50,9 @@ function AdminDatabasePage() {
   let PStyling = {
     background: isLightMode ? "linear-gradient(135deg, #f8fafc, #dbeafe, #ede9fe)": "linear-gradient(135deg, #020617, #0f172a, #1e1b4b)",
     color: isLightMode? "#7b0445": "#f18900", border: isLightMode? "#ffffff": "#000000",
-    height:"auto",
+    height:"fit-content",
     minHeight: "663px",
-    maxHeight: "1440px"
-  };
+    };
   const fetch_admin = async () => {
     if (user["id"]) {
       //console.log(user["id"]);

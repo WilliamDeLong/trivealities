@@ -1,0 +1,494 @@
+
+@baseUrl = http://localhost:8081
+@json = application/json
+
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "How many different ways can you say \"I love you\" in American Sign Language?",
+    "correct_answer" : "4",
+    "incorrect_answer1" : "3",
+    "incorrect_answer2" : "2",
+    "incorrect_answer3" : "5",
+    "category" : 9,
+    "difficulty" : 1
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "How do you give a round of applause in American Sign Language?",
+    "correct_answer" : "Raise your arms and jazz hands",
+    "incorrect_answer1" : "Clap in their general direction",
+    "incorrect_answer2" : "Do the wave",
+    "incorrect_answer3" : "Star Trek \"Live life and prosper\" hand",
+    "category" : 9,
+    "difficulty" : 0
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "Wellington is the capital of New Zealand. Which of these statements is true?",
+    "correct_answer" : "It's situated on New Zealand's North Island",
+    "incorrect_answer1" : "It's the second southernmost capital in the world",
+    "incorrect_answer2" : "The record high temperature is 35 C / 95 F",
+    "incorrect_answer3" : "It's named after Charles Wellesey, 1st Duke of Wellington",
+    "category" : 22,
+    "difficulty" : 2
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "Richard III's body was dug up in Leicester, England, in 2012. What was he dug up in?",
+    "correct_answer" : "A parking lot",
+    "incorrect_answer1" : "A brewery",
+    "incorrect_answer2" : "A railway station",
+    "incorrect_answer3" : "A playground",
+    "category" : 23,
+    "difficulty" : 1
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "What is the name for a female cat?",
+    "correct_answer" : "Queen",
+    "incorrect_answer1" : "Vixen",
+    "incorrect_answer2" : "Tam",
+    "incorrect_answer3" : "Bitch",
+    "category" : 27,
+    "difficulty" : 0
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "Which of these languages is part of the Indo-European language family?",
+    "correct_answer" : "Farsi",
+    "incorrect_answer1" : "Turkish",
+    "incorrect_answer2" : "Hungarian",
+    "incorrect_answer3" : "Finnish",
+    "category" : 9,
+    "difficulty" : 2
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "Kelvin and Celcius move in tandem along their respective temperature scales, just with Kelvin starting at absolute zero. What is the equivalent for Fahrenheit?",
+    "correct_answer" : "Rankine",
+    "incorrect_answer1" : "Candela",
+    "incorrect_answer2" : "Maxwell",
+    "incorrect_answer3" : "Hertz",
+    "category" : 17,
+    "difficulty" : 2
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "In ancient wonders of the world, it's the Hanging Gardens of...",
+    "correct_answer" : "Babylon",
+    "incorrect_answer1" : "Thebes",
+    "incorrect_answer2" : "Halicarnassus",
+    "incorrect_answer3" : "Antioch",
+    "category" : 23,
+    "difficulty" : 0
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "Which car was the symbol of East Germany during the cold war?",
+    "correct_answer" : "Trabant",
+    "incorrect_answer1" : "Volkswagen",
+    "incorrect_answer2" : "Renault",
+    "incorrect_answer3" : "Lada",
+    "category" : 28,
+    "difficulty" : 0
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "Which of these countries has the highest population at ~10.6 million people?",
+    "correct_answer" : "Czechia ",
+    "incorrect_answer1" : "Austria",
+    "incorrect_answer2" : "Hungary",
+    "incorrect_answer3" : "Switzerland",
+    "category" : 22,
+    "difficulty" : 1
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "Who played the Ninth Doctor in the 2005 reboot of Doctor Who?",
+    "correct_answer" : "Christopher Eccleston",
+    "incorrect_answer1" : "Matt Smith",
+    "incorrect_answer2" : "David Tennant",
+    "incorrect_answer3" : "Tom Baker",
+    "category" : 14,
+    "difficulty" : 0
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "Dua Lipa received citizenship of this country in 2022 due to her \"promoting the country through her music and fame\".",
+    "correct_answer" : "Albania",
+    "incorrect_answer1" : "North Macedonia",
+    "incorrect_answer2" : "United Kingdom",
+    "incorrect_answer3" : "Turkey",
+    "category" : 26,
+    "difficulty" : 1
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "In a literary sense, the name of this fish refers to details that distract from the true plot of a story.",
+    "correct_answer" : "Red Herring",
+    "incorrect_answer1" : "Lumpfish",
+    "incorrect_answer2" : "Betta Fish",
+    "incorrect_answer3" : "Walleye",
+    "category" : 10,
+    "difficulty" : 1
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "The name of this language, in that language, is Euskara.",
+    "correct_answer" : "Basque",
+    "incorrect_answer1" : "Finnish",
+    "incorrect_answer2" : "Albanian",
+    "incorrect_answer3" : "Uzbek",
+    "category" : 9,
+    "difficulty" : 2
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "This Clash Royale troop consists of two Barbarians wielding the namesake weapon.",
+    "correct_answer" : "Battle Ram",
+    "incorrect_answer1" : "Cannon",
+    "incorrect_answer2" : "Firecracker",
+    "incorrect_answer3" : "P.E.K.K.A.",
+    "category" : 15,
+    "difficulty" : 1
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "Which artist's famous set of 14 \"Black Paintings\" were painted directly on the walls of their home?",
+    "correct_answer" : "Franscisco Goya",
+    "incorrect_answer1" : "Leonardo da Vinci",
+    "incorrect_answer2" : "Georges Seurat",
+    "incorrect_answer3" : "Edvard Munch",
+    "category" : 25,
+    "difficulty" : 2
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "British-Indian artist Anish Kapoor, known for his Chicago public sculpture Cloudgate/The Bean, controversially owns the exclusive artistic rights to this super-black coating, known as the blackest of blacks.",
+    "correct_answer" : "Vantablack",
+    "incorrect_answer1" : "Ebony",
+    "incorrect_answer2" : "Obsidian",
+    "incorrect_answer3" : "Phantomblack",
+    "category" : 25,
+    "difficulty" : 1
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "What Shakespeare play contains the phrase 'all the world's a stage'?",
+    "correct_answer" : "As You Like It",
+    "incorrect_answer1" : "Hamlet",
+    "incorrect_answer2" : "A Midsummer Night's Dream",
+    "incorrect_answer3" : "The Twelfth Night",
+    "category" : 13,
+    "difficulty" : 1
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "This character in My Little Pony: Friendship is Magic has an hourglass cutie mark, and is an homage to Doctor Who.",
+    "correct_answer" : "Dr. Hooves",
+    "incorrect_answer1" : "Time Winder",
+    "incorrect_answer2" : "Tara Dis",
+    "incorrect_answer3" : "Time Shine",
+    "category" : 32,
+    "difficulty" : 1
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "Which virtual singer's voice sings in the Nyan Cat Youtube video?",
+    "correct_answer" : "Momone Momo",
+    "incorrect_answer1" : "Hatsune Miku",
+    "incorrect_answer2" : "Kasane Teto",
+    "incorrect_answer3" : "Kagamine Rin",
+    "category" : 12,
+    "difficulty" : 2
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "Which of these characters appears in Super Smash Bros Brawl's Subspace Emissary but is not a battleable boss character?",
+    "correct_answer" : "Master Hand",
+    "incorrect_answer1" : "Meta Ridley",
+    "incorrect_answer2" : "Crazy Hand",
+    "incorrect_answer3" : "Petey Piranha",
+    "category" : 15,
+    "difficulty" : 1
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "According to GEM Partners, this streaming service has surpassed Crunchyroll as the most popular anime streaming service in several countries, including the US.",
+    "correct_answer" : "Netflix",
+    "incorrect_answer1" : "Hulu",
+    "incorrect_answer2" : "Amazon Prime",
+    "incorrect_answer3" : "Disney+",
+    "category" : 31,
+    "difficulty" : 0
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "This character in the comic and tv show Invincible starred in his own comic that predates Invincible, and had his gender changed to female when she was given a starring role in season 4.",
+    "correct_answer" : "Tech Jacket",
+    "incorrect_answer1" : "Space Racer",
+    "incorrect_answer2" : "Shrinking Ray",
+    "incorrect_answer3" : "Battle Beast",
+    "category" : 29,
+    "difficulty" : 1
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "This was the last car produced by automobile manufacturer Pontiac before its discontinuation by parent company General Motors in 2010.",
+    "correct_answer" : "G6",
+    "incorrect_answer1" : "G7",
+    "incorrect_answer2" : "Grand Prix",
+    "incorrect_answer3" : "GTO",
+    "category" : 28,
+    "difficulty" : 1
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "This is the first name of the protagonist of the novel Gulliver's Travels by Jonathan Swift.",
+    "correct_answer" : "Lemuel",
+    "incorrect_answer1" : "Raphael",
+    "incorrect_answer2" : "Michael",
+    "incorrect_answer3" : "Hazael",
+    "category" : 10,
+    "difficulty" : 0
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "This was the only US state to not vote for Ronald Reagan in the 1984 presidential election, and has since continued its streak of voting for the Democratic Party's candidate in every presidential election to this day.",
+    "correct_answer" : "Minnesota",
+    "incorrect_answer1" : "California",
+    "incorrect_answer2" : "Oregon",
+    "incorrect_answer3" : "Colorado",
+    "category" : 24,
+    "difficulty" : 1
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "What is an alternative name that refers to the geometric distribution in Statistics?",
+    "correct_answer" : "Furry distribution",
+    "incorrect_answer1" : "Fishy distribution",
+    "incorrect_answer2" : "Spiky distribution",
+    "incorrect_answer3" : "Scaly distribution",
+    "category" : 19,
+    "difficulty" : 1
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "What is the term used in Game Theory to describe a situation where no player would deviate from their current chosen strategy when playing optimally",
+    "correct_answer" : "Nash equilibrium",
+    "incorrect_answer1" : "Minmax equilibrium",
+    "incorrect_answer2" : "Maxmin equilibrium",
+    "incorrect_answer3" : "Prisoner's equilibrium",
+    "category" : 19,
+    "difficulty" : 2
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "What is a line segment that has its endpoints on the circumference of the same circle called?",
+    "correct_answer" : "Chord",
+    "incorrect_answer1" : "Note",
+    "incorrect_answer2" : "Clef",
+    "incorrect_answer3" : "Leger lines",
+    "category" : 19,
+    "difficulty" : 1
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "A stochastic process in probability theory characterised as having the expected value of the next observation to be equal to the value of the current observation, given all previous observations, is called a?",
+    "correct_answer" : "Martingale",
+    "incorrect_answer1" : "Nightingale ",
+    "incorrect_answer2" : "Mockingbird",
+    "incorrect_answer3" : "Blackbird",
+    "category" : 19,
+    "difficulty" : 2
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "What term refers to two numbers that only share the number \"1\" as their common divisor?",
+    "correct_answer" : "Coprime",
+    "incorrect_answer1" : "Complementary",
+    "incorrect_answer2" : "Mutually exclusive ",
+    "incorrect_answer3" : "Mutually indivisible",
+    "category" : 19,
+    "difficulty" : 1
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "What is the name given to fractions where the numerator is greater than the denominator",
+    "correct_answer" : "Improper fractions",
+    "incorrect_answer1" : "Imperfect fractions",
+    "incorrect_answer2" : "Indivisible fractions",
+    "incorrect_answer3" : "Immutable fractions",
+    "category" : 19,
+    "difficulty" : 0
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "In a right angled triangle, the sine of an angle can also be expressed as which of the following?",
+    "correct_answer" : "Length of the side opposite to the angle/ Length of the hypotenuse of the triangle",
+    "incorrect_answer1" : "Length of the side adjacent to the angle/ Length of the hypotenuse of the triangle",
+    "incorrect_answer2" : "Length of the side opposite to the angle/ length of the side adjacent to the angle",
+    "incorrect_answer3" : "Length of the side adjacent to the angle/ length of the side opposite to the angle",
+    "category" : 19,
+    "difficulty" : 0
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "Name a character other than Batman himself who has worn the Hellbat suit.",
+    "correct_answer" : "Lois Lane",
+    "incorrect_answer1" : "Clark Kent",
+    "incorrect_answer2" : "Damian Wayne",
+    "incorrect_answer3" : "Alfred Pennyworth",
+    "category" : 29,
+    "difficulty" : 2
+}
+
+###
+POST {{baseUrl}}/question/create
+Content-Type: {{json}}
+
+{
+    "question" : "How much total Titanium is required to build the Neptune Escape Rocket in Subnautica?",
+    "correct_answer" : "60",
+    "incorrect_answer1" : "80",
+    "incorrect_answer2" : "40",
+    "incorrect_answer3" : "30",
+    "category" : 15,
+    "difficulty" : 2
+}

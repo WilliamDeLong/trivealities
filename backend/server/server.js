@@ -5,6 +5,7 @@ const app = express();
 const cors = require("cors");
 const registerMultiplayerHandlers = require("./socket/registerMultiplayerHandlers");
 
+
 const socketController = require("./controllers/socketController");
 const { generateRoomCode } = require("./utilities/roomStore");
 const socketAuth = require("./utilities/socketAuth");
@@ -46,6 +47,15 @@ const userDeleteAccount = require("./routes/userDeleteAccount");
 const userResetLevel = require("./routes/userResetLevel");
 const userGameRoutes = require("./routes/userGameRoutes");
 const userCheckAdmin = require("./routes/userCheckAdmin");
+
+//async import dns from "node:dns/promises";
+//console.log("I AM HERE");
+//console.log(await dns.getServers());
+
+//import dns from "node:dns/promises";
+//dns.setServers(["1.1.1.1"]);
+
+require('dns').setServers(['8.8.8.8', '1.1.1.1']);
 
 
 require("dotenv").config();
