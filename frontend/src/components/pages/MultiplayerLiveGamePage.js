@@ -4,7 +4,7 @@ import socket from "../../socket";
 import getUserInfo from "../../utilities/decodeJwt";
 import { connectSocket } from "../../socket";
 import GameChatPanel from "../chat/GameChatPanel";
-import  API_BASE  from "../../api";
+import API_BASE from "../../api";
 
 function MultiplayerLiveGamePage() {
   const { roomCode } = useParams();
@@ -67,7 +67,7 @@ function MultiplayerLiveGamePage() {
         setMessage("");
       }
     };
-    
+
     const handleTimerTick = ({ roomCode: updatedRoomCode, timeLeft }) => {
       if (updatedRoomCode === roomCode) {
         setTimeLeft(timeLeft);
@@ -88,7 +88,6 @@ function MultiplayerLiveGamePage() {
     };
   }, [navigate, roomCode]);
 
-    
   useEffect(() => {
     setLoadingQuestions(true);
     setMessage("");
@@ -132,60 +131,62 @@ function MultiplayerLiveGamePage() {
   const currentQuestion = useMemo(() => {
     return questions[currentQuestionIndex] || null;
   }, [questions, currentQuestionIndex]);
-    useEffect(() => {
-      if (!currentQuestion || answerLocked) return;
-    
-      if (timeLeft === 0) {
-        setAnswerLocked(true);
-        setSelectedAnswer("");
-    
-        socket.emit("submit_multiplayer_answer_result", {
-          roomCode,
-          isCorrect: false,
-        });
+
+  useEffect(() => {
+    if (!currentQuestion || answerLocked) return;
+
+    if (timeLeft === 0) {
+      setAnswerLocked(true);
+      setSelectedAnswer("");
+
+      socket.emit("submit_multiplayer_answer_result", {
+        roomCode,
+        isCorrect: false,
+      });
     }
   }, [timeLeft, currentQuestion, answerLocked, roomCode]);
+
   const handleAnswerClick = async (answer) => {
     if (!currentQuestion || answerLocked || timeLeft <= 0) return;
-  
+
     setSelectedAnswer(answer);
     setAnswerLocked(true);
-  
+
     const isCorrect = answer === currentQuestion.correctAnswer;
-  
+
     socket.emit("submit_multiplayer_answer_result", {
       roomCode,
       isCorrect,
     });
-  
+
     if (isCorrect) {
-  const userId = user?._id || user?.id;
+      const userId = user?._id || user?.id;
 
-        if (userId) {
-          try {
-            await fetch(`${API_BASE}/user/${userId}/xp`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-              },
-              body: JSON.stringify({ xp: 20 }),
-            });
-          } catch (error) {
-            console.error("XP award error:", error);
-          }
+      if (userId) {
+        try {
+          await fetch(`${API_BASE}/user/${userId}/xp`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+            body: JSON.stringify({ xp: 20 }),
+          });
+        } catch (error) {
+          console.error("XP award error:", error);
         }
-
-        setLocalCorrectCount((prev) => prev + 1);
-        setLocalStreak((prev) => {
-          const next = prev + 1;
-          setHighestLocalStreak((highest) => Math.max(highest, next));
-          return next;
-        });
-      } else {
-        setLocalStreak(0);
       }
-        };
+
+      setLocalCorrectCount((prev) => prev + 1);
+      setLocalStreak((prev) => {
+        const next = prev + 1;
+        setHighestLocalStreak((highest) => Math.max(highest, next));
+        return next;
+      });
+    } else {
+      setLocalStreak(0);
+    }
+  };
 
   if (loadingQuestions) {
     return (
@@ -202,7 +203,7 @@ function MultiplayerLiveGamePage() {
 
   if (!currentQuestion) {
     return (
-      <GameChatPanel roomId={roomCode}>
+      <GameChatPanel roomId={roomCode} allowFreeChat={false}>
         <div style={pageStyle}>
           <div style={panelStyle}>
             <h1 style={{ color: "#00d0ff", marginTop: 0 }}>No Questions Loaded</h1>
@@ -222,7 +223,7 @@ function MultiplayerLiveGamePage() {
   }
 
   return (
-    <GameChatPanel roomId={roomCode}>
+    <GameChatPanel roomId={roomCode} allowFreeChat={false}>
       <div style={pageStyle}>
         <div style={panelStyle}>
           <div style={topBarStyle}>
