@@ -65,6 +65,7 @@ const QuestionCreationPage = () => {
     e.preventDefault();
     try {
       //console.log(data);
+      //console.log(e.target.id);
       await axios.post(url, data);
       //console.log(data);
       const inputField = document.getElementById("form"); 
@@ -207,6 +208,7 @@ const QuestionCreationPage = () => {
                 {error && <div style={labelStyling} className='pt-3'>{error}</div>}
                 <Button
                   variant="primary"
+                  //id="Test"
                   type="submit"
                   onClick={handleSubmit}
                   style={buttonStyling}

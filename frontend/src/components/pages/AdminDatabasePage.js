@@ -86,6 +86,15 @@ function AdminDatabasePage() {
         }
       }
     };
+    function reload_db() {
+      setSeed(Math.random());
+    }
+    const reloader = async (e) => {
+      //e.preventDefault();
+      fetch_questions();
+      await reload_db();
+    };
+    
   
   useEffect(() => {
     fetch_questions();
@@ -126,7 +135,7 @@ function AdminDatabasePage() {
     <div style={PStyling}>
       <div className="modTable">
         <h1>Trivealities Question Editing Database V0.0074</h1>
-        <text>This is a work in progress so don't be surprised that nothing works</text>
+        <div>This is a work in progress so don't be surprised that nothing works</div>
         <Form>
           <Form.Group className="mb-3" controlId="formBasicPrompt">
             <table >
@@ -198,6 +207,7 @@ function AdminDatabasePage() {
           key={seed}
           data={questions}
           columns={columns}
+          sed = {reloader}
         />}
       </div>
     </div>
