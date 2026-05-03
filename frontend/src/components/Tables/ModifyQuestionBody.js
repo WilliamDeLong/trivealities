@@ -80,7 +80,7 @@ const ModifyQuestionBody = ({ data, columns, q_id, set_id_funct, reset_submit}) 
       //console.log(e.target.id);
       data2["questionId"] = q_id;
       await axios.post(url, data2);
-      console.log(data2);
+      //console.log(data2);
       //const inputField = document.getElementById("form"); 
       //inputField.reset(); // This resets the prompts so that the page doesn't have to be reloaded to create a new question
       //setData(data_default); // This resets the values for all of the prompts
