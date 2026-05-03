@@ -34,23 +34,27 @@ import MultiplayerJoinPage from "./components/pages/MultiplayerJoinPage";
 import MultiplayerRoomPage from "./components/pages/MultiplayerRoomPage";
 import MultiplayerResultsPage from "./components/pages/MultiplayerResultsPage";
 import MultiplayerLiveGamePage from "./components/pages/MultiplayerLiveGamePage";
+
 export const UserContext = createContext();
-//test change
-//test again
-//Test everything
+
 const App = () => {
   const [user, setUser] = useState();
-  const [isLightMode, setIsLightMode] = useState(false);
+  const [isLightMode, setIsLightMode] = useState(() => {
+    const savedTheme = sessionStorage.getItem("isLightMode");
+    return savedTheme ? JSON.parse(savedTheme) : false;
+  });
   const location = useLocation();
 
   useEffect(() => {
     setUser(getUserInfo());
   }, [location.pathname]);
 
+  useEffect(() => {
+    sessionStorage.setItem("isLightMode", JSON.stringify(isLightMode));
+  }, [isLightMode]);
+
   const toggleTheme = () => {
-    //console.log(isLightMode);
     setIsLightMode((prev) => !prev);
-    //console.log(isLightMode);
   };
 
   return (
@@ -72,7 +76,7 @@ const App = () => {
           <Route exact path="/questionDatabase-A" element={<AdminDatabasePage />} />
           <Route exact path="/usors" element={<ExperimentalTableTest />} />
           {/* <Route exact path="/mbta" element={<MbtaAlertsPage />} /> */}
-          <Route exact path="/add-xp" element={<AddAccountXpPage />} /> 
+          <Route exact path="/add-xp" element={<AddAccountXpPage />} />
           <Route exact path="/chat" element={<ChatPage />} />
           <Route path="/singleplayer" element={<SinglePlayerMenuPage />} />
           <Route path="/singleplayer/:difficulty" element={<SinglePlayerGamePage />} />
