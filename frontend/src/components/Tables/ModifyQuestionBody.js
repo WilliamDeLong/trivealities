@@ -165,14 +165,14 @@ const ModifyQuestionBody = ({ data, columns, q_id, set_id_funct, reset_submit}) 
               <button
           key={data2._id+"Save"} 
           onClick={handlePush_Update}
-          style={{color: isLightMode? "#a0316e": "#ff2f00"}}>
+          style={{color: isLightMode? "#1fd853": "#0edb0b"}}>
             Save
             </button>
             <button 
             className={null}
           key={data2._id+"Cancel"} 
           onClick={set_id_funct}
-          style={{color: isLightMode? "#a0316e": "#ff2f00"}}>Cancel
+          style={{color: isLightMode? "#ff0000": "#ff0000"}}>Cancel
             </button>
             </td>
             </tr>
