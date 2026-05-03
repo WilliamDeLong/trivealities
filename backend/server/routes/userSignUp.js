@@ -50,9 +50,13 @@ router.post("/signup", async (req, res) => {
     });
 
     const savedUser = await createUser.save();
+    const savedUserWithProfile = await newUserModel
+      .findById(savedUser._id)
+      .populate("profileImage");
 
     // Remove password before sending response
-    const { password: _, adminAccount: __, ...safeUser } = savedUser.toObject();
+    const { password: _, adminAccount: __, ...safeUser } =
+      savedUserWithProfile.toObject();
     return res.status(201).send(safeUser);
   } catch (err) {
     return res.status(500).send({ message: "Error trying to create new user" });

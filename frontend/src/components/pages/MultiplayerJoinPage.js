@@ -35,6 +35,11 @@ function MultiplayerJoinPage() {
 
     if (!enteredCode) return;
 
+    const profileImageUrl =
+      typeof user?.profileImage === "string"
+        ? "/user-icon.png"
+        : user?.profileImage?.imageUrl || "/user-icon.png";
+
     socket.emit(
       "join_multiplayer_room",
       {
@@ -42,7 +47,8 @@ function MultiplayerJoinPage() {
         enteredCode,
         userId: user?._id || user?.id || null,
         username: user?.username || "Player",
-        profileImage: user?.profileImage?.imageUrl || user?.profileImage || "",        accountLevel: user?.accountLevel || 0,
+        profileImage: profileImageUrl,
+        accountLevel: user?.accountLevel || 0,
       },
       (response) => {
         if (!response?.success) {

@@ -24,20 +24,6 @@ const upload = multer({
  * GET /:id
  * Returns the user with populated profileImage
  */
-router.get("/:id", async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id).populate("profileImage");
-
-    if (!user) {
-      return res.status(404).send({ message: "User not found." });
-    }
-
-    return res.status(200).send({ user });
-  } catch (err) {
-    return res.status(500).send({ message: err.message });
-  }
-});
-
 /**
  * POST /:id/profile-image
  * Uploads an image to S3, creates a ProfileImage doc, links it to the user,

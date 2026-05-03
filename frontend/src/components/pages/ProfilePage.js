@@ -34,20 +34,10 @@ const ProfilePage = () => {
   };
   const fetch_user = async () => {
       try {
-        //console.log(data);
-        //const result = await axios.get(url, {params: data});
-        //console.log(`${API_BASE}/user/${id}`);
         const result = await axios.get(`${API_BASE}/user/${id}`);
-        //const { accountLevel, accountXp} = result;
-        //console.log(username);
-        //console.log(result);
-        //console.log(accountXp);
-        const { accountLevel, accountXp} = result.data;
+        const { accountLevel, accountXp } = result.data.user || result.data;
         setAccLvl(accountLevel);
         setAccXP(accountXp);
-        //console.log(result);
-        //setUser_profData(result.data);
-        //setSeed(Math.random());
       } catch (error) {
         if (
           error.response &&
@@ -79,7 +69,7 @@ useEffect(() => {
       }
 
       const data = await res.json();
-      const fetchedUser = data?.user;
+      const fetchedUser = data?.user || data;
 
       if (fetchedUser) {
         setUser({

@@ -29,10 +29,16 @@ function MultiplayerHostPage() {
 
     setCreating(true);
 
+    const profileImageUrl =
+      typeof user?.profileImage === "string"
+        ? "/user-icon.png"
+        : user?.profileImage?.imageUrl || "/user-icon.png";
+
     const payload = {
       userId: user?._id || user?.id || null,
       username: user?.username || "Host",
-      profileImage: user?.profileImage?.imageUrl || user?.profileImage || "",      accountLevel: user?.accountLevel || 0,
+      profileImage: profileImageUrl,
+      accountLevel: user?.accountLevel || 0,
       roomName,
       questionSource,
       maxPlayers: Number(maxPlayers),

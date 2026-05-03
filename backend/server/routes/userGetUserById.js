@@ -1,24 +1,23 @@
 const express = require("express");
 const router = express.Router();
-const z = require("zod");
-const bcrypt = require("bcrypt");
-
 const newUserModel = require("../models/userModel");
 
 router.get("/:id", async (req, res) => {
-  var { id } = req.params;
+  const { id } = req.params;
 
-  newUserModel.findById(id, function (err, user) {
-    if (err) {
-      console.log(err);
+  try {
+    const user = await newUserModel.findById(id).populate("profileImage");
+
+    if (!user) {
+      return res.status(404).send({ message: "userId does not exist." });
     }
-    if (user==null) {
-      res.status(404).send("userId does not exist.");
-    } 
-    else {
-      return res.json(user);
-    }
-  });
+
+    const { password: _, ...safeUser } = user.toObject();
+    return res.status(200).json({ user: safeUser });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send({ message: err.message });
+  }
 });
 
 module.exports = router;
