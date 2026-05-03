@@ -163,7 +163,7 @@ function MultiplayerLiveGamePage() {
 
         if (userId) {
           try {
-            await fetch(`${API_BASE}/user/${userId}/xp`, {
+            await fetch(`${API_BASE}/user/${userId}/multiplayer-xp`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
