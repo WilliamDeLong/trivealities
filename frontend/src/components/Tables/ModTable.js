@@ -5,7 +5,7 @@ import { UserContext } from '../../App';
 import React, { useState, useEffect, useContext, useRef } from 'react';
 
 
-const ModTable = ({ data, columns }) => {
+const ModTable = ({ data, columns, sed }) => {
   const [tableData, handleSorting] = useSortableModTable(data, columns);
   const { isLightMode } = useContext(UserContext);
 
@@ -13,7 +13,7 @@ const ModTable = ({ data, columns }) => {
     <>
       <table className="table">
         <ModTableHead  {...{ columns, handleSorting }} />
-        <ModTableBody {...{ columns, tableData }} />
+        <ModTableBody {...{ columns, tableData, sed }} />
       </table>
     </>
   );
