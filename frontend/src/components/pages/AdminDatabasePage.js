@@ -63,6 +63,7 @@ function AdminDatabasePage() {
       setAdmin(result.data.success);
     }
   };
+  
   const fetch_questions = async () => {
       try {
         //console.log(data);
@@ -105,7 +106,11 @@ function AdminDatabasePage() {
       setData({ ...data, [input.name]: input.value });
       //console.log(data);
     };
-
+  if (isAdmin!=true) {
+    return (
+      <div><h4>Only Admins can access this page.</h4></div>
+    );
+  }
   const handleSubmit = async (e) => {
       e.preventDefault();
       try {
@@ -130,12 +135,11 @@ function AdminDatabasePage() {
     };
 
   
-  if (questions.length>0){
+  if (questions.length>0&&isAdmin){
   return (
     <div style={PStyling}>
       <div className="modTable">
-        <h1>Trivealities Question Editing Database V0.0074</h1>
-        <div>This is a work in progress so don't be surprised that nothing works</div>
+        <h1>Trivealities Question Editing Database V1</h1>
         <Form>
           <Form.Group className="mb-3" controlId="formBasicPrompt">
             <table >
@@ -211,7 +215,12 @@ function AdminDatabasePage() {
         />}
       </div>
     </div>
-  );}
+  );
+  } else if  (isAdmin==false) {
+    return (
+      <div><h4>Only Admins can access this page.</h4></div>
+    );
+  }
 }
 
 
