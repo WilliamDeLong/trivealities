@@ -106,7 +106,7 @@ function AdminDatabasePage() {
       setData({ ...data, [input.name]: input.value });
       //console.log(data);
     };
-  if (isAdmin!=true) {
+  if (isAdmin!==true) {
     return (
       <div><h4>Only Admins can access this page.</h4></div>
     );
@@ -216,7 +216,7 @@ function AdminDatabasePage() {
       </div>
     </div>
   );
-  } else if  (isAdmin==false) {
+  } else if  (isAdmin===false) {
     return (
       <div><h4>Only Admins can access this page.</h4></div>
     );
