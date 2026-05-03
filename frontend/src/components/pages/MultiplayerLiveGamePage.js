@@ -103,15 +103,6 @@ function MultiplayerLiveGamePage() {
       const currentRoom = response.room;
       setRoom(currentRoom);
 
-      if (currentRoom.questionSource !== "opentdb") {
-        setMessage(
-          "This room is not using OpenTriviaDB yet. Database mode can be connected next."
-        );
-        setQuestions([]);
-        setLoadingQuestions(false);
-        return;
-      }
-
       if (currentRoom.questions && currentRoom.questions.length > 0) {
         setQuestions(currentRoom.questions);
         setLoadingQuestions(false);
@@ -229,7 +220,7 @@ function MultiplayerLiveGamePage() {
             <div>
               <h1 style={{ color: "#00d0ff", margin: 0 }}>Live Multiplayer Game</h1>
               <p style={{ color: "#cbd5e1", marginTop: "6px" }}>
-                Room {roomCode} • OpenTriviaDB
+              Room {roomCode} • {room?.questionSource === "database" ? "User Database" : "OpenTriviaDB"}
               </p>
             </div>
 
