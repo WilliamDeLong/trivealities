@@ -1,15 +1,26 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import socket from "../../socket";
 import getUserInfo from "../../utilities/decodeJwt";
 import { connectSocket } from "../../socket";
 import GameChatPanel from "../chat/GameChatPanel";
 import API_BASE from "../../api";
+import { useMusic } from "../../context/MusicContext";
 
 function MultiplayerLiveGamePage() {
   const { roomCode } = useParams();
   const navigate = useNavigate();
   const user = getUserInfo();
+  const {
+    isMuted,
+    hasStartedMusic,
+    startMusic,
+    setMusicVolume,
+    getMusicVolume,
+  } = useMusic();
+  const rightSoundRef = useRef(null);
+  const wrongSoundRef = useRef(null);
+  const previousVolumeRef = useRef(1);
   const [timeLeft, setTimeLeft] = useState(20);
   const [room, setRoom] = useState(null);
   const [questions, setQuestions] = useState([]);
@@ -21,6 +32,38 @@ function MultiplayerLiveGamePage() {
   const [localCorrectCount, setLocalCorrectCount] = useState(0);
   const [localStreak, setLocalStreak] = useState(0);
   const [highestLocalStreak, setHighestLocalStreak] = useState(0);
+
+  useEffect(() => {
+    rightSoundRef.current = new Audio("/right-answer-sound.mp3");
+    wrongSoundRef.current = new Audio("/wrong-answer-sound.mp3");
+  
+    rightSoundRef.current.preload = "auto";
+    wrongSoundRef.current.preload = "auto";
+    rightSoundRef.current.volume = 1;
+    wrongSoundRef.current.volume = 1;
+  
+    return () => {
+      if (rightSoundRef.current) {
+        rightSoundRef.current.pause();
+        rightSoundRef.current.currentTime = 0;
+      }
+  
+      if (wrongSoundRef.current) {
+        wrongSoundRef.current.pause();
+        wrongSoundRef.current.currentTime = 0;
+      }
+  
+      setMusicVolume(previousVolumeRef.current || 1);
+    };
+  }, [setMusicVolume]);
+  
+  useEffect(() => {
+    if (!isMuted && !hasStartedMusic) {
+      startMusic().catch((err) => {
+        console.log("Multiplayer music auto-start failed:", err?.message || err);
+      });
+    }
+  }, [isMuted, hasStartedMusic, startMusic]);
 
   useEffect(() => {
     connectSocket();
@@ -137,6 +180,32 @@ function MultiplayerLiveGamePage() {
     }
   }, [timeLeft, currentQuestion, answerLocked, roomCode]);
 
+  const playAnswerSound = async (isCorrect) => {
+    if (isMuted) return;
+
+    const sound = isCorrect ? rightSoundRef.current : wrongSoundRef.current;
+    if (!sound) return;
+
+    try {
+      previousVolumeRef.current = getMusicVolume();
+      setMusicVolume(0.18);
+
+      sound.currentTime = 0;
+      sound.volume = 1;
+
+      const restoreVolume = () => {
+        sound.removeEventListener("ended", restoreVolume);
+        setMusicVolume(previousVolumeRef.current || 1);
+      };
+
+      sound.addEventListener("ended", restoreVolume, { once: true });
+      await sound.play();
+    } catch (err) {
+      console.log("Answer sound failed:", err.message);
+      setMusicVolume(previousVolumeRef.current || 1);
+    }
+  };
+  
   const handleAnswerClick = async (answer) => {
     if (!currentQuestion || answerLocked || timeLeft <= 0) return;
 
@@ -144,6 +213,8 @@ function MultiplayerLiveGamePage() {
     setAnswerLocked(true);
 
     const isCorrect = answer === currentQuestion.correctAnswer;
+
+    playAnswerSound(isCorrect);
 
     socket.emit("submit_multiplayer_answer_result", {
       roomCode,
