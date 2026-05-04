@@ -34,6 +34,7 @@ import MultiplayerJoinPage from "./components/pages/MultiplayerJoinPage";
 import MultiplayerRoomPage from "./components/pages/MultiplayerRoomPage";
 import MultiplayerResultsPage from "./components/pages/MultiplayerResultsPage";
 import MultiplayerLiveGamePage from "./components/pages/MultiplayerLiveGamePage";
+import LeaderboardPage from "./components/pages/LeaderboardPage";
 
 export const UserContext = createContext();
 
@@ -86,6 +87,7 @@ const App = () => {
           <Route path="/multiplayer/room/:roomCode" element={<MultiplayerRoomPage />} />
           <Route path="/multiplayer/results/:roomCode" element={<MultiplayerResultsPage />} />
           <Route path="/multiplayer/live/:roomCode" element={<MultiplayerLiveGamePage />} />
+          <Route exact path="/leaderboard" element={<LeaderboardPage />} />
         </Routes>
       </UserContext.Provider>
     </>

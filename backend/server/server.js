@@ -48,6 +48,8 @@ const userDeleteAccount = require("./routes/userDeleteAccount");
 const userResetLevel = require("./routes/userResetLevel");
 const userGameRoutes = require("./routes/userGameRoutes");
 const userCheckAdmin = require("./routes/userCheckAdmin");
+const leaderboardRoute = require("./routes/userLeaderboard");
+
 
 //async import dns from "node:dns/promises";
 //console.log("I AM HERE");
@@ -73,6 +75,7 @@ app.use(express.json());
 app.use("/api", openTriviaDBquestionGetter);
 app.use("/user", loginRoute);
 app.use("/user", registerRoute);
+app.use("/user", leaderboardRoute);
 app.use("/user", getAllUsersRoute);
 app.use("/user", getUserByIdRoute);
 app.use("/user", editUser);
