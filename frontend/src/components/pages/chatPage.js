@@ -1,10 +1,7 @@
-import React, { useContext, useEffect } from "react";
-import { UserContext } from "../../App";
+import React, { useEffect } from "react";
 import GameChatPanel from "../chat/GameChatPanel";
 
 const ChatPage = () => {
-  const { isLightMode } = useContext(UserContext);
-
   useEffect(() => {
     sessionStorage.setItem("communityChatUnread", "0");
     window.dispatchEvent(
@@ -12,6 +9,17 @@ const ChatPage = () => {
         detail: { unread: 0 },
       })
     );
+
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousHtmlOverflow;
+    };
   }, []);
 
   return (
@@ -20,8 +28,10 @@ const ChatPage = () => {
       allowFreeChat={true}
       fullHeightPanel={true}
       fullScreenPanel={true}
-    >
-    </GameChatPanel>
+      hideCloseButton={true}
+      panelSideInset={12}
+      subHeaderText="Disclaimer: opinions in this chat may be spicy, unserious, or typed before coffee."
+    />
   );
 };
 

@@ -15,6 +15,9 @@ const GameChatPanel = ({
   allowFreeChat = false,
   fullHeightPanel = false,
   fullScreenPanel = false,
+  hideCloseButton = false,
+  subHeaderText = "",
+  panelSideInset = 24,
 }) => {
   const { isLightMode } = useContext(UserContext);
   const currentUser = useMemo(() => getUserInfo(), []);
@@ -209,6 +212,18 @@ const GameChatPanel = ({
     setActiveMenu((prev) => (prev === "emoji" ? null : "emoji"));
   };
 
+  const panelStyle =
+    fullScreenPanel
+      ? {
+          left: `${panelSideInset}px`,
+          right: `${panelSideInset}px`,
+          width: "auto",
+          minWidth: 0,
+          maxWidth: "none",
+          height: `calc(100vh - 75px - ${panelSideInset}px)`,
+        }
+      : undefined;
+
   return (
     <div className="game-layout">
       <div className={`game-content ${isOpen ? "with-chat" : ""}`}>{children}</div>
@@ -224,22 +239,28 @@ const GameChatPanel = ({
           className={`game-chat-panel ${isLightMode ? "light" : "dark"} ${
             fullHeightPanel ? "full-height-panel" : ""
           } ${fullScreenPanel ? "full-screen-panel" : ""}`}
+          style={panelStyle}
         >
           <div className="game-chat-header">
             <div className="game-chat-title">
               <h3>Community Chat</h3>
               <span>{onlineCount} online</span>
+              {subHeaderText ? (
+                <small className="game-chat-subheader">{subHeaderText}</small>
+              ) : null}
             </div>
 
-            <div className="game-chat-actions">
-              <button
-                className="game-chat-icon-btn"
-                onClick={() => setIsOpen(false)}
-                type="button"
-              >
-                ✕
-              </button>
-            </div>
+            {!hideCloseButton && (
+              <div className="game-chat-actions">
+                <button
+                  className="game-chat-icon-btn"
+                  onClick={() => setIsOpen(false)}
+                  type="button"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="game-chat-body">
