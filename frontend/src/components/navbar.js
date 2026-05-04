@@ -254,6 +254,15 @@ export default function Navbar({ isLightMode, toggleTheme }) {
           >
             Chat
           </Nav.Link>
+
+          <Nav.Link
+            onClick={() => navigate("/leaderboard")}
+            data-active={location.pathname === "/leaderboard" ? "true" : ""}
+            style={getNavLinkStyle("/leaderboard")}
+            {...navHoverHandlers}
+          >
+            Leaderboard
+          </Nav.Link>
         </Nav>
 
         <div
