@@ -184,8 +184,10 @@ function MultiplayerRoomPage() {
                     e.currentTarget.src = "/user-icon.png";
                   }}
                   style={{
-                    width: "64px",
-                    height: "64px",
+                    width: "70%",
+                    height: "70%",
+                    maxWidth: "140px",
+                    maxHeight: "140px",
                     borderRadius: "50%",
                     objectFit: "cover",
                     border: player.isHost
@@ -294,15 +296,26 @@ const metaCard = {
 
 const playerGrid = {
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 220px))",
+  justifyContent: "center", // 🔥 centers cards instead of stretching
   gap: "14px",
 };
 
 const playerCard = {
   background: "rgba(30,41,59,0.9)",
-  padding: "18px",
   borderRadius: "16px",
-  textAlign: "center",
+
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+
+  aspectRatio: "1 / 1",   // 🔥 THIS makes it a square
+  width: "100%",
+  maxWidth: "220px",      // 🔥 controls size (tweak this)
+
+  margin: "0 auto",       // 🔥 centers it if only 1 player
+  padding: "16px",
 };
 
 const hostBadge = {

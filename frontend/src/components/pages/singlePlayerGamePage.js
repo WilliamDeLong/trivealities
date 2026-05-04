@@ -27,10 +27,17 @@ const difficultyConfig = {
   },
 };
 
+const getNextUnlockText = (difficulty) => {
+  if (difficulty === "easy") return "Medium Unlocked";
+  if (difficulty === "medium") return "Hard Unlocked";
+  return "Final Difficulty Cleared";
+};
+
 function SinglePlayerGamePage() {
   const { difficulty } = useParams();
   const navigate = useNavigate();
   const { isLightMode } = useContext(UserContext);
+
   const {
     isMuted,
     hasStartedMusic,
@@ -57,6 +64,18 @@ function SinglePlayerGamePage() {
 
   const config = difficultyConfig[difficulty];
 
+  const currentQuestion = questions[currentQuestionIndex];
+  const totalQuestions = questions.length;
+
+  const unlockPercent =
+    totalQuestions > 0 ? (score / totalQuestions) * 100 : 0;
+
+  const didUnlockNextDifficulty =
+    gameFinished && totalQuestions > 0 && unlockPercent > 50;
+
+  const nextUnlockText = getNextUnlockText(difficulty);
+  const lockedText = "Score more than 50% to unlock the next difficulty";
+
   useEffect(() => {
     rightSoundRef.current = new Audio("/right-answer-sound.mp3");
     wrongSoundRef.current = new Audio("/wrong-answer-sound.mp3");
@@ -71,10 +90,12 @@ function SinglePlayerGamePage() {
         rightSoundRef.current.pause();
         rightSoundRef.current.currentTime = 0;
       }
+
       if (wrongSoundRef.current) {
         wrongSoundRef.current.pause();
         wrongSoundRef.current.currentTime = 0;
       }
+
       setMusicVolume(previousVolumeRef.current || 1);
     };
   }, [setMusicVolume]);
@@ -114,7 +135,6 @@ function SinglePlayerGamePage() {
 
         if (!Array.isArray(res.data) || res.data.length === 0) {
           setError("No questions were returned.");
-          setLoading(false);
           return;
         }
 
@@ -131,13 +151,10 @@ function SinglePlayerGamePage() {
     run();
   }, [config]);
 
-  const currentQuestion = questions[currentQuestionIndex];
-  const totalQuestions = questions.length;
-  const isPerfectRun = gameFinished && totalQuestions > 0 && score === totalQuestions;
-
   useEffect(() => {
     const sendXp = async () => {
       if (!gameFinished || awardedXp || !user) return;
+
       if (!earnedXp) {
         setAwardedXp(true);
         return;
@@ -166,7 +183,9 @@ function SinglePlayerGamePage() {
 
   useEffect(() => {
     const saveProgress = async () => {
-      if (!gameFinished || !isPerfectRun || progressSaved || !user) return;
+      if (!gameFinished || !didUnlockNextDifficulty || progressSaved || !user) {
+        return;
+      }
 
       const userId = user._id || user.id;
 
@@ -176,10 +195,9 @@ function SinglePlayerGamePage() {
       }
 
       try {
-        await axios.put(
-          `${API_BASE}/user/${userId}/singleplayer-progress`,
-          { difficulty }
-        );
+        await axios.put(`${API_BASE}/user/${userId}/singleplayer-progress`, {
+          difficulty,
+        });
       } catch (err) {
         console.log("Progress save failed:", err.response?.data || err.message);
       } finally {
@@ -188,7 +206,7 @@ function SinglePlayerGamePage() {
     };
 
     saveProgress();
-  }, [gameFinished, isPerfectRun, progressSaved, user, difficulty]);
+  }, [gameFinished, didUnlockNextDifficulty, progressSaved, user, difficulty]);
 
   const playAnswerSound = async (isCorrect) => {
     if (isMuted) return;
@@ -299,6 +317,7 @@ function SinglePlayerGamePage() {
         >
           <h2 style={{ marginTop: 0 }}>Single Player Error</h2>
           <p>{error}</p>
+
           <button
             type="button"
             onClick={handleBackToMenu}
@@ -320,13 +339,6 @@ function SinglePlayerGamePage() {
   }
 
   if (gameFinished) {
-    const nextUnlockText =
-      difficulty === "easy"
-        ? "Medium Unlocked"
-        : difficulty === "medium"
-        ? "Hard Unlocked"
-        : "Final Difficulty Cleared";
-
     return (
       <div
         style={{
@@ -344,7 +356,9 @@ function SinglePlayerGamePage() {
           style={{
             width: "100%",
             maxWidth: "760px",
-            background: isLightMode ? "rgba(255,255,255,0.9)" : "rgba(15,23,42,0.72)",
+            background: isLightMode
+              ? "rgba(255,255,255,0.9)"
+              : "rgba(15,23,42,0.72)",
             border: "1px solid rgba(255,255,255,0.14)",
             borderRadius: "22px",
             padding: "32px 28px",
@@ -360,7 +374,7 @@ function SinglePlayerGamePage() {
               marginBottom: "12px",
             }}
           >
-            {isPerfectRun ? "🏆" : "🎮"}
+            {didUnlockNextDifficulty ? "🏆" : "🎮"}
           </div>
 
           <h1
@@ -381,7 +395,7 @@ function SinglePlayerGamePage() {
               color: isLightMode ? "#334155" : "#cbd5e1",
             }}
           >
-            Final Score: {score} / {totalQuestions}
+            Final Score: {score} / {totalQuestions} ({unlockPercent.toFixed(0)}%)
           </p>
 
           <div
@@ -408,12 +422,12 @@ function SinglePlayerGamePage() {
 
             <span
               style={{
-                background: isPerfectRun
+                background: didUnlockNextDifficulty
                   ? "rgba(59,130,246,0.18)"
                   : "rgba(148,163,184,0.16)",
-                color: isPerfectRun ? "#3b82f6" : "#94a3b8",
+                color: didUnlockNextDifficulty ? "#3b82f6" : "#94a3b8",
                 border: `1px solid ${
-                  isPerfectRun
+                  didUnlockNextDifficulty
                     ? "rgba(59,130,246,0.35)"
                     : "rgba(148,163,184,0.25)"
                 }`,
@@ -422,13 +436,11 @@ function SinglePlayerGamePage() {
                 fontWeight: "bold",
               }}
             >
-              {isPerfectRun
-                ? nextUnlockText
-                : "Perfect score required to unlock next difficulty"}
+              {didUnlockNextDifficulty ? nextUnlockText : lockedText}
             </span>
           </div>
 
-          {isPerfectRun ? (
+          {didUnlockNextDifficulty ? (
             <div
               style={{
                 marginBottom: "22px",
@@ -440,7 +452,7 @@ function SinglePlayerGamePage() {
                 fontWeight: "bold",
               }}
             >
-              You answered every question correctly.
+              You scored more than 50% and unlocked the next difficulty.
             </div>
           ) : (
             <div
@@ -454,7 +466,7 @@ function SinglePlayerGamePage() {
                 fontWeight: "bold",
               }}
             >
-              You need a perfect run to unlock the next difficulty.
+              You need more than 50% correct to unlock the next difficulty.
             </div>
           )}
 
@@ -521,7 +533,8 @@ function SinglePlayerGamePage() {
 
   const progressPercent =
     totalQuestions > 0
-      ? ((currentQuestionIndex + (selectedAnswer ? 1 : 0)) / totalQuestions) * 100
+      ? ((currentQuestionIndex + (selectedAnswer ? 1 : 0)) / totalQuestions) *
+        100
       : 0;
 
   return (
@@ -583,7 +596,9 @@ function SinglePlayerGamePage() {
         <div
           style={{
             width: "100%",
-            background: isLightMode ? "rgba(255,255,255,0.7)" : "rgba(15,23,42,0.68)",
+            background: isLightMode
+              ? "rgba(255,255,255,0.7)"
+              : "rgba(15,23,42,0.68)",
             borderRadius: "16px",
             padding: "14px",
             marginBottom: "18px",
@@ -630,7 +645,9 @@ function SinglePlayerGamePage() {
         {currentQuestion && (
           <div
             style={{
-              background: isLightMode ? "rgba(255,255,255,0.88)" : "rgba(15,23,42,0.72)",
+              background: isLightMode
+                ? "rgba(255,255,255,0.88)"
+                : "rgba(15,23,42,0.72)",
               borderRadius: "24px",
               padding: "28px",
               boxShadow: "0 18px 36px rgba(0,0,0,0.28)",
@@ -663,8 +680,9 @@ function SinglePlayerGamePage() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+                gridTemplateColumns: "repeat(2, 1fr)",
                 gap: "14px",
+                width: "100%",
               }}
             >
               {currentQuestion.answers.map((answer, index) => {
@@ -703,19 +721,24 @@ function SinglePlayerGamePage() {
                       cursor: selectedAnswer ? "default" : "pointer",
                       fontWeight: "bold",
                       fontSize: "1rem",
+                      width: "100%",
+                      minHeight: "80px",
                       boxShadow: selectedAnswer
                         ? "none"
                         : "0 8px 18px rgba(0,0,0,0.12)",
-                      transition: "transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease",
+                      transition:
+                        "transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease",
                     }}
                     onMouseEnter={(e) => {
                       if (selectedAnswer) return;
                       e.currentTarget.style.transform = "translateY(-2px)";
-                      e.currentTarget.style.boxShadow = "0 12px 24px rgba(0,0,0,0.15)";
+                      e.currentTarget.style.boxShadow =
+                        "0 12px 24px rgba(0,0,0,0.15)";
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = "translateY(0)";
-                      e.currentTarget.style.boxShadow = "0 8px 18px rgba(0,0,0,0.12)";
+                      e.currentTarget.style.boxShadow =
+                        "0 8px 18px rgba(0,0,0,0.12)";
                     }}
                   >
                     {answer}

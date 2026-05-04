@@ -365,6 +365,7 @@ const answerButtonStyle = {
   color: "white",
   fontSize: "1rem",
   textAlign: "left",
+  width: "100%", // 🔥 THIS FIXES IT
 };
 
 const buttonStyle = {
