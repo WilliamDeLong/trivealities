@@ -18,7 +18,8 @@ const GameChatPanel = ({ roomId, children, allowFreeChat = false }) => {
   const [toasts, setToasts] = useState([]);
   const [onlineCount, setOnlineCount] = useState(0);
   const [textMessage, setTextMessage] = useState("");
-  const endRef = useRef(null);
+  const [activeMenu, setActiveMenu] = useState(null); // "presets" | "emoji" | null
+  const popupRef = useRef(null);
 
   const storageKey = `chat-history-${roomId}`;
 
@@ -54,7 +55,7 @@ const GameChatPanel = ({ roomId, children, allowFreeChat = false }) => {
     const token = localStorage.getItem("accessToken");
     if (!token) return;
 
-    connectSocket();
+    connectSocket(token);
 
     const handleReceiveMessage = async (incomingMessage) => {
       if (incomingMessage.roomId !== roomId) return;
@@ -128,7 +129,7 @@ const GameChatPanel = ({ roomId, children, allowFreeChat = false }) => {
       socket.off("chat_room_users", handleRoomUsers);
       socket.off("chat_error", handleChatError);
     };
-  }, [roomId]);
+  }, [roomId, isOpen]);
 
   useEffect(() => {
     if (isOpen) {
@@ -137,16 +138,17 @@ const GameChatPanel = ({ roomId, children, allowFreeChat = false }) => {
   }, [isOpen]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setMessages((prev) => [...prev]);
-    }, 2000);
+    const handleOutsideClick = (event) => {
+      if (popupRef.current && !popupRef.current.contains(event.target)) {
+        setActiveMenu(null);
+      }
+    };
 
-    return () => clearInterval(interval);
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
   }, []);
-
-  useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
 
   const sendTextMessage = () => {
     const trimmedMessage = textMessage.trim();
@@ -176,6 +178,8 @@ const GameChatPanel = ({ roomId, children, allowFreeChat = false }) => {
       roomId,
       preset,
     });
+
+    setActiveMenu(null);
   };
 
   const sendEmoji = (emoji) => {
@@ -185,6 +189,18 @@ const GameChatPanel = ({ roomId, children, allowFreeChat = false }) => {
       roomId,
       emoji,
     });
+
+    setActiveMenu(null);
+  };
+
+  const togglePresetMenu = (e) => {
+    e.stopPropagation();
+    setActiveMenu((prev) => (prev === "presets" ? null : "presets"));
+  };
+
+  const toggleEmojiMenu = (e) => {
+    e.stopPropagation();
+    setActiveMenu((prev) => (prev === "emoji" ? null : "emoji"));
   };
 
   return (
@@ -226,7 +242,6 @@ const GameChatPanel = ({ roomId, children, allowFreeChat = false }) => {
                 isOwnMessage={message.userId === currentUser?.id}
               />
             ))}
-            <div ref={endRef} />
           </div>
 
           <div className="game-chat-controls">
@@ -258,6 +273,7 @@ const GameChatPanel = ({ roomId, children, allowFreeChat = false }) => {
                     Send
                   </button>
                 </div>
+
                 <div
                   style={{
                     marginTop: "6px",
@@ -270,36 +286,62 @@ const GameChatPanel = ({ roomId, children, allowFreeChat = false }) => {
               </div>
             )}
 
-            <div>
-              <div className="chat-section-label">Quick messages</div>
-              <div className="chat-preset-row">
-                {CHAT_PRESETS.map((preset) => (
-                  <button
-                    key={preset}
-                    className="chat-preset-btn"
-                    type="button"
-                    onClick={() => sendPreset(preset)}
-                  >
-                    {preset}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <div
+              className="chat-toolbar"
+              ref={popupRef}
+              onMouseDown={(e) => e.stopPropagation()}
+            >
+              <button
+                type="button"
+                className="chat-toolbar-btn"
+                onClick={togglePresetMenu}
+              >
+                Quick Text
+              </button>
 
-            <div>
-              <div className="chat-section-label">Reactions</div>
-              <div className="chat-emoji-row">
-                {CHAT_EMOJIS.map((emoji) => (
-                  <button
-                    key={emoji}
-                    className="chat-emoji-btn"
-                    type="button"
-                    onClick={() => sendEmoji(emoji)}
-                  >
-                    {emoji}
-                  </button>
-                ))}
-              </div>
+              <button
+                type="button"
+                className="chat-toolbar-btn"
+                onClick={toggleEmojiMenu}
+              >
+                😊
+              </button>
+
+              {activeMenu === "presets" && (
+                <div className={`chat-popup-menu ${isLightMode ? "light" : "dark"}`}>
+                  <div className="chat-popup-title">Quick messages</div>
+                  <div className="chat-preset-row">
+                    {CHAT_PRESETS.map((preset) => (
+                      <button
+                        key={preset}
+                        className="chat-preset-btn"
+                        type="button"
+                        onClick={() => sendPreset(preset)}
+                      >
+                        {preset}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {activeMenu === "emoji" && (
+                <div className={`chat-popup-menu ${isLightMode ? "light" : "dark"}`}>
+                  <div className="chat-popup-title">Reactions</div>
+                  <div className="chat-emoji-row">
+                    {CHAT_EMOJIS.map((emoji) => (
+                      <button
+                        key={emoji}
+                        className="chat-emoji-btn"
+                        type="button"
+                        onClick={() => sendEmoji(emoji)}
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </aside>

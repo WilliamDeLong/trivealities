@@ -92,7 +92,7 @@ export default function Navbar({ isLightMode, toggleTheme }) {
 
   const themeToggleStyle = {
     position: "relative",
-    width: "138px",
+    width: "122px",
     height: "42px",
     border: "none",
     borderRadius: "999px",
@@ -109,7 +109,7 @@ export default function Navbar({ isLightMode, toggleTheme }) {
   const themeKnobStyle = {
     position: "absolute",
     top: "4px",
-    left: isLightMode ? "92px" : "4px",
+    left: isLightMode ? "84px" : "4px",
     width: "34px",
     height: "34px",
     borderRadius: "50%",
@@ -283,7 +283,7 @@ export default function Navbar({ isLightMode, toggleTheme }) {
           >
             {isLightMode ? (
               <>
-                <span style={{ ...themeLabelStyle, left: "14px" }}>
+                <span style={{ ...themeLabelStyle, left: "10px" }}>
                   LIGHT
                   <br />
                   MODE
@@ -293,7 +293,7 @@ export default function Navbar({ isLightMode, toggleTheme }) {
             ) : (
               <>
                 <span style={themeKnobStyle}>🌙</span>
-                <span style={{ ...themeLabelStyle, right: "16px" }}>
+                <span style={{ ...themeLabelStyle, right: "10px" }}>
                   DARK
                   <br />
                   MODE
