@@ -18,6 +18,36 @@ Content-Type: {{json}}
 }
 
 ###
+POST {{baseUrl}}/question/editQuestion
+Content-Type: {{json}}
+
+{
+    "questionId" : "{{questionId1}}", 
+    "question" : "QuestionThatWasEdited2",
+    "correct_answer" : "NewCorrectAnswer",
+    "incorrect_answer1" : "NewIncorrectAnswer",
+    "incorrect_answer2" : "NewSecondIncorrectAnswer",
+    "incorrect_answer3" : "AnAnswerThatIsSomehowEVENMOREIncorrect",
+    "category" : 9,
+    "difficulty" : 2
+}
+###
+###
+POST {{baseUrl}}/question/editQuestion
+Content-Type: {{json}}
+
+{
+    "questionId" : "{{questionId1}}", 
+    "question" : "This question is false",
+    "correct_answer" : "Paradox",
+    "incorrect_answer1" : "True",
+    "incorrect_answer2" : "False",
+    "incorrect_answer3" : "True and False",
+    "category" : 9,
+    "difficulty" : 2
+}
+###
+###
 POST {{baseUrl}}/question/create
 Content-Type: {{json}}
 
@@ -82,14 +112,14 @@ POST {{baseUrl}}/question/editQuestion
 Content-Type: {{json}}
 
 {
-    "questionId" : "{{questionId2}}", 
+    "questionId" : "{{questionId1}}", 
     "question" : "QuestionThatWasEdited2",
     "correct_answer" : "NewCorrectAnswer",
     "incorrect_answer1" : "NewIncorrectAnswer",
     "incorrect_answer2" : "NewSecondIncorrectAnswer",
     "incorrect_answer3" : "AnAnswerThatIsSomehowEVENMOREIncorrect",
-    "category" : 3,
-    "difficulty" : 20
+    "category" : 9,
+    "difficulty" : 2
 }
 
 ###Input ID for question created by the 2nd "question create"

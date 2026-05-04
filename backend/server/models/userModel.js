@@ -39,6 +39,16 @@ const newUserSchema = new mongoose.Schema(
       default: 0,
       min: 0,
     },
+    multiplayerLevel:{
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    multiplayerXp: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
     singlePlayerProgress: {
       easyCompleted: {
         type: Boolean,

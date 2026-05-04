@@ -62,7 +62,7 @@ const QuestionModificationPage = () => {
     };
     if (user === undefined || user === null) setUser(getUserInfo());
     if (admin===null || admin===undefined) fetch_admin();
-    console.log(location.state);
+    //console.log(location.state);
     //console.log(isLightMode);
     if (isLightMode) {
       setBgColor("white");

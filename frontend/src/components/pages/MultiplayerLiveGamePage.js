@@ -102,15 +102,6 @@ function MultiplayerLiveGamePage() {
       const currentRoom = response.room;
       setRoom(currentRoom);
 
-      if (currentRoom.questionSource !== "opentdb") {
-        setMessage(
-          "This room is not using OpenTriviaDB yet. Database mode can be connected next."
-        );
-        setQuestions([]);
-        setLoadingQuestions(false);
-        return;
-      }
-
       if (currentRoom.questions && currentRoom.questions.length > 0) {
         setQuestions(currentRoom.questions);
         setLoadingQuestions(false);
@@ -162,20 +153,20 @@ function MultiplayerLiveGamePage() {
     if (isCorrect) {
       const userId = user?._id || user?.id;
 
-      if (userId) {
-        try {
-          await fetch(`${API_BASE}/user/${userId}/xp`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-            body: JSON.stringify({ xp: 20 }),
-          });
-        } catch (error) {
-          console.error("XP award error:", error);
+        if (userId) {
+          try {
+            await fetch(`${API_BASE}/user/${userId}/multiplayer-xp`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+              body: JSON.stringify({ xp: 20 }),
+            });
+          } catch (error) {
+            console.error("XP award error:", error);
+          }
         }
-      }
 
       setLocalCorrectCount((prev) => prev + 1);
       setLocalStreak((prev) => {
@@ -230,7 +221,7 @@ function MultiplayerLiveGamePage() {
             <div>
               <h1 style={{ color: "#00d0ff", margin: 0 }}>Live Multiplayer Game</h1>
               <p style={{ color: "#cbd5e1", marginTop: "6px" }}>
-                Room {roomCode} • OpenTriviaDB
+              Room {roomCode} • {room?.questionSource === "database" ? "User Database" : "OpenTriviaDB"}
               </p>
             </div>
 

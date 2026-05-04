@@ -15,7 +15,7 @@ const {
   setRoomQuestions,
 } = require("./multiplayerRooms");
 
-
+const Question = require("../models/questionModel");
 const shuffleArray = (array) => {
   const copied = [...array];
   for (let i = copied.length - 1; i > 0; i -= 1) {
@@ -23,6 +23,31 @@ const shuffleArray = (array) => {
     [copied[i], copied[j]] = [copied[j], copied[i]];
   }
   return copied;
+};
+const getDatabaseQuestions = async (amount) => {
+  const questions = await Question.aggregate([
+    { $sample: { size: Number(amount) } },
+  ]);
+
+  return questions.map((q, index) => {
+    const correctAnswer = q.correct_answer;
+
+    const answers = shuffleArray([
+      q.correct_answer,
+      q.incorrect_answer1,
+      q.incorrect_answer2,
+      q.incorrect_answer3,
+    ]);
+
+    return {
+      id: `${index}-${correctAnswer}`,
+      question: q.question,
+      category: q.category,
+      difficulty: q.difficulty,
+      correctAnswer, // ✅ MATCHES FRONTEND
+      answers,
+    };
+  });
 };
 const emitRoomList = (io) => {
   io.emit("multiplayer_rooms_updated", getPublicRooms());
@@ -337,10 +362,14 @@ socket.on("get_multiplayer_room_by_code", ({ roomCode }, callback) => {
 
     // database mode can be added here later
     if (room.questionSource === "database") {
-      return callback?.({
-        success: false,
-        message: "Database question mode is not connected yet.",
-      });
+      questions = await getDatabaseQuestions(room.questionCount);
+    
+      if (!questions || questions.length === 0) {
+        return callback?.({
+          success: false,
+          message: "No database questions found.",
+        });
+      }
     }
 
     setRoomQuestions(roomCode, questions);

@@ -95,6 +95,7 @@ app.use("/user", userDeleteAccount);
 app.use("/user", userResetLevel);
 app.use("/user", userGameRoutes);
 app.use("/user", userCheckAdmin);
+app.use("/user", userAddXp);
 
 
 io.use(socketAuth);
