@@ -247,8 +247,9 @@ const ProfilePage = () => {
   const { id, email, username } = user;
 
   return (
-    <div className="card-container">
-      <div className="card" style={mainCardStyle}>
+    <div style={profilePageBackgroundStyle}>
+      <div className="card-container" style={profileContainerStyle}>
+        <div className="card" style={mainCardStyle}>
         <div style={{ fontWeight: "bold" }}>
           <p>Welcome back,</p>
         </div>
@@ -388,7 +389,25 @@ const ProfilePage = () => {
         </button>
       </div>
     </div>
-  );
+  </div>
+);
+};
+const profilePageBackgroundStyle = {
+  minHeight: "100vh",
+  width: "100%",
+  padding: "80px 20px 40px",
+  boxSizing: "border-box",
+  background:
+    "radial-gradient(circle at 20% 20%, rgba(0,208,255,0.18), transparent 32%), radial-gradient(circle at 80% 30%, rgba(168,85,247,0.18), transparent 30%), linear-gradient(135deg, #020617, #0f172a, #1e1b4b)",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "flex-start",
+};
+
+const profileContainerStyle = {
+  width: "100%",
+  display: "flex",
+  justifyContent: "center",
 };
 
 const mainCardStyle = {
@@ -397,6 +416,14 @@ const mainCardStyle = {
   justifyContent: "center",
   alignItems: "center",
   textAlign: "center",
+  width: "100%",
+  maxWidth: "620px",
+  padding: "28px",
+  borderRadius: "22px",
+  background: "rgba(15, 23, 42, 0.82)",
+  border: "1px solid rgba(255,255,255,0.12)",
+  boxShadow: "0 18px 40px rgba(0,0,0,0.35)",
+  color: "white",
 };
 
 const profileImageStyle = {
