@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
@@ -58,8 +59,7 @@ const userCheckAdmin = require("./routes/userCheckAdmin");
 require('dns').setServers(['8.8.8.8', '1.1.1.1']);
 
 
-require("dotenv").config();
-const SERVER_PORT = 8081;
+const SERVER_PORT = process.env.PORT || 8081;
 
 dbConnection();
 
