@@ -252,9 +252,6 @@ function MultiplayerRoomPage() {
               </button>
             )}
 
-            <button style={secondaryButton} onClick={() => navigate("/multiplayer")}>
-              Back
-            </button>
           </div>
         </div>
       </div>
@@ -265,15 +262,18 @@ function MultiplayerRoomPage() {
 const pageStyle = {
   minHeight: "100vh",
   background: "linear-gradient(135deg, #020617, #0f172a, #1e1b4b)",
-  padding: "24px 380px 24px 24px",
+  padding: "64px 360px 24px 24px",
   width: "100%",
   boxSizing: "border-box",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "flex-start",
 };
 
 const panelStyle = {
   width: "100%",
   maxWidth: "1100px",
-  margin: "0",
+  margin: "0 auto",
   background: "rgba(15,23,42,0.85)",
   padding: "28px",
   borderRadius: "18px",

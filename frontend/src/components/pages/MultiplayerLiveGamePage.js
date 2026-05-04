@@ -306,9 +306,12 @@ const shuffleArray = (array) => {
 const pageStyle = {
   minHeight: "100vh",
   background: "linear-gradient(135deg, #020617, #0f172a, #1e1b4b)",
-  padding: "24px 380px 24px 24px",
+  padding: "64px 360px 24px 24px",
   width: "100%",
   boxSizing: "border-box",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "flex-start",
 };
 
 const panelStyle = {
@@ -318,6 +321,7 @@ const panelStyle = {
   padding: "28px",
   borderRadius: "18px",
   border: "1px solid rgba(255,255,255,0.08)",
+  margin: "0 auto",
 };
 
 const topBarStyle = {
