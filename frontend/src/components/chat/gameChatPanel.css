@@ -33,6 +33,23 @@
   box-sizing: border-box;
 }
 
+.game-chat-panel.full-height-panel {
+  position: fixed;
+  top: 75px;
+  right: 0;
+  height: calc(100vh - 75px);
+}
+
+.game-chat-panel.full-screen-panel {
+  position: fixed;
+  top: 75px;
+  right: 0;
+  width: 100vw;
+  min-width: 100vw;
+  max-width: 100vw;
+  height: calc(100vh - 75px);
+}
+
 .game-chat-panel.light {
   background: rgba(247, 243, 251, 0.92);
   color: #1f2937;
@@ -400,15 +417,4 @@
   justify-content: center;
   font-size: 0.75rem;
   font-weight: 700;
-}
-
-@keyframes fadeToast {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }

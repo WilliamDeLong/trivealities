@@ -6,6 +6,7 @@ import ReactNavbar from "react-bootstrap/Navbar";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useMusic } from "../context/MusicContext";
+import socket, { connectSocket } from "../socket";
 import API_BASE from "../api";
 
 export default function Navbar({ isLightMode, toggleTheme }) {
@@ -13,6 +14,10 @@ export default function Navbar({ isLightMode, toggleTheme }) {
   const [profileUrl, setProfileUrl] = useState("/user-icon.png");
   const [isProfileAreaHovered, setIsProfileAreaHovered] = useState(false);
   const [isAdmin, setAdmin] = useState(false);
+  const [communityUnread, setCommunityUnread] = useState(() => {
+    const saved = sessionStorage.getItem("communityChatUnread");
+    return saved ? Number(saved) : 0;
+  });
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -56,9 +61,61 @@ export default function Navbar({ isLightMode, toggleTheme }) {
     }
   }, []);
 
+  useEffect(() => {
+    sessionStorage.setItem("communityChatUnread", String(communityUnread));
+  }, [communityUnread]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (!token || !user?.id) return;
+
+    connectSocket(token);
+
+    const joinCommunityRoom = () => {
+      socket.emit("chat_join_room", { roomId: "room-1" });
+    };
+
+    const handleCommunityMessage = (incomingMessage) => {
+      if (incomingMessage.roomId !== "room-1") return;
+      if (location.pathname === "/chat") return;
+      if (incomingMessage.type === "system") return;
+
+      setCommunityUnread((prev) => prev + 1);
+    };
+
+    const handleUnreadUpdateEvent = (event) => {
+      const nextUnread = Number(event.detail?.unread || 0);
+      setCommunityUnread(nextUnread);
+    };
+
+    window.addEventListener("community-chat-unread-updated", handleUnreadUpdateEvent);
+
+    socket.on("chat_receive_message", handleCommunityMessage);
+
+    if (socket.connected) {
+      joinCommunityRoom();
+    } else {
+      socket.once("connect", joinCommunityRoom);
+    }
+
+    return () => {
+      window.removeEventListener("community-chat-unread-updated", handleUnreadUpdateEvent);
+      socket.off("chat_receive_message", handleCommunityMessage);
+      socket.off("connect", joinCommunityRoom);
+    };
+  }, [location.pathname, user?.id]);
+
+  useEffect(() => {
+    if (location.pathname === "/chat" && communityUnread !== 0) {
+      setCommunityUnread(0);
+      sessionStorage.setItem("communityChatUnread", "0");
+    }
+  }, [location.pathname, communityUnread]);
+
   const handleLogout = (e) => {
     e.preventDefault();
     localStorage.removeItem("accessToken");
+    sessionStorage.removeItem("communityChatUnread");
     stopAndResetMusic();
     navigate("/");
   };
@@ -74,6 +131,9 @@ export default function Navbar({ isLightMode, toggleTheme }) {
       textUnderlineOffset: "6px",
       textDecorationThickness: "2px",
       transition: "transform 0.18s ease, text-decoration-color 0.18s ease",
+      display: "flex",
+      alignItems: "center",
+      gap: "8px",
     };
   };
 
@@ -177,6 +237,21 @@ export default function Navbar({ isLightMode, toggleTheme }) {
     pointerEvents: "none",
   };
 
+  const unreadBadgeStyle = {
+    minWidth: "20px",
+    height: "20px",
+    borderRadius: "999px",
+    background: "#ef4444",
+    color: "white",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "0.72rem",
+    fontWeight: "700",
+    padding: "0 6px",
+    lineHeight: 1,
+  };
+
   if (!user?.id) return null;
 
   return (
@@ -252,7 +327,8 @@ export default function Navbar({ isLightMode, toggleTheme }) {
             style={getNavLinkStyle("/chat")}
             {...navHoverHandlers}
           >
-            Chat
+            <span>Community Chat</span>
+            {communityUnread > 0 && <span style={unreadBadgeStyle}>{communityUnread}</span>}
           </Nav.Link>
 
           <Nav.Link

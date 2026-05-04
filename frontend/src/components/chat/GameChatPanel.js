@@ -9,7 +9,13 @@ import CHAT_EMOJIS from "./constants/chatEmojis";
 import "./gameChatPanel.css";
 import API_BASE from "../../api";
 
-const GameChatPanel = ({ roomId, children, allowFreeChat = false }) => {
+const GameChatPanel = ({
+  roomId,
+  children,
+  allowFreeChat = false,
+  fullHeightPanel = false,
+  fullScreenPanel = false,
+}) => {
   const { isLightMode } = useContext(UserContext);
   const currentUser = useMemo(() => getUserInfo(), []);
   const [isOpen, setIsOpen] = useState(true);
@@ -18,7 +24,7 @@ const GameChatPanel = ({ roomId, children, allowFreeChat = false }) => {
   const [toasts, setToasts] = useState([]);
   const [onlineCount, setOnlineCount] = useState(0);
   const [textMessage, setTextMessage] = useState("");
-  const [activeMenu, setActiveMenu] = useState(null); // "presets" | "emoji" | null
+  const [activeMenu, setActiveMenu] = useState(null);
   const popupRef = useRef(null);
 
   const storageKey = `chat-history-${roomId}`;
@@ -205,9 +211,7 @@ const GameChatPanel = ({ roomId, children, allowFreeChat = false }) => {
 
   return (
     <div className="game-layout">
-      <div className={`game-content ${isOpen ? "with-chat" : ""}`}>
-        {children}
-      </div>
+      <div className={`game-content ${isOpen ? "with-chat" : ""}`}>{children}</div>
 
       <div className="chat-toast-stack">
         {toasts.map((toast) => (
@@ -216,10 +220,14 @@ const GameChatPanel = ({ roomId, children, allowFreeChat = false }) => {
       </div>
 
       {isOpen ? (
-        <aside className={`game-chat-panel ${isLightMode ? "light" : "dark"}`}>
+        <aside
+          className={`game-chat-panel ${isLightMode ? "light" : "dark"} ${
+            fullHeightPanel ? "full-height-panel" : ""
+          } ${fullScreenPanel ? "full-screen-panel" : ""}`}
+        >
           <div className="game-chat-header">
             <div className="game-chat-title">
-              <h3>Game Chat</h3>
+              <h3>Community Chat</h3>
               <span>{onlineCount} online</span>
             </div>
 
