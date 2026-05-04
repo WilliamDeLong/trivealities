@@ -18,6 +18,7 @@ const GameChatPanel = ({
   hideCloseButton = false,
   subHeaderText = "",
   panelSideInset = 24,
+  panelTopOffset = 75,
 }) => {
   const { isLightMode } = useContext(UserContext);
   const currentUser = useMemo(() => getUserInfo(), []);
@@ -215,12 +216,18 @@ const GameChatPanel = ({
   const panelStyle =
     fullScreenPanel
       ? {
+          top: `${panelTopOffset}px`,
           left: `${panelSideInset}px`,
           right: `${panelSideInset}px`,
           width: "auto",
           minWidth: 0,
           maxWidth: "none",
-          height: `calc(100vh - 75px - ${panelSideInset}px)`,
+          height: `calc(100vh - ${panelTopOffset}px - ${panelSideInset}px)`,
+        }
+      : fullHeightPanel
+      ? {
+          top: `${panelTopOffset}px`,
+          height: `calc(100vh - ${panelTopOffset}px)`,
         }
       : undefined;
 

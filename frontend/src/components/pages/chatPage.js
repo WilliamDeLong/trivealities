@@ -29,8 +29,9 @@ const ChatPage = () => {
       fullHeightPanel={true}
       fullScreenPanel={true}
       hideCloseButton={true}
-      panelSideInset={12}
-      subHeaderText="Disclaimer: opinions in this chat may be spicy, unserious, or typed before coffee."
+      panelSideInset={0}
+      panelTopOffset={64}
+      subHeaderText="disclaimer: Trivealities is in no way responsible for communication in this chat. If offended, please contact the trivia police at 1-800-TRIVIA-HELP. Remember to play nice and keep it trivia-friendly!"
     />
   );
 };

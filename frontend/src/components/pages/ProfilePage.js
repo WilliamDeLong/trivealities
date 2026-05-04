@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import getUserInfo from "../../utilities/decodeJwt";
 import API_BASE from "../../api";
 import axios from "axios";
+import { UserContext } from "../../App";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
+  const { isLightMode } = useContext(UserContext);
 
   const [user, setUser] = useState(getUserInfo());
   const [error, setError] = useState("");
@@ -221,25 +223,33 @@ const ProfilePage = () => {
   };
 
   const XpCard = ({ title, level, xp }) => (
-    <div className="card">
-      <p className="label">{title}</p>
-      <p className="accountLevel">Level: {level}</p>
+    <div className="card" style={innerCardStyle(isLightMode)}>
+      <p className="label" style={{ fontWeight: "bold", color: isLightMode ? "#111827" : "#ffffff" }}>
+        {title}
+      </p>
+      <p className="accountLevel" style={{ color: isLightMode ? "#111827" : "#ffffff" }}>
+        Level: {level}
+      </p>
 
-      <div className="xp-bar-container">
+      <div style={xpBarContainerStyle(isLightMode)}>
         <div
           className="xp-bar-fill"
-          style={{ width: `${Math.min(xp, 100)}%` }}
+          style={{ ...xpBarFillStyle, width: `${Math.min(xp, 100)}%` }}
         ></div>
       </div>
 
-      <p className="accountXp">XP: {xp} / 100</p>
+      <p className="accountXp" style={{ color: isLightMode ? "#111827" : "#ffffff" }}>
+        XP: {xp} / 100
+      </p>
     </div>
   );
 
   if (!user) {
     return (
-      <div>
-        <h4>Log in to view this page.</h4>
+      <div style={profilePageBackgroundStyle(isLightMode)}>
+        <h4 style={{ color: isLightMode ? "#111827" : "#ffffff" }}>
+          Log in to view this page.
+        </h4>
       </div>
     );
   }
@@ -247,162 +257,193 @@ const ProfilePage = () => {
   const { id, email, username } = user;
 
   return (
-    <div style={profilePageBackgroundStyle}>
+    <div style={profilePageBackgroundStyle(isLightMode)}>
       <div className="card-container" style={profileContainerStyle}>
-        <div className="card" style={mainCardStyle}>
-        <div style={{ fontWeight: "bold" }}>
-          <p>Welcome back,</p>
-        </div>
+        <div className="card" style={mainCardStyle(isLightMode)}>
+          <div style={{ fontWeight: "bold", color: isLightMode ? "#111827" : "#ffffff" }}>
+            <p>Welcome back,</p>
+          </div>
 
-        <h2 className="username" style={{ color: "#00d0ff" }}>
-          {username}
-        </h2>
+          <h2
+            className="username"
+            style={{ color: isLightMode ? "#7c3aed" : "#00d0ff" }}
+          >
+            {username}
+          </h2>
 
-        <img
-          src={profileUrl}
-          alt="Profile"
-          style={profileImageStyle}
-          onError={() => setProfileUrl("/user-icon.png")}
-        />
-
-        <div style={{ marginTop: 12 }}>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              setSelectedFile(e.target.files?.[0] || null);
-              setUploadSuccess(false);
-            }}
+          <img
+            src={profileUrl}
+            alt="Profile"
+            style={profileImageStyle(isLightMode)}
+            onError={() => setProfileUrl("/user-icon.png")}
           />
 
-          {selectedFile && (
-            <button onClick={uploadProfileImage} style={uploadButtonStyle}>
-              {uploadSuccess ? "Upload Successful" : "Upload New Profile Image"}
+          <div style={{ marginTop: 12 }}>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                setSelectedFile(e.target.files?.[0] || null);
+                setUploadSuccess(false);
+              }}
+              style={{ color: isLightMode ? "#111827" : "#ffffff" }}
+            />
+
+            {selectedFile && (
+              <button onClick={uploadProfileImage} style={uploadButtonStyle}>
+                {uploadSuccess ? "Upload Successful" : "Upload New Profile Image"}
+              </button>
+            )}
+          </div>
+
+          {status && (
+            <p style={{ marginTop: 10, color: isLightMode ? "#111827" : "#ffffff" }}>
+              {status}
+            </p>
+          )}
+          {error && <p style={{ color: "#f87171" }}>{error}</p>}
+
+          <div className="card" style={innerCardStyle(isLightMode)}>
+            <p style={{ fontWeight: "bold", color: isLightMode ? "#111827" : "#ffffff" }}>
+              Profile details:
+            </p>
+            <p className="username" style={{ color: isLightMode ? "#111827" : "#ffffff" }}>
+              Username: {username}
+            </p>
+            <p className="userId" style={{ color: isLightMode ? "#111827" : "#ffffff" }}>
+              User ID: {id}
+            </p>
+            <p className="email" style={{ color: isLightMode ? "#111827" : "#ffffff" }}>
+              Email: {email}
+            </p>
+          </div>
+
+          <XpCard
+            title="Single Player XP:"
+            level={singlePlayerLevel}
+            xp={singlePlayerXp}
+          />
+
+          <XpCard
+            title="Multiplayer XP:"
+            level={multiplayerLevel}
+            xp={multiplayerXp}
+          />
+
+          <div style={{ width: "100%", marginTop: 15 }}>
+            <button onClick={togglePasswordDropdown} style={dropdownTriggerStyle(isLightMode)}>
+              <span style={dropdownLeftStyle()}>
+                <span style={dropdownDotStyle}></span>
+                {showPasswordDropdown ? "Hide Password Update" : "Update Password"}
+              </span>
+              <span style={dropdownArrowStyle(showPasswordDropdown)}>▼</span>
             </button>
-          )}
-        </div>
 
-        {status && <p style={{ marginTop: 10 }}>{status}</p>}
-        {error && <p style={{ color: "#f87171" }}>{error}</p>}
-
-        <div className="card">
-          <p style={{ fontWeight: "bold" }}>Profile details:</p>
-          <p className="username">Username: {username}</p>
-          <p className="userId">User ID: {id}</p>
-          <p className="email">Email: {email}</p>
-        </div>
-
-        <XpCard
-          title="Single Player XP:"
-          level={singlePlayerLevel}
-          xp={singlePlayerXp}
-        />
-
-        <XpCard
-          title="Multiplayer XP:"
-          level={multiplayerLevel}
-          xp={multiplayerXp}
-        />
-
-        <div style={{ width: "100%", marginTop: 15 }}>
-          <button onClick={togglePasswordDropdown} style={dropdownTriggerStyle}>
-            <span style={dropdownLeftStyle}>
-              <span style={dropdownDotStyle}></span>
-              {showPasswordDropdown ? "Hide Password Update" : "Update Password"}
-            </span>
-            <span style={dropdownArrowStyle(showPasswordDropdown)}>▼</span>
-          </button>
-
-          {showPasswordDropdown && (
-            <div style={dropdownPanelStyle}>
-              <input
-                type="password"
-                placeholder="Current password"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                style={inputStyle}
-              />
-
-              <input
-                type="password"
-                placeholder="New password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                style={inputStyle}
-              />
-
-              <input
-                type="password"
-                placeholder="Confirm new password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                style={inputStyle}
-              />
-
-              <button onClick={updatePassword} style={updatePasswordButtonStyle}>
-                Update Password
-              </button>
-
-              {passwordStatus && <p style={{ marginTop: 5 }}>{passwordStatus}</p>}
-            </div>
-          )}
-        </div>
-
-        <div style={{ width: "100%", marginTop: 15 }}>
-          <button onClick={toggleDeleteDropdown} style={dropdownTriggerStyle}>
-            <span style={dropdownLeftStyle}>
-              <span style={dropdownDotStyle}></span>
-              {showDeleteDropdown ? "Hide Delete Account" : "Delete Account"}
-            </span>
-          </button>
-
-          {showDeleteDropdown && (
-            <div style={dropdownPanelStyle}>
-              <input
-                type="password"
-                placeholder="Enter password to confirm"
-                value={deletePassword}
-                onChange={(e) => setDeletePassword(e.target.value)}
-                style={inputStyle}
-              />
-
-              <label style={checkboxLabelStyle}>
+            {showPasswordDropdown && (
+              <div style={dropdownPanelStyle}>
                 <input
-                  type="checkbox"
-                  checked={confirmDelete}
-                  onChange={(e) => setConfirmDelete(e.target.checked)}
+                  type="password"
+                  placeholder="Current password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  style={inputStyle(isLightMode)}
                 />
-                I understand this action cannot be undone
-              </label>
 
-              <button onClick={deleteAccount} style={deleteButtonStyle}>
-                Confirm Delete Account
-              </button>
+                <input
+                  type="password"
+                  placeholder="New password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  style={inputStyle(isLightMode)}
+                />
 
-              {deleteStatus && <p style={{ marginTop: 5 }}>{deleteStatus}</p>}
-            </div>
-          )}
+                <input
+                  type="password"
+                  placeholder="Confirm new password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  style={inputStyle(isLightMode)}
+                />
+
+                <button onClick={updatePassword} style={updatePasswordButtonStyle}>
+                  Update Password
+                </button>
+
+                {passwordStatus && (
+                  <p style={{ marginTop: 5, color: isLightMode ? "#111827" : "#ffffff" }}>
+                    {passwordStatus}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div style={{ width: "100%", marginTop: 15 }}>
+            <button onClick={toggleDeleteDropdown} style={dropdownTriggerStyle(isLightMode)}>
+              <span style={dropdownLeftStyle()}>
+                <span style={dropdownDotStyle}></span>
+                {showDeleteDropdown ? "Hide Delete Account" : "Delete Account"}
+              </span>
+            </button>
+
+            {showDeleteDropdown && (
+              <div style={dropdownPanelStyle}>
+                <input
+                  type="password"
+                  placeholder="Enter password to confirm"
+                  value={deletePassword}
+                  onChange={(e) => setDeletePassword(e.target.value)}
+                  style={inputStyle(isLightMode)}
+                />
+
+                <label
+                  style={{
+                    ...checkboxLabelStyle,
+                    color: isLightMode ? "#111827" : "#ffffff",
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={confirmDelete}
+                    onChange={(e) => setConfirmDelete(e.target.checked)}
+                  />
+                  I understand this action cannot be undone
+                </label>
+
+                <button onClick={deleteAccount} style={deleteButtonStyle}>
+                  Confirm Delete Account
+                </button>
+
+                {deleteStatus && (
+                  <p style={{ marginTop: 5, color: isLightMode ? "#111827" : "#ffffff" }}>
+                    {deleteStatus}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+
+          <button onClick={handleLogout} style={logoutButtonStyle}>
+            Log Out
+          </button>
         </div>
-
-        <button onClick={handleLogout} style={logoutButtonStyle}>
-          Log Out
-        </button>
       </div>
     </div>
-  </div>
-);
+  );
 };
-const profilePageBackgroundStyle = {
+
+const profilePageBackgroundStyle = (isLightMode) => ({
   minHeight: "100vh",
   width: "100%",
-  padding: "80px 20px 40px",
+  padding: "56px 20px 40px",
   boxSizing: "border-box",
-  background:
-    "radial-gradient(circle at 20% 20%, rgba(0,208,255,0.18), transparent 32%), radial-gradient(circle at 80% 30%, rgba(168,85,247,0.18), transparent 30%), linear-gradient(135deg, #020617, #0f172a, #1e1b4b)",
+  background: isLightMode
+    ? "linear-gradient(135deg, #f8fafc, #dbeafe, #ede9fe)"
+    : "radial-gradient(circle at 20% 20%, rgba(0,208,255,0.18), transparent 32%), radial-gradient(circle at 80% 30%, rgba(168,85,247,0.18), transparent 30%), linear-gradient(135deg, #020617, #0f172a, #1e1b4b)",
   display: "flex",
   justifyContent: "center",
   alignItems: "flex-start",
-};
+});
 
 const profileContainerStyle = {
   width: "100%",
@@ -410,7 +451,7 @@ const profileContainerStyle = {
   justifyContent: "center",
 };
 
-const mainCardStyle = {
+const mainCardStyle = (isLightMode) => ({
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
@@ -420,19 +461,36 @@ const mainCardStyle = {
   maxWidth: "620px",
   padding: "28px",
   borderRadius: "22px",
-  background: "rgba(15, 23, 42, 0.82)",
-  border: "1px solid rgba(255,255,255,0.12)",
-  boxShadow: "0 18px 40px rgba(0,0,0,0.35)",
-  color: "white",
-};
+  background: isLightMode ? "rgba(255,255,255,0.82)" : "rgba(15, 23, 42, 0.82)",
+  border: isLightMode
+    ? "1px solid rgba(0,0,0,0.08)"
+    : "1px solid rgba(255,255,255,0.12)",
+  boxShadow: isLightMode
+    ? "0 18px 40px rgba(0,0,0,0.18)"
+    : "0 18px 40px rgba(0,0,0,0.35)",
+  color: isLightMode ? "#111827" : "#ffffff",
+});
 
-const profileImageStyle = {
+const innerCardStyle = (isLightMode) => ({
+  width: "100%",
+  marginTop: "16px",
+  background: isLightMode ? "rgba(255,255,255,0.78)" : "rgba(30,41,59,0.85)",
+  color: isLightMode ? "#111827" : "#ffffff",
+  border: isLightMode
+    ? "1px solid rgba(0,0,0,0.06)"
+    : "1px solid rgba(255,255,255,0.08)",
+});
+
+const profileImageStyle = (isLightMode) => ({
   width: 110,
   height: 110,
   borderRadius: "50%",
   objectFit: "cover",
   marginBottom: 10,
-};
+  border: isLightMode
+    ? "3px solid rgba(124,58,237,0.18)"
+    : "3px solid rgba(255,255,255,0.12)",
+});
 
 const uploadButtonStyle = {
   marginTop: 10,
@@ -446,7 +504,7 @@ const uploadButtonStyle = {
   transition: "background-color 0.3s ease, transform 0.2s ease",
 };
 
-const dropdownTriggerStyle = {
+const dropdownTriggerStyle = (isLightMode) => ({
   width: "100%",
   maxWidth: "320px",
   margin: "0 auto",
@@ -459,15 +517,15 @@ const dropdownTriggerStyle = {
   justifyContent: "space-between",
   cursor: "pointer",
   boxSizing: "border-box",
-};
+});
 
-const dropdownLeftStyle = {
+const dropdownLeftStyle = () => ({
   display: "flex",
   alignItems: "center",
   gap: "10px",
   fontWeight: "500",
   color: "#222",
-};
+});
 
 const dropdownDotStyle = {
   width: "8px",
@@ -492,12 +550,14 @@ const dropdownArrowStyle = (isOpen) => ({
   transition: "transform 0.2s ease",
 });
 
-const inputStyle = {
+const inputStyle = (isLightMode) => ({
   padding: "8px",
   borderRadius: "8px",
   border: "1px solid #ccc",
   width: "250px",
-};
+  background: "#ffffff",
+  color: "#111827",
+});
 
 const updatePasswordButtonStyle = {
   backgroundColor: "#10b981",
@@ -531,6 +591,19 @@ const checkboxLabelStyle = {
   display: "flex",
   alignItems: "center",
   gap: "8px",
+};
+
+const xpBarContainerStyle = (isLightMode) => ({
+  width: "100%",
+  height: "12px",
+  borderRadius: "999px",
+  background: isLightMode ? "#e5e7eb" : "#334155",
+  overflow: "hidden",
+});
+
+const xpBarFillStyle = {
+  height: "100%",
+  background: "#22c55e",
 };
 
 export default ProfilePage;
