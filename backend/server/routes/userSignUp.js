@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const { newUserValidation } = require("../models/userValidator");
 const newUserModel = require("../models/userModel");
-const profileImage = require("../models/ProfileImage"); // ✅ add this
+const profileImage = require("../models/profileImage"); // ✅ add this
 
 router.post("/signup", async (req, res) => {
   const { error } = newUserValidation(req.body);
